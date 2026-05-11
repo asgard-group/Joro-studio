@@ -36,3 +36,6 @@ next-env.d.ts
 
 # netlify
 .netlify
+
+# claude worktrees
+.claude/worktrees/
