@@ -71,7 +71,7 @@ export default function Hero({
               {titleHighlight && (
                 <>
                   {" "}
-                  <em className="not-italic text-terracotta">
+                  <em className="not-italic text-cream">
                     {titleHighlight}
                   </em>
                 </>
