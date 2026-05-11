@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-cream: #F4EFE5;
+    --color-terracotta: #812403;
+    --color-charcoal: #1C1A18;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-cream text-charcoal antialiased;
+    font-feature-settings: "kern" 1, "liga" 1;
+  }
+
+  ::selection {
+    background-color: #812403;
+    color: #F4EFE5;
+  }
+
+  /* Focus visible only for keyboard nav */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-terracotta;
+  }
+}
+
+@layer components {
+  .container-site {
+    @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .heading-display {
+    @apply font-serif text-4xl font-normal leading-tight tracking-tight lg:text-5xl xl:text-6xl;
+  }
+
+  .heading-section {
+    @apply font-serif text-3xl font-normal leading-snug lg:text-4xl;
+  }
+
+  .label-eyebrow {
+    @apply text-xs font-semibold uppercase tracking-widest text-terracotta;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center gap-2 bg-terracotta px-6 py-3 text-sm font-semibold uppercase tracking-wider text-cream transition-all duration-200 hover:bg-terracotta-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center gap-2 border border-charcoal px-6 py-3 text-sm font-semibold uppercase tracking-wider text-charcoal transition-all duration-200 hover:bg-charcoal hover:text-cream;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold uppercase tracking-wider text-charcoal transition-all duration-200 hover:text-terracotta;
+  }
+
+  .link-underline {
+    @apply relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-terracotta after:transition-all after:duration-300 hover:after:w-full;
+  }
+}
