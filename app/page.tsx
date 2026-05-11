@@ -30,7 +30,7 @@ export default function HomePage() {
     <>
       {/* Hero */}
       <Hero
-        eyebrow="Architecture & Design d'intérieur"
+        eyebrow="Architecture tetstestzatazegzeaf & Design d'intérieur"
         title="Concevoir les espaces hybrides"
         titleHighlight="de demain"
         subtitle="JÖRO Studio imagine et réalise des environnements haut de gamme alliant design contemporain, fonctionnalité et responsabilité écologique — pour les entreprises et investisseurs les plus exigeants."
