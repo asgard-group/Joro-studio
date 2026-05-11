@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { buildMetadata } from "@/lib/metadata";
 import CTA from "@/components/sections/CTA";
+import Card from "@/components/ui/Card";
+import { services } from "@/data/services";
 
 export const metadata: Metadata = buildMetadata({
   title: "À propos — JÖRO Studio",
@@ -155,6 +158,33 @@ export default function AboutPage() {
                 </div>
               )
             )}
+          </div>
+        </div>
+      </section>
+
+      {/* Écosystème */}
+      <section className="py-24">
+        <div className="container-site">
+          <div className="mb-16 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div className="max-w-xl">
+              <p className="label-eyebrow mb-4">L'écosystème JÖRO</p>
+              <h2 className="heading-section">Quatre offres, une exigence</h2>
+            </div>
+            <Link href="/services" className="btn-ghost shrink-0">
+              Toutes nos offres →
+            </Link>
+          </div>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {services.map((service) => (
+              <Card
+                key={service.id}
+                title={service.name}
+                subtitle={service.tagline}
+                description={service.description}
+                href={service.href}
+                image={service.image}
+              />
+            ))}
           </div>
         </div>
       </section>
