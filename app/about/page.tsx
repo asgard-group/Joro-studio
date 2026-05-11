@@ -112,7 +112,7 @@ export default function AboutPage() {
             </div>
             <div className="relative aspect-square overflow-hidden">
               <Image
-                src="/images/about-team.jpg"
+                src="/images/work/portfolio-6.jpg"
                 alt="L'équipe JÖRO Studio"
                 fill
                 className="object-cover"

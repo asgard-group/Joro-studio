@@ -36,8 +36,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ["var(--font-sans)", "system-ui", "sans-serif"],
-        serif: ["var(--font-serif)", "Georgia", "serif"],
+        sans: ["var(--font-general-sans)", "system-ui", "sans-serif"],
+        serif: ["var(--font-general-sans)", "system-ui", "sans-serif"],
       },
       letterSpacing: {
         widest: "0.2em",

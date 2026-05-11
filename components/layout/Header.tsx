@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { navItems } from "@/data/navigation";
 import Navigation from "./Navigation";
@@ -28,20 +29,31 @@ export default function Header() {
           {/* Logo */}
           <Link
             href="/"
-            className="flex items-center gap-2"
+            className="flex items-center"
             aria-label="JÖRO Studio — retour à l'accueil"
           >
-            <span className="font-serif text-xl font-normal tracking-widest text-charcoal lg:text-2xl">
-              JÖRO <span className="font-semibold text-terracotta">STUDIO</span>
-            </span>
+            <Image
+              src={scrolled ? "/images/logos/logo-dark.svg" : "/images/logos/logo-white.svg"}
+              alt="JÖRO Studio"
+              width={140}
+              height={39}
+              priority
+            />
           </Link>
 
           {/* Desktop nav */}
-          <Navigation items={navItems} />
+          <Navigation items={navItems} scrolled={scrolled} />
 
           {/* CTA + hamburger */}
           <div className="flex items-center gap-4">
-            <Link href="/contact" className="btn-primary hidden lg:inline-flex">
+            <Link
+              href="/contact"
+              className={`hidden lg:inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold uppercase tracking-wider transition-all duration-200 ${
+                scrolled
+                  ? "bg-terracotta text-cream hover:bg-terracotta-600"
+                  : "border border-cream text-cream hover:bg-cream hover:text-charcoal"
+              }`}
+            >
               Nous contacter
             </Link>
             <button
@@ -51,19 +63,19 @@ export default function Header() {
               className="flex flex-col gap-1.5 p-1 lg:hidden"
             >
               <span
-                className={`block h-0.5 w-6 bg-charcoal transition-all duration-300 ${
-                  mobileOpen ? "translate-y-2 rotate-45" : ""
-                }`}
+                className={`block h-0.5 w-6 transition-all duration-300 ${
+                  scrolled || mobileOpen ? "bg-charcoal" : "bg-cream"
+                } ${mobileOpen ? "translate-y-2 rotate-45" : ""}`}
               />
               <span
-                className={`block h-0.5 w-6 bg-charcoal transition-all duration-300 ${
-                  mobileOpen ? "opacity-0" : ""
-                }`}
+                className={`block h-0.5 w-6 transition-all duration-300 ${
+                  scrolled || mobileOpen ? "bg-charcoal" : "bg-cream"
+                } ${mobileOpen ? "opacity-0" : ""}`}
               />
               <span
-                className={`block h-0.5 w-6 bg-charcoal transition-all duration-300 ${
-                  mobileOpen ? "-translate-y-2 -rotate-45" : ""
-                }`}
+                className={`block h-0.5 w-6 transition-all duration-300 ${
+                  scrolled || mobileOpen ? "bg-charcoal" : "bg-cream"
+                } ${mobileOpen ? "-translate-y-2 -rotate-45" : ""}`}
               />
             </button>
           </div>

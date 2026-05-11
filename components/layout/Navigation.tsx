@@ -7,11 +7,15 @@ import type { NavItem } from "@/types";
 
 interface Props {
   items: NavItem[];
+  scrolled?: boolean;
 }
 
-export default function Navigation({ items }: Props) {
+export default function Navigation({ items, scrolled = false }: Props) {
   const pathname = usePathname();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+
+  const textColor = scrolled ? "text-charcoal hover:text-terracotta" : "text-cream/90 hover:text-cream";
+  const activeColor = scrolled ? "text-terracotta" : "text-cream";
 
   return (
     <nav aria-label="Navigation principale" className="hidden lg:block">
@@ -29,8 +33,8 @@ export default function Navigation({ items }: Props) {
                   onMouseLeave={() => setOpenDropdown(null)}
                 >
                   <button
-                    className={`flex items-center gap-1 text-sm font-medium transition-colors hover:text-terracotta ${
-                      isActive ? "text-terracotta" : "text-charcoal"
+                    className={`flex items-center gap-1 text-sm font-medium transition-colors ${
+                      isActive ? activeColor : textColor
                     }`}
                     aria-expanded={openDropdown === item.href}
                     aria-haspopup="true"
@@ -71,8 +75,8 @@ export default function Navigation({ items }: Props) {
               ) : (
                 <Link
                   href={item.href}
-                  className={`text-sm font-medium transition-colors hover:text-terracotta ${
-                    isActive ? "text-terracotta" : "text-charcoal"
+                  className={`text-sm font-medium transition-colors ${
+                    isActive ? activeColor : textColor
                   }`}
                 >
                   {item.label}

@@ -15,14 +15,14 @@ export const services: Service[] = [
       "Design signature JÖRO",
     ],
     href: "/services#office",
-    image: "/images/office-cover.jpg",
+    image: "/images/work/portfolio-3.jpg",
   },
   {
     id: "meeting",
     name: "JÖRO Meeting",
     tagline: "Salles de réunion & espaces événementiels",
     description:
-      "Des lieux d'exception pour vos réunions stratégiques, séminaires et événements clients. Chaque espace JÖRO Meeting est conçu pour favoriser la concentration, l'inspiration et l'impréssion — au service de vos enjeux business.",
+      "Des lieux d'exception pour vos réunions stratégiques, séminaires et événements clients. Chaque espace JÖRO Meeting est conçu pour favoriser la concentration, l'inspiration et l'impression — au service de vos enjeux business.",
     features: [
       "Location à la demi-journée ou journée",
       "Équipement audiovisuel premium",
@@ -31,7 +31,7 @@ export const services: Service[] = [
       "Réservation en ligne",
     ],
     href: "/services#meeting",
-    image: "/images/meeting-cover.jpg",
+    image: "/images/work/portfolio-4.jpg",
   },
   {
     id: "living",
@@ -47,14 +47,14 @@ export const services: Service[] = [
       "Support 24/7",
     ],
     href: "/services#living",
-    image: "/images/living-cover.jpg",
+    image: "/images/work/portfolio-1.jpg",
   },
   {
     id: "studio",
     name: "JÖRO Studio",
     tagline: "Architecture intérieure & rénovation",
     description:
-      "Notre atelier de création. JÖRO Studio conçoit et réalise des projets d'architecture intérieure sur mesure pour des entreprises, des investisseurs et des asset managers. Du programme à la livraison, nous pilotions l'ensemble du projet avec un engagement fort pour la durabilité et l'excellence artisanale.",
+      "Notre atelier de création. JÖRO Studio conçoit et réalise des projets d'architecture intérieure sur mesure pour des entreprises, des investisseurs et des asset managers. Du programme à la livraison, nous pilotons l'ensemble du projet avec un engagement fort pour la durabilité et l'excellence artisanale.",
     features: [
       "Conception architecturale et plans",
       "Direction artistique et design d'intérieur",
@@ -63,6 +63,6 @@ export const services: Service[] = [
       "Suivi de chantier et livraison",
     ],
     href: "/services#studio",
-    image: "/images/studio-cover.jpg",
+    image: "/images/work/portfolio-5.jpg",
   },
 ];

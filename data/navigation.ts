@@ -12,10 +12,8 @@ export const navItems: NavItem[] = [
       { label: "JÖRO Studio", href: "/services#studio" },
     ],
   },
-  { label: "Réalisations", href: "/work" },
+  { label: "Portfolio", href: "/work" },
   { label: "À propos", href: "/about" },
-  { label: "Blog", href: "/blog" },
-  { label: "Contact", href: "/contact" },
 ];
 
 export const footerLinks = {

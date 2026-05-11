@@ -36,7 +36,7 @@ export default function HomePage() {
         subtitle="JÖRO Studio imagine et réalise des environnements haut de gamme alliant design contemporain, fonctionnalité et responsabilité écologique — pour les entreprises et investisseurs les plus exigeants."
         cta={{ label: "Découvrir nos réalisations", href: "/work" }}
         ctaSecondary={{ label: "Parler d'un projet", href: "/contact" }}
-        image="/images/hero-main.jpg"
+        image="/images/hero.jpeg"
       />
 
       {/* Stats */}
@@ -81,7 +81,7 @@ export default function HomePage() {
             </div>
             <div className="relative aspect-[4/3] overflow-hidden">
               <Image
-                src="/images/studio-intro.jpg"
+                src="/images/work/portfolio-2.jpg"
                 alt="Espace JÖRO Studio — design et durabilité"
                 fill
                 className="object-cover"
