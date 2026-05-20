@@ -8,21 +8,11 @@ import { navItems } from "@/data/navigation";
 export default function Header() {
   const [isDark, setIsDark] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [hidden, setHidden] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    let lastY = window.scrollY;
-
     const handleScroll = () => {
-      const currentY = window.scrollY;
-
-      // Cache si on scroll vers le bas (après 80px pour ne pas masquer au départ)
-      if (currentY > lastY && currentY > 80) {
-        setHidden(true);
-      } else {
-        setHidden(false);
-      }
-      lastY = currentY;
+      setScrolled(window.scrollY > 20);
 
       // Couleur adaptative
       const midNavbar = 40;
@@ -46,6 +36,7 @@ export default function Header() {
     };
   }, []);
 
+
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
@@ -54,7 +45,9 @@ export default function Header() {
   return (
     <>
       <header
-        className={`fixed inset-x-0 top-0 z-50 bg-transparent transition-transform duration-300 ${hidden && !menuOpen ? "-translate-y-full" : "translate-y-0"}`}
+        className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+          scrolled ? "backdrop-blur-md" : ""
+        }`}
       >
         <div className="px-4 sm:px-6 md:px-10 lg:px-[60px]">
           <div className="grid grid-cols-3 items-center py-3 sm:py-4 md:py-6 lg:py-[40px]">

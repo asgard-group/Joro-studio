@@ -8,6 +8,7 @@ import CTA from "@/components/sections/CTA";
 import Card from "@/components/ui/Card";
 import ParallaxImage from "@/components/ui/ParallaxImage";
 import ServicesAll from "@/components/sections/ServicesAll";
+import ServiceReveal from "@/components/sections/ServiceReveal";
 import { services } from "@/data/services";
 import { workItems } from "@/data/work";
 
@@ -74,6 +75,25 @@ export default function HomePage() {
 
       {/* Services — intro + 4 cartes dans le même conteneur sticky */}
       <ServicesAll />
+      <ServiceReveal
+        activeId="amo"
+        title="AMO"
+        description="Assistance à maîtrise d'ouvrage : nous vous accompagnons à chaque étape de votre projet, de la définition du programme jusqu'à la livraison."
+        video="/vidéos/Composition 1.mp4"
+      />
+      <ServiceReveal
+        activeId="marketing-suite"
+        title="MARKETING SUITE"
+        description="Des espaces de démonstration et de commercialisation pensés pour valoriser vos actifs immobiliers et séduire vos futurs acquéreurs."
+        image="/images/Frame 207.png"
+      />
+      <ServiceReveal
+        activeId="conseil-workplace"
+        title={"CONSEIL WORKPLACE\n& STRATÉGIE IMMOBILIÈRE"}
+        description="Nous vous aidons à définir votre stratégie immobilière, optimiser vos espaces de travail et anticiper les nouveaux usages urbains."
+        video="/vidéos/vecteezy_4k-animation-angled-view-of-modern-building-with-clear-blue_40552327.mp4"
+        flipX
+      />
 
       {/* Featured work */}
       <section className="py-24">
