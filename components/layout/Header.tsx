@@ -8,9 +8,23 @@ import { navItems } from "@/data/navigation";
 export default function Header() {
   const [isDark, setIsDark] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
-    const checkTheme = () => {
+    let lastY = window.scrollY;
+
+    const handleScroll = () => {
+      const currentY = window.scrollY;
+
+      // Cache si on scroll vers le bas (après 80px pour ne pas masquer au départ)
+      if (currentY > lastY && currentY > 80) {
+        setHidden(true);
+      } else {
+        setHidden(false);
+      }
+      lastY = currentY;
+
+      // Couleur adaptative
       const midNavbar = 40;
       const sections = document.querySelectorAll("[data-navbar-theme]");
       let theme = "light";
@@ -22,12 +36,13 @@ export default function Header() {
       });
       setIsDark(theme === "dark");
     };
-    checkTheme();
-    window.addEventListener("scroll", checkTheme, { passive: true });
-    window.addEventListener("resize", checkTheme, { passive: true });
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll, { passive: true });
     return () => {
-      window.removeEventListener("scroll", checkTheme);
-      window.removeEventListener("resize", checkTheme);
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
     };
   }, []);
 
@@ -39,7 +54,7 @@ export default function Header() {
   return (
     <>
       <header
-        className="fixed inset-x-0 top-0 z-50 bg-transparent"
+        className={`fixed inset-x-0 top-0 z-50 bg-transparent transition-transform duration-300 ${hidden && !menuOpen ? "-translate-y-full" : "translate-y-0"}`}
       >
         <div className="px-4 sm:px-6 md:px-10 lg:px-[60px]">
           <div className="grid grid-cols-3 items-center py-3 sm:py-4 md:py-6 lg:py-[40px]">
