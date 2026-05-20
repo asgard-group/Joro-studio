@@ -4,128 +4,140 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { navItems } from "@/data/navigation";
-import Navigation from "./Navigation";
 
 export default function Header() {
-  const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [isDark, setIsDark] = useState(true);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    const checkTheme = () => {
+      const midNavbar = 40;
+      const sections = document.querySelectorAll("[data-navbar-theme]");
+      let theme = "light";
+      sections.forEach((section) => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= midNavbar && rect.bottom >= midNavbar) {
+          theme = section.getAttribute("data-navbar-theme") ?? "light";
+        }
+      });
+      setIsDark(theme === "dark");
+    };
+    checkTheme();
+    window.addEventListener("scroll", checkTheme, { passive: true });
+    window.addEventListener("resize", checkTheme, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", checkTheme);
+      window.removeEventListener("resize", checkTheme);
+    };
   }, []);
 
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [menuOpen]);
+
   return (
-    <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-cream/95 shadow-sm backdrop-blur-md"
-          : "bg-transparent"
-      }`}
-    >
-      <div className="container-site">
-        <div className="flex h-16 items-center justify-between lg:h-20">
-          {/* Logo */}
-          <Link
-            href="/"
-            className="flex items-center"
-            aria-label="JÖRO Studio — retour à l'accueil"
-          >
-            <Image
-              src={scrolled ? "/images/logos/logo-dark.svg" : "/images/logos/logo-white.svg"}
-              alt="JÖRO Studio"
-              width={140}
-              height={39}
-              priority
-            />
-          </Link>
+    <>
+      <header
+        className="fixed inset-x-0 top-0 z-50 bg-transparent"
+      >
+        <div className="px-4 sm:px-6 md:px-10 lg:px-[60px]">
+          <div className="grid grid-cols-3 items-center py-3 sm:py-4 md:py-6 lg:py-[40px]">
 
-          {/* Desktop nav */}
-          <Navigation items={navItems} scrolled={scrolled} />
-
-          {/* CTA + hamburger */}
-          <div className="flex items-center gap-4">
-            <Link
-              href="/contact"
-              className={`hidden lg:inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold uppercase tracking-wider transition-all duration-200 ${
-                scrolled
-                  ? "bg-terracotta text-cream hover:bg-terracotta-600"
-                  : "border border-cream text-cream hover:bg-cream hover:text-charcoal"
-              }`}
-            >
-              Nous contacter
-            </Link>
+            {/* Left — hamburger */}
             <button
-              aria-label={mobileOpen ? "Fermer le menu" : "Ouvrir le menu"}
-              aria-expanded={mobileOpen}
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className="flex flex-col gap-1.5 p-1 lg:hidden"
+              onClick={() => setMenuOpen(true)}
+              aria-label="Ouvrir le menu"
+              className="justify-self-start p-1"
             >
-              <span
-                className={`block h-0.5 w-6 transition-all duration-300 ${
-                  scrolled || mobileOpen ? "bg-charcoal" : "bg-cream"
-                } ${mobileOpen ? "translate-y-2 rotate-45" : ""}`}
-              />
-              <span
-                className={`block h-0.5 w-6 transition-all duration-300 ${
-                  scrolled || mobileOpen ? "bg-charcoal" : "bg-cream"
-                } ${mobileOpen ? "opacity-0" : ""}`}
-              />
-              <span
-                className={`block h-0.5 w-6 transition-all duration-300 ${
-                  scrolled || mobileOpen ? "bg-charcoal" : "bg-cream"
-                } ${mobileOpen ? "-translate-y-2 -rotate-45" : ""}`}
+              <Image
+                src="/images/icon/menu-outline.svg"
+                alt=""
+                width={28}
+                height={28}
+                className="w-5 h-5 md:w-6 md:h-6 lg:w-7 lg:h-7"
+                style={{ filter: isDark ? 'brightness(0) invert(1) sepia(1) saturate(0) brightness(0.953)' : 'brightness(0) invert(1) sepia(1) hue-rotate(155deg) saturate(400%) brightness(0.14)' }}
               />
             </button>
+
+            {/* Center — logo */}
+            <Link
+              href="/"
+              className="justify-self-center"
+              aria-label="JÖRO Studio — retour à l'accueil"
+            >
+              <Image
+                src="/images/logos/joro-studio-ẢCHITECTURE-TRAVAUX@300x 2.png"
+                alt="JÖRO Studio — Architecture & Travaux"
+                width={320}
+                height={97}
+                priority
+                className="object-contain w-auto h-[35px] md:h-12 lg:h-14 xl:h-16"
+                style={{ maxWidth: "none", filter: isDark ? 'none' : 'brightness(0) invert(1) sepia(1) hue-rotate(155deg) saturate(400%) brightness(0.14)' }}
+              />
+            </Link>
+
+            {/* Right — search */}
+            <button aria-label="Rechercher" className="justify-self-end p-1">
+              <Image
+                src="/images/icon/search-line.svg"
+                alt=""
+                width={28}
+                height={28}
+                className="w-5 h-5 md:w-6 md:h-6 lg:w-7 lg:h-7"
+                style={{ filter: isDark ? 'brightness(0) invert(1) sepia(1) saturate(0) brightness(0.953)' : 'brightness(0) invert(1) sepia(1) hue-rotate(155deg) saturate(400%) brightness(0.14)' }}
+              />
+            </button>
+
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* Mobile menu */}
-      {mobileOpen && (
-        <div className="border-t border-cream-300 bg-cream lg:hidden">
-          <nav className="container-site py-6" aria-label="Navigation mobile">
-            <ul className="flex flex-col gap-1">
+      {/* Full-screen overlay menu */}
+      <div
+        className={`fixed inset-0 z-40 bg-charcoal transition-opacity duration-300 ${
+          menuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        }`}
+      >
+        {/* Close button */}
+        <button
+          onClick={() => setMenuOpen(false)}
+          aria-label="Fermer le menu"
+          className="absolute right-5 top-5 p-2 text-cream sm:right-6 sm:top-6 lg:right-10 lg:top-8"
+        >
+          <svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.5" className="sm:w-8 sm:h-8">
+            <line x1="6" y1="6" x2="26" y2="26" />
+            <line x1="26" y1="6" x2="6" y2="26" />
+          </svg>
+        </button>
+
+        <div className="container-site flex h-full flex-col justify-center">
+          <nav aria-label="Menu principal">
+            <ul className="flex flex-col gap-5 sm:gap-6 lg:gap-8">
               {navItems.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    onClick={() => setMobileOpen(false)}
-                    className="block py-3 text-lg font-medium text-charcoal hover:text-terracotta"
+                    onClick={() => setMenuOpen(false)}
+                    className="font-serif text-3xl text-cream transition-colors hover:text-terracotta sm:text-4xl lg:text-5xl"
                   >
                     {item.label}
                   </Link>
-                  {item.children && (
-                    <ul className="ml-4 mt-1 flex flex-col gap-1 border-l border-cream-300 pl-4">
-                      {item.children.map((child) => (
-                        <li key={child.href}>
-                          <Link
-                            href={child.href}
-                            onClick={() => setMobileOpen(false)}
-                            className="block py-2 text-sm text-charcoal-muted hover:text-terracotta"
-                          >
-                            {child.label}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
                 </li>
               ))}
             </ul>
-            <div className="mt-6">
+            <div className="mt-10 lg:mt-12">
               <Link
                 href="/contact"
-                onClick={() => setMobileOpen(false)}
-                className="btn-primary w-full justify-center"
+                onClick={() => setMenuOpen(false)}
+                className="btn-primary"
               >
                 Nous contacter
               </Link>
             </div>
           </nav>
         </div>
-      )}
-    </header>
+      </div>
+    </>
   );
 }

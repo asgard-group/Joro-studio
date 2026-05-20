@@ -6,6 +6,7 @@ import Hero from "@/components/sections/Hero";
 import Testimonials from "@/components/sections/Testimonials";
 import CTA from "@/components/sections/CTA";
 import Card from "@/components/ui/Card";
+import ParallaxImage from "@/components/ui/ParallaxImage";
 import { services } from "@/data/services";
 import { workItems } from "@/data/work";
 
@@ -16,13 +17,6 @@ export const metadata: Metadata = buildMetadata({
   alternates: { canonical: "/" },
 });
 
-const stats = [
-  { value: "50+", label: "Projets livrés" },
-  { value: "12", label: "Villes en France" },
-  { value: "98%", label: "Clients satisfaits" },
-  { value: "2022", label: "Année de création" },
-];
-
 export default function HomePage() {
   const featuredWork = workItems.filter((w) => w.featured).slice(0, 3);
 
@@ -30,65 +24,50 @@ export default function HomePage() {
     <>
       {/* Hero */}
       <Hero
-        eyebrow="Architecture tetstestzatazegzeaf & Design d'intérieur"
-        title="Concevoir les espaces hybrides"
-        titleHighlight="de demain"
-        subtitle="JÖRO Studio imagine et réalise des environnements haut de gamme alliant design contemporain, fonctionnalité et responsabilité écologique — pour les entreprises et investisseurs les plus exigeants."
-        cta={{ label: "Découvrir nos réalisations", href: "/work" }}
-        ctaSecondary={{ label: "Parler d'un projet", href: "/contact" }}
-        image="/images/hero.jpeg"
+        eyebrow="Architecture & Design d'intérieur"
+        title={<>Concevoir les espaces<br />hybrides de demain</>}
+        image="/images/hero2.png"
+        scrollCta="Découvrir notre studio"
       />
 
-      {/* Stats */}
-      <section className="border-b border-cream-300 bg-cream py-16">
+      {/* Notre vision */}
+      <section className="pt-[200px] pb-24 bg-[#F3F2ED]">
         <div className="container-site">
-          <dl className="grid grid-cols-2 gap-8 lg:grid-cols-4">
-            {stats.map((stat) => (
-              <div key={stat.label} className="text-center">
-                <dt className="font-serif text-4xl font-normal text-terracotta lg:text-5xl">
-                  {stat.value}
-                </dt>
-                <dd className="mt-2 text-sm text-charcoal-muted">{stat.label}</dd>
-              </div>
-            ))}
-          </dl>
-        </div>
-      </section>
 
-      {/* Intro / Manifeste */}
-      <section className="py-24">
-        <div className="container-site">
-          <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
-            <div>
-              <p className="label-eyebrow mb-6">Notre raison d'être</p>
-              <h2 className="heading-section mb-6">
-                L'exigence du design, l'impératif de la durabilité
-              </h2>
-              <p className="mb-6 text-lg leading-relaxed text-charcoal-muted">
-                Chez JÖRO Studio, nous refusons de choisir entre esthétique,
-                performance et responsabilité environnementale. Chaque projet est
-                conçu pour durer, inspirer et respecter les ressources de demain.
-              </p>
-              <p className="mb-10 leading-relaxed text-charcoal-muted">
-                Fondé en 2022 par Romain Ruby dans la continuité de JÖRO Office,
-                notre studio porte une vision claire : devenir un des leaders de la
-                conception d'espaces dédiés aux nouveaux usages urbains — bureaux,
-                événementiel, hôtellerie lifestyle.
-              </p>
-              <Link href="/about" className="btn-outline">
-                Notre histoire
-              </Link>
-            </div>
-            <div className="relative aspect-[4/3] overflow-hidden">
-              <Image
-                src="/images/work/portfolio-2.jpg"
-                alt="Espace JÖRO Studio — design et durabilité"
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
-            </div>
+          {/* Label + Titre */}
+          <p className="text-[12px] font-medium uppercase tracking-widest text-charcoal mb-4">
+            Notre vision
+          </p>
+          <h2 className="text-[46px] font-semibold leading-tight tracking-tight text-charcoal mb-[50px] max-w-3xl">
+            Repenser les espaces dédiés aux nouveaux usages urbains
+          </h2>
+
+          {/* Image pleine largeur — parallax */}
+          <div className="mb-[50px]">
+            <ParallaxImage
+              src="/images/desk.jpg"
+              alt="Espace JÖRO Studio"
+              aspectClass="aspect-[16/7]"
+            />
           </div>
+
+          {/* Texte + lien */}
+          <div className="max-w-lg">
+            <p className="text-[16px] leading-relaxed text-charcoal-muted mb-8">
+              Chez Jöro Studio, nous transformons les espaces en lieux de vie authentiques,
+              conjuguant qualité haut de gamme, design contemporain et responsabilité
+              écologique. Notre studio a une vision claire : devenir leaders de la conception
+              d'espaces dédiés aux nouveaux usages urbains, bureaux, événementiel,
+              hôtellerie lifestyle.
+            </p>
+            <Link
+              href="/about"
+              className="text-[12px] font-medium uppercase tracking-widest text-charcoal-muted border-b border-charcoal-muted pb-1 hover:text-charcoal hover:border-charcoal transition-colors"
+            >
+              Découvrir notre histoire
+            </Link>
+          </div>
+
         </div>
       </section>
 
