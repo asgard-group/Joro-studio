@@ -79,7 +79,7 @@ export default function ServicesAll() {
         {/* Contenu DESIGN & BUILD — révélé par le split */}
         <div className="absolute inset-0 z-10 flex items-center justify-between px-4 sm:px-6 lg:px-[60px]">
           <div className="max-w-[480px]">
-            <h2 className="text-[48px] md:text-[64px] font-semibold uppercase leading-none tracking-tight text-[#F3F2ED] mb-6">
+            <h2 className="text-[48px] md:text-[64px] font-semibold uppercase leading-none tracking-tight text-[#F3F2ED] mb-6 whitespace-nowrap">
               DESIGN & BUILD
             </h2>
             <p className="max-w-[360px] text-[16px] leading-relaxed text-[#F3F2ED]/80 mb-8">

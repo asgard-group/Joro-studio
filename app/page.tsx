@@ -97,10 +97,11 @@ export default function HomePage() {
         <div className="sticky top-0 h-screen" style={{ zIndex: 60 }}>
           <ServiceReveal
             activeId="conseil-workplace"
-            title={"CONSEIL WORKPLACE\n& STRATÉGIE IMMOBILIÈRE"}
+            title={"CONSEIL WORKPLACE &\nSTRATÉGIE IMMOBILIÈRE"}
             description="Nous vous aidons à définir votre stratégie immobilière, optimiser vos espaces de travail et anticiper les nouveaux usages urbains."
             video="/vidéos/vecteezy_4k-animation-angled-view-of-modern-building-with-clear-blue_40552327.mp4"
             flipX
+            wide
           />
         </div>
       </div>

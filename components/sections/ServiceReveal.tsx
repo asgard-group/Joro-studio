@@ -20,9 +20,10 @@ interface Props {
   video?: string;
   flipX?: boolean;
   noFadeIn?: boolean;
+  wide?: boolean;
 }
 
-export default function ServiceReveal({ activeId, title, description, image, video, flipX, noFadeIn }: Props) {
+export default function ServiceReveal({ activeId, title, description, image, video, flipX, noFadeIn, wide }: Props) {
   const sectionRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -67,8 +68,8 @@ export default function ServiceReveal({ activeId, title, description, image, vid
         viewport={{ once: true, margin: "-10%" }}
       >
         {/* Gauche */}
-        <div className="max-w-[480px]">
-          <h2 className="text-[48px] md:text-[64px] font-semibold uppercase leading-none tracking-tight text-[#F3F2ED] mb-6 whitespace-pre-line">
+        <div className={wide ? "max-w-[680px]" : "max-w-[480px]"}>
+          <h2 className={`${wide ? 'text-[36px] md:text-[46px]' : 'text-[48px] md:text-[64px]'} font-semibold uppercase leading-none tracking-tight text-[#F3F2ED] mb-6 ${title.includes('\n') ? 'whitespace-pre-line' : 'whitespace-nowrap'}`}>
             {title}
           </h2>
           <p className="max-w-[360px] text-[16px] leading-relaxed text-[#F3F2ED]/80 mb-8">
