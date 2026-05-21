@@ -21,9 +21,10 @@ interface Props {
   flipX?: boolean;
   noFadeIn?: boolean;
   wide?: boolean;
+  overlayClass?: string;
 }
 
-export default function ServiceReveal({ activeId, title, description, image, video, flipX, noFadeIn, wide }: Props) {
+export default function ServiceReveal({ activeId, title, description, image, video, flipX, noFadeIn, wide, overlayClass }: Props) {
   const sectionRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -57,7 +58,7 @@ export default function ServiceReveal({ activeId, title, description, image, vid
           <Image src={image} alt={title} fill className="object-cover" sizes="100vw" />
         ) : null}
       </motion.div>
-      <div className="absolute inset-0 bg-[#1C2626]/50" />
+      {overlayClass && <div className={`absolute inset-0 ${overlayClass}`} />}
 
       {/* Contenu */}
       <motion.div
@@ -68,11 +69,11 @@ export default function ServiceReveal({ activeId, title, description, image, vid
         viewport={{ once: true, margin: "-10%" }}
       >
         {/* Gauche */}
-        <div className={wide ? "max-w-[680px]" : "max-w-[480px]"}>
-          <h2 className={`${wide ? 'text-[36px] md:text-[46px]' : 'text-[48px] md:text-[64px]'} font-semibold uppercase leading-none tracking-tight text-[#F3F2ED] mb-6 ${title.includes('\n') ? 'whitespace-pre-line' : 'whitespace-nowrap'}`}>
+        <div className={wide ? "max-w-[880px]" : "max-w-[480px]"}>
+          <h2 className={`text-[48px] md:text-[64px] font-semibold uppercase leading-none tracking-tight text-[#F3F2ED] mb-[40px] md:mb-[70px] ${title.includes('\n') ? 'whitespace-pre-line' : 'whitespace-nowrap'}`}>
             {title}
           </h2>
-          <p className="max-w-[360px] text-[16px] leading-relaxed text-[#F3F2ED]/80 mb-8">
+          <p className="max-w-[360px] text-[16px] leading-relaxed text-[#F3F2ED] mb-[25px]">
             {description}
           </p>
           <Link
@@ -86,14 +87,15 @@ export default function ServiceReveal({ activeId, title, description, image, vid
         {/* Droite — navigation verticale */}
         <div className="hidden md:flex flex-col items-end gap-[18px]">
           {serviceNav.map((item) => (
-            <span
+            <a
               key={item.id}
-              className={`text-[11px] font-medium uppercase tracking-[0.18em] transition-colors ${
+              href={`#${item.id}`}
+              className={`text-[11px] font-medium uppercase tracking-[0.18em] transition-colors hover:text-[#F3F2ED] ${
                 item.id === activeId ? "text-[#F3F2ED]" : "text-[#F3F2ED]/30"
               }`}
             >
               {item.label}
-            </span>
+            </a>
           ))}
         </div>
       </motion.div>

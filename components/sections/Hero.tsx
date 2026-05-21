@@ -53,7 +53,7 @@ export default function Hero({
             sizes="100vw"
           />
           {overlay && (
-            <div className="absolute inset-0 bg-[#1C2626]/50" />
+            <div className="absolute inset-0 bg-[#1C2626]/50 mix-blend-hard-light" />
           )}
         </motion.div>
       )}

@@ -78,7 +78,7 @@ export default function HomePage() {
       {/* Services — intro + 4 cartes dans le même conteneur sticky */}
       <ServicesAll />
       <div className="relative" style={{ height: "400vh", marginTop: "-100vh" }}>
-        <div className="sticky top-0 h-screen" style={{ zIndex: 40 }}>
+        <div id="amo" className="sticky top-0 h-screen" style={{ zIndex: 40 }}>
           <ServiceReveal
             activeId="amo"
             title="AMO"
@@ -86,15 +86,16 @@ export default function HomePage() {
             video="/vidéos/Composition 1.mp4"
           />
         </div>
-        <div className="sticky top-0 h-screen" style={{ zIndex: 50 }}>
+        <div id="marketing-suite" className="sticky top-0 h-screen" style={{ zIndex: 50 }}>
           <ServiceReveal
             activeId="marketing-suite"
             title="MARKETING SUITE"
             description="Des espaces de démonstration et de commercialisation pensés pour valoriser vos actifs immobiliers et séduire vos futurs acquéreurs."
             image="/images/Frame 207.png"
+            overlayClass="bg-[#1C2626]/20 mix-blend-color-burn"
           />
         </div>
-        <div className="sticky top-0 h-screen" style={{ zIndex: 60 }}>
+        <div id="conseil-workplace" className="sticky top-0 h-screen" style={{ zIndex: 60 }}>
           <ServiceReveal
             activeId="conseil-workplace"
             title={"CONSEIL WORKPLACE &\nSTRATÉGIE IMMOBILIÈRE"}
@@ -102,6 +103,7 @@ export default function HomePage() {
             video="/vidéos/vecteezy_4k-animation-angled-view-of-modern-building-with-clear-blue_40552327.mp4"
             flipX
             wide
+            overlayClass="bg-[#1C2626]/20 mix-blend-soft-light"
           />
         </div>
       </div>

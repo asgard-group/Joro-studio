@@ -50,15 +50,17 @@ export default function ServicesAll() {
 
   const contentOpacity = useTransform(
     scrollY,
-    [ranges.fadeInStart, ranges.fadeInEnd, ranges.fadeOutStart, ranges.fadeOutEnd],
-    [0, 1, 1, 0]
+    [ranges.fadeOutStart, ranges.fadeOutEnd],
+    [1, 0]
   );
+
 
   const leftX = useTransform(scrollY, [ranges.splitStart, ranges.splitEnd], ["0%", "-100%"]);
   const rightX = useTransform(scrollY, [ranges.splitStart, ranges.splitEnd], ["0%", "100%"]);
 
   return (
     <div ref={containerRef} className="relative" style={{ height: "420vh" }}>
+      <div id="design-build" style={{ position: "absolute", top: "calc(2.2 * 100vh)" }} />
       <div
         data-navbar-theme="dark"
         className="sticky top-0 h-screen overflow-hidden"
@@ -74,15 +76,15 @@ export default function ServicesAll() {
           loop
           playsInline
         />
-        <div className="absolute inset-0 z-0 bg-[#1C2626]/50" />
+        <div className="absolute inset-0 z-0 bg-[#1C2626]/20 mix-blend-color-dodge" />
 
         {/* Contenu DESIGN & BUILD — révélé par le split */}
         <div className="absolute inset-0 z-10 flex items-center justify-between px-4 sm:px-6 lg:px-[60px]">
           <div className="max-w-[480px]">
-            <h2 className="text-[48px] md:text-[64px] font-semibold uppercase leading-none tracking-tight text-[#F3F2ED] mb-6 whitespace-nowrap">
+            <h2 className="text-[48px] md:text-[64px] font-semibold uppercase leading-none tracking-tight text-[#F3F2ED] mb-[40px] md:mb-[70px] whitespace-nowrap">
               DESIGN & BUILD
             </h2>
-            <p className="max-w-[360px] text-[16px] leading-relaxed text-[#F3F2ED]/80 mb-8">
+            <p className="max-w-[360px] text-[16px] leading-relaxed text-[#F3F2ED] mb-[25px]">
               Nous transformons les espaces en lieux de vie authentiques,
               conjuguant qualité haut de gamme, design contemporain
               et responsabilité écologique.
@@ -96,14 +98,15 @@ export default function ServicesAll() {
           </div>
           <div className="hidden md:flex flex-col items-end gap-[18px]">
             {serviceNav.map((item) => (
-              <span
+              <a
                 key={item.id}
-                className={`text-[11px] font-medium uppercase tracking-[0.18em] ${
+                href={`#${item.id}`}
+                className={`text-[11px] font-medium uppercase tracking-[0.18em] transition-colors hover:text-[#F3F2ED] ${
                   item.id === "design-build" ? "text-[#F3F2ED]" : "text-[#F3F2ED]/30"
                 }`}
               >
                 {item.label}
-              </span>
+              </a>
             ))}
           </div>
         </div>
@@ -126,12 +129,7 @@ export default function ServicesAll() {
               Glisser pour découvrir
             </span>
             <div className="h-5" />
-            <motion.div
-              className="w-px bg-[#F3F2ED]/30 origin-top"
-              animate={{ scaleY: [0, 1, 0] }}
-              transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-              style={{ height: 40 }}
-            />
+            <div className="w-px bg-[#F3F2ED]/30" style={{ height: 40 }} />
           </div>
         </motion.div>
 

@@ -45,7 +45,7 @@ export default function Header() {
   return (
     <>
       <header
-        className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+        className={`fixed inset-x-0 top-0 z-[70] transition-all duration-300 ${
           scrolled ? "backdrop-blur-md" : ""
         }`}
       >
@@ -103,7 +103,7 @@ export default function Header() {
 
       {/* Full-screen overlay menu */}
       <div
-        className={`fixed inset-0 z-40 bg-charcoal transition-opacity duration-300 ${
+        className={`fixed inset-0 z-[65] bg-charcoal transition-opacity duration-300 ${
           menuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
       >
