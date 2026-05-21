@@ -5,10 +5,10 @@ import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
 
 const serviceNav = [
-  { label: "DESIGN & BUILD", href: "/services#design-build", active: true },
-  { label: "AMO", href: "/services#amo" },
-  { label: "MARKETING SUITE", href: "/services#marketing-suite" },
-  { label: "CONSEIL WORKPLACE & STRATÉGIE IMMOBILIÈRE", href: "/services#conseil-workplace" },
+  { label: "DESIGN & BUILD", id: "design-build" },
+  { label: "AMO", id: "amo" },
+  { label: "MARKETING SUITE", id: "marketing-suite" },
+  { label: "CONSEIL & STRATÉGIE", id: "conseil-workplace" },
 ];
 
 export default function ServicesAll() {
@@ -16,7 +16,6 @@ export default function ServicesAll() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const { scrollY } = useScroll();
 
-  const [cursor, setCursor] = useState({ x: 0, y: 0, visible: false });
 
   const [ranges, setRanges] = useState({
     fadeInStart: 99999, fadeInEnd: 109999,
@@ -59,16 +58,11 @@ export default function ServicesAll() {
   const rightX = useTransform(scrollY, [ranges.splitStart, ranges.splitEnd], ["0%", "100%"]);
 
   return (
-    <div ref={containerRef} className="relative" style={{ height: "320vh" }}>
+    <div ref={containerRef} className="relative" style={{ height: "420vh" }}>
       <div
         data-navbar-theme="dark"
         className="sticky top-0 h-screen overflow-hidden"
-        onMouseMove={(e) => {
-          const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-          setCursor({ x: e.clientX - rect.left, y: e.clientY - rect.top, visible: true });
-        }}
-        onMouseLeave={() => setCursor((c) => ({ ...c, visible: false }))}
-        style={{ cursor: "none" }}
+        style={{ zIndex: 35 }}
       >
         {/* Vidéo de fond */}
         <video
@@ -82,35 +76,35 @@ export default function ServicesAll() {
         />
         <div className="absolute inset-0 z-0 bg-[#1C2626]/50" />
 
-        {/* Contenu révélé — DESIGN & BUILD */}
-        <div className="absolute inset-0 z-10 flex flex-col">
-          <div className="pt-[100px] px-4 sm:px-6 lg:px-[60px]">
-            <nav className="flex flex-wrap gap-x-8 gap-y-2">
-              {serviceNav.map((item) => (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  className={`text-[11px] font-medium uppercase tracking-[0.18em] pb-1 transition-colors ${
-                    item.active
-                      ? "text-[#F3F2ED] border-b border-[#F3F2ED]"
-                      : "text-[#F3F2ED]/50 hover:text-[#F3F2ED]"
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
-          </div>
-
-          <div className="flex-1 flex flex-col justify-center px-4 sm:px-6 lg:px-[60px]">
+        {/* Contenu DESIGN & BUILD — révélé par le split */}
+        <div className="absolute inset-0 z-10 flex items-center justify-between px-4 sm:px-6 lg:px-[60px]">
+          <div className="max-w-[480px]">
             <h2 className="text-[48px] md:text-[64px] font-semibold uppercase leading-none tracking-tight text-[#F3F2ED] mb-6">
               DESIGN & BUILD
             </h2>
-            <p className="max-w-[340px] text-[16px] font-normal leading-relaxed text-[#F3F2ED]/80">
+            <p className="max-w-[360px] text-[16px] leading-relaxed text-[#F3F2ED]/80 mb-8">
               Nous transformons les espaces en lieux de vie authentiques,
               conjuguant qualité haut de gamme, design contemporain
               et responsabilité écologique.
             </p>
+            <Link
+              href="/services#design-build"
+              className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#F3F2ED] border-b border-[#F3F2ED]/50 pb-1 hover:border-[#F3F2ED] transition-colors"
+            >
+              Découvrir l'offre
+            </Link>
+          </div>
+          <div className="hidden md:flex flex-col items-end gap-[18px]">
+            {serviceNav.map((item) => (
+              <span
+                key={item.id}
+                className={`text-[11px] font-medium uppercase tracking-[0.18em] ${
+                  item.id === "design-build" ? "text-[#F3F2ED]" : "text-[#F3F2ED]/30"
+                }`}
+              >
+                {item.label}
+              </span>
+            ))}
           </div>
         </div>
 
@@ -153,20 +147,6 @@ export default function ServicesAll() {
           style={{ width: "50%", x: rightX }}
         />
 
-        {/* Curseur custom */}
-        <div
-          className="pointer-events-none absolute z-40 flex items-center gap-2 transition-opacity duration-200"
-          style={{
-            left: cursor.x,
-            top: cursor.y,
-            transform: "translate(-50%, -50%)",
-            opacity: cursor.visible ? 1 : 0,
-          }}
-        >
-          <span className="text-[#F3F2ED] text-[11px] font-medium uppercase tracking-[0.2em] whitespace-nowrap">
-            • Voir le service
-          </span>
-        </div>
       </div>
     </div>
   );

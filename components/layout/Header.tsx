@@ -50,7 +50,7 @@ export default function Header() {
         }`}
       >
         <div className="px-4 sm:px-6 md:px-10 lg:px-[60px]">
-          <div className="grid grid-cols-3 items-center py-3 sm:py-4 md:py-6 lg:py-[40px]">
+          <div className="grid grid-cols-3 items-center py-3 sm:py-4 md:py-6 lg:py-[20px]">
 
             {/* Left — hamburger */}
             <button
@@ -63,7 +63,7 @@ export default function Header() {
                 alt=""
                 width={28}
                 height={28}
-                className="w-5 h-5 md:w-6 md:h-6 lg:w-7 lg:h-7"
+                className="w-5 h-5 md:w-6 md:h-6"
                 style={{ filter: isDark ? 'brightness(0) invert(1) sepia(1) saturate(0) brightness(0.953)' : 'brightness(0) invert(1) sepia(1) hue-rotate(155deg) saturate(400%) brightness(0.14)' }}
               />
             </button>
@@ -80,7 +80,7 @@ export default function Header() {
                 width={320}
                 height={97}
                 priority
-                className="object-contain w-auto h-[35px] md:h-12 lg:h-14 xl:h-16"
+                className="object-contain w-auto h-[35px] md:h-[53px]"
                 style={{ maxWidth: "none", filter: isDark ? 'none' : 'brightness(0) invert(1) sepia(1) hue-rotate(155deg) saturate(400%) brightness(0.14)' }}
               />
             </Link>
@@ -92,7 +92,7 @@ export default function Header() {
                 alt=""
                 width={28}
                 height={28}
-                className="w-5 h-5 md:w-6 md:h-6 lg:w-7 lg:h-7"
+                className="w-5 h-5 md:w-6 md:h-6"
                 style={{ filter: isDark ? 'brightness(0) invert(1) sepia(1) saturate(0) brightness(0.953)' : 'brightness(0) invert(1) sepia(1) hue-rotate(155deg) saturate(400%) brightness(0.14)' }}
               />
             </button>

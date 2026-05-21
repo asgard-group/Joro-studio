@@ -1,15 +1,15 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
 
 const serviceNav = [
-  { id: "design-build", label: "DESIGN & BUILD", href: "/services#design-build" },
-  { id: "amo", label: "AMO", href: "/services#amo" },
-  { id: "marketing-suite", label: "MARKETING SUITE", href: "/services#marketing-suite" },
-  { id: "conseil-workplace", label: "CONSEIL WORKPLACE & STRATÉGIE IMMOBILIÈRE", href: "/services#conseil-workplace" },
+  { id: "design-build", label: "DESIGN & BUILD" },
+  { id: "amo", label: "AMO" },
+  { id: "marketing-suite", label: "MARKETING SUITE" },
+  { id: "conseil-workplace", label: "CONSEIL & STRATÉGIE" },
 ];
 
 interface Props {
@@ -19,10 +19,10 @@ interface Props {
   image?: string;
   video?: string;
   flipX?: boolean;
+  noFadeIn?: boolean;
 }
 
-export default function ServiceReveal({ activeId, title, description, image, video, flipX }: Props) {
-  const [cursor, setCursor] = useState({ x: 0, y: 0, visible: false });
+export default function ServiceReveal({ activeId, title, description, image, video, flipX, noFadeIn }: Props) {
   const sectionRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -36,13 +36,7 @@ export default function ServiceReveal({ activeId, title, description, image, vid
     <div
       ref={sectionRef}
       data-navbar-theme="dark"
-      className="relative h-screen overflow-hidden"
-      onMouseMove={(e) => {
-        const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-        setCursor({ x: e.clientX - rect.left, y: e.clientY - rect.top, visible: true });
-      }}
-      onMouseLeave={() => setCursor((c) => ({ ...c, visible: false }))}
-      style={{ cursor: "none" }}
+      className="relative h-full overflow-hidden"
     >
       {/* Fond parallaxe — vidéo ou image */}
       <motion.div
@@ -66,56 +60,43 @@ export default function ServiceReveal({ activeId, title, description, image, vid
 
       {/* Contenu */}
       <motion.div
-        className="absolute inset-0 z-10 flex flex-col"
-        initial={{ opacity: 0 }}
+        className="absolute inset-0 z-10 flex items-center justify-between px-4 sm:px-6 lg:px-[60px]"
+        initial={{ opacity: noFadeIn ? 1 : 0 }}
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         viewport={{ once: true, margin: "-10%" }}
       >
-        {/* Nav offres */}
-        <div className="pt-[100px] px-4 sm:px-6 lg:px-[60px]">
-          <nav className="flex flex-wrap gap-x-8 gap-y-2">
-            {serviceNav.map((item) => (
-              <Link
-                key={item.id}
-                href={item.href}
-                className={`text-[11px] font-medium uppercase tracking-[0.18em] pb-1 transition-colors ${
-                  item.id === activeId
-                    ? "text-[#F3F2ED] border-b border-[#F3F2ED]"
-                    : "text-[#F3F2ED]/50 hover:text-[#F3F2ED]"
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-        </div>
-
-        {/* Titre + description */}
-        <div className="flex-1 flex flex-col justify-center px-4 sm:px-6 lg:px-[60px]">
+        {/* Gauche */}
+        <div className="max-w-[480px]">
           <h2 className="text-[48px] md:text-[64px] font-semibold uppercase leading-none tracking-tight text-[#F3F2ED] mb-6 whitespace-pre-line">
             {title}
           </h2>
-          <p className="max-w-[340px] text-[16px] font-normal leading-relaxed text-[#F3F2ED]/80">
+          <p className="max-w-[360px] text-[16px] leading-relaxed text-[#F3F2ED]/80 mb-8">
             {description}
           </p>
+          <Link
+            href={`/services#${activeId}`}
+            className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#F3F2ED] border-b border-[#F3F2ED]/50 pb-1 hover:border-[#F3F2ED] transition-colors"
+          >
+            Découvrir l'offre
+          </Link>
+        </div>
+
+        {/* Droite — navigation verticale */}
+        <div className="hidden md:flex flex-col items-end gap-[18px]">
+          {serviceNav.map((item) => (
+            <span
+              key={item.id}
+              className={`text-[11px] font-medium uppercase tracking-[0.18em] transition-colors ${
+                item.id === activeId ? "text-[#F3F2ED]" : "text-[#F3F2ED]/30"
+              }`}
+            >
+              {item.label}
+            </span>
+          ))}
         </div>
       </motion.div>
 
-      {/* Curseur custom */}
-      <div
-        className="pointer-events-none absolute z-40 transition-opacity duration-200"
-        style={{
-          left: cursor.x,
-          top: cursor.y,
-          transform: "translate(-50%, -50%)",
-          opacity: cursor.visible ? 1 : 0,
-        }}
-      >
-        <span className="text-[#F3F2ED] text-[11px] font-medium uppercase tracking-[0.2em] whitespace-nowrap">
-          • Voir le service
-        </span>
-      </div>
     </div>
   );
 }
