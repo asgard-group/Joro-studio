@@ -46,19 +46,19 @@ export default function FeaturedWork({ items }: Props) {
           <button
             onClick={() => scrollTo("prev")}
             aria-label="Projet précédent"
-            className="w-9 h-9 border border-charcoal/25 flex items-center justify-center hover:bg-charcoal hover:text-cream transition-colors"
+            className="flex items-center justify-center hover:opacity-50 transition-opacity"
           >
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
-              <path d="M8.5 2L3.5 6.5l5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M15 19l-7-7 7-7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </button>
           <button
             onClick={() => scrollTo("next")}
             aria-label="Projet suivant"
-            className="w-9 h-9 border border-charcoal/25 flex items-center justify-center hover:bg-charcoal hover:text-cream transition-colors"
+            className="flex items-center justify-center hover:opacity-50 transition-opacity"
           >
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
-              <path d="M4.5 2l5 4.5-5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M9 5l7 7-7 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </button>
         </div>
@@ -87,13 +87,25 @@ export default function FeaturedWork({ items }: Props) {
                 sizes="(max-width: 767px) 85vw, (max-width: 1023px) 62vw, min(64vw, 926px)"
               />
             </div>
-            <div className="mt-5 lg:mt-[30px] pr-2">
-              <h3 className="text-[24px] font-medium text-charcoal leading-tight">
-                {item.title}
-              </h3>
-              <p className="text-[12px] font-medium uppercase tracking-[0.12em] text-charcoal/40 mt-1">
-                {item.location}
-              </p>
+            <div className="mt-5 lg:mt-[20px] flex items-center justify-between">
+              <div className="flex items-baseline gap-2">
+                <h3 className="text-[16px] font-medium text-charcoal leading-tight">
+                  {item.title}
+                </h3>
+                <span className="text-charcoal/30 text-[14px] font-light">•</span>
+                <p className="text-[16px] font-medium text-charcoal/40">
+                  {item.location}
+                </p>
+              </div>
+              {/* Voir plus — apparaît au survol */}
+              <div className="flex items-center gap-1.5 shrink-0">
+                <span className="text-[16px] font-medium tracking-wide text-charcoal opacity-0 -translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-out">
+                  Voir plus
+                </span>
+                <span className="opacity-0 -translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-out delay-75 flex items-center">
+                  <Image src="/images/icon/arrow-right-line.svg" alt="" width={20} height={20} />
+                </span>
+              </div>
             </div>
           </Link>
         ))}

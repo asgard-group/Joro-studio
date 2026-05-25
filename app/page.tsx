@@ -109,55 +109,9 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Values strip */}
-      <section className="border-y border-cream-300 bg-cream py-16">
-        <div className="container-site">
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              {
-                icon: "🌿",
-                title: "Engagement environnemental",
-                desc: "Réemploi, matériaux biosourcés, basse consommation.",
-              },
-              {
-                icon: "✦",
-                title: "Innovation",
-                desc: "Excellence opérationnelle et amélioration continue.",
-              },
-              {
-                icon: "◎",
-                title: "Customer focus",
-                desc: "Service personnalisé, transparent, adapté.",
-              },
-              {
-                icon: "⬡",
-                title: "Artisanat & Savoir-faire",
-                desc: "Techniques traditionnelles, talent artisanal.",
-              },
-            ].map((v) => (
-              <div key={v.title} className="flex flex-col gap-3">
-                <span className="text-2xl" role="img" aria-hidden>
-                  {v.icon}
-                </span>
-                <h3 className="font-semibold text-charcoal">{v.title}</h3>
-                <p className="text-sm leading-relaxed text-charcoal-muted">
-                  {v.desc}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <Testimonials />
 
-      <CTA
-        eyebrow="Parlons de votre projet"
-        title="Transformez vos espaces avec JÖRO Studio"
-        description="Que vous soyez asset manager, directeur immobilier ou prescripteur, notre équipe est disponible pour étudier votre projet."
-        primaryCta={{ label: "Prendre contact", href: "/contact" }}
-        secondaryCta={{ label: "Voir nos réalisations", href: "/work" }}
-      />
+      <CTA />
     </>
   );
 }
