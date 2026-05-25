@@ -3,7 +3,7 @@ import type { WorkItem } from "@/types";
 export const workItems: WorkItem[] = [
   {
     id: "opco-paris",
-    title: "Bureaux OPCO — Paris 9e",
+    title: "Bureaux OPCO",
     client: "Opérateur de compétences",
     location: "Paris, 9e arrondissement",
     year: "2024",
@@ -17,7 +17,7 @@ export const workItems: WorkItem[] = [
   },
   {
     id: "loft-vincennes",
-    title: "Espace lounge & café — Vincennes",
+    title: "Espace lounge & café",
     client: "Family office",
     location: "Vincennes",
     year: "2024",
@@ -31,7 +31,7 @@ export const workItems: WorkItem[] = [
   },
   {
     id: "hotel-boutique-lyon",
-    title: "Salle de réunion prestige — Lyon 2e",
+    title: "Salle de réunion prestige",
     client: "Investisseur privé",
     location: "Lyon, 2e arrondissement",
     year: "2023",
@@ -45,7 +45,7 @@ export const workItems: WorkItem[] = [
   },
   {
     id: "hub-coworking-bordeaux",
-    title: "Hub coworking — Bordeaux",
+    title: "Hub coworking",
     client: "Promoteur immobilier",
     location: "Bordeaux, Bastide",
     year: "2023",
@@ -59,7 +59,7 @@ export const workItems: WorkItem[] = [
   },
   {
     id: "siege-fintech-paris",
-    title: "Siège social — Fintech Series B",
+    title: "Siège social Fintech Series B",
     client: "Confidentiel",
     location: "Paris, 8e arrondissement",
     year: "2023",
@@ -73,7 +73,7 @@ export const workItems: WorkItem[] = [
   },
   {
     id: "salle-reunion-premium",
-    title: "Espace de travail hybride — Paris 16e",
+    title: "Espace de travail hybride",
     client: "Asset manager",
     location: "Paris, 16e arrondissement",
     year: "2022",
@@ -87,7 +87,7 @@ export const workItems: WorkItem[] = [
   },
   {
     id: "residence-cadres-nantes",
-    title: "Résidence cadres dirigeants — Nantes",
+    title: "Résidence cadres dirigeants",
     client: "Entreprise industrielle",
     location: "Nantes",
     year: "2022",
@@ -101,7 +101,7 @@ export const workItems: WorkItem[] = [
   },
   {
     id: "showroom-architecte",
-    title: "Showroom prescripteurs — Paris 3e",
+    title: "Showroom prescripteurs",
     client: "JÖRO",
     location: "Paris, 3e arrondissement",
     year: "2022",

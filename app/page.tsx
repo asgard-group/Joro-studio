@@ -1,15 +1,13 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { buildMetadata } from "@/lib/metadata";
 import Hero from "@/components/sections/Hero";
 import Testimonials from "@/components/sections/Testimonials";
 import CTA from "@/components/sections/CTA";
-import Card from "@/components/ui/Card";
 import ParallaxImage from "@/components/ui/ParallaxImage";
 import ServicesAll from "@/components/sections/ServicesAll";
 import ServiceReveal from "@/components/sections/ServiceReveal";
-import { services } from "@/data/services";
+import FeaturedWork from "@/components/sections/FeaturedWork";
 import { workItems } from "@/data/work";
 
 export const metadata: Metadata = buildMetadata({
@@ -77,7 +75,7 @@ export default function HomePage() {
 
       {/* Services — intro + 4 cartes dans le même conteneur sticky */}
       <ServicesAll />
-      <div className="relative" style={{ height: "400vh", marginTop: "-100vh" }}>
+      <div className="relative" style={{ height: "450vh", marginTop: "-100vh" }}>
         <div id="amo" className="sticky top-0 h-screen" style={{ zIndex: 40 }}>
           <ServiceReveal
             activeId="amo"
@@ -106,35 +104,10 @@ export default function HomePage() {
             overlayClass="bg-[#1C2626]/20 mix-blend-soft-light"
           />
         </div>
-      </div>
-
-      {/* Featured work */}
-      <section className="py-24">
-        <div className="container-site">
-          <div className="mb-16 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div className="max-w-xl">
-              <p className="label-eyebrow mb-4">Réalisations</p>
-              <h2 className="heading-section">Nos projets récents</h2>
-            </div>
-            <Link href="/work" className="btn-ghost shrink-0">
-              Voir toutes les réalisations →
-            </Link>
-          </div>
-          <div className="grid gap-8 md:grid-cols-3">
-            {featuredWork.map((item) => (
-              <Card
-                key={item.id}
-                title={item.title}
-                subtitle={item.category}
-                description={item.description}
-                image={item.coverImage}
-                href={`/work/${item.id}`}
-                tags={[item.location, item.year]}
-              />
-            ))}
-          </div>
+        <div className="sticky top-0" style={{ zIndex: 65 }}>
+          <FeaturedWork items={featuredWork} />
         </div>
-      </section>
+      </div>
 
       {/* Values strip */}
       <section className="border-y border-cream-300 bg-cream py-16">
