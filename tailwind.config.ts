@@ -42,6 +42,9 @@ const config: Config = {
       letterSpacing: {
         widest: "0.2em",
       },
+      screens: {
+        "3xl": "1441px",
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
