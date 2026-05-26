@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { event } from "@/lib/gtag";
 
 interface CTAProps {
   eyebrow?: string;
@@ -45,7 +48,11 @@ export default function CTA({
             </p>
           )}
           <div className="flex flex-wrap items-center justify-center gap-4">
-            <Link href={primaryCta.href} className="btn-primary">
+            <Link
+              href={primaryCta.href}
+              className="btn-primary"
+              onClick={() => event("cta_click", { label: primaryCta.label })}
+            >
               {primaryCta.label}
             </Link>
             {secondaryCta && (

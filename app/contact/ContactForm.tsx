@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Input, Textarea } from "@/components/ui/Input";
+import { event } from "@/lib/gtag";
 
 type Status = "idle" | "sending" | "success" | "error";
 
@@ -16,6 +17,7 @@ export default function ContactForm() {
     try {
       await new Promise((res) => setTimeout(res, 1000)); // placeholder
       setStatus("success");
+      event("form_submit", { form_name: "contact" });
     } catch {
       setStatus("error");
     }

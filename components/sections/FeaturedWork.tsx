@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { WorkItem } from "@/types";
+import { event } from "@/lib/gtag";
 
 interface Props {
   items: WorkItem[];
@@ -77,6 +78,7 @@ export default function FeaturedWork({ items }: Props) {
             href={`/work/${item.id}`}
             className="shrink-0 group w-[85vw] md:w-[62vw] lg:w-[64vw] lg:max-w-[926px]"
             style={{ scrollSnapAlign: "start" }}
+            onClick={() => event("portfolio_click", { project: item.title })}
           >
             <div className="relative w-full overflow-hidden aspect-square lg:aspect-[926/487]">
               <Image
