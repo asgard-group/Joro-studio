@@ -149,12 +149,7 @@ export default function WorkDetailPage({ params }: Props) {
         </section>
       )}
 
-      <CTA
-        eyebrow="Votre tour"
-        title="Créons votre prochain espace"
-        primaryCta={{ label: "Nous contacter", href: "/contact" }}
-        secondaryCta={{ label: "Toutes les réalisations", href: "/work" }}
-      />
+      <CTA />
     </>
   );
 }

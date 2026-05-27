@@ -234,13 +234,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <CTA
-        eyebrow="Travaillons ensemble"
-        title="Votre projet mérite l'excellence"
-        description="Discutons de vos ambitions et voyons comment JÖRO Studio peut vous accompagner dans la création de votre espace idéal."
-        primaryCta={{ label: "Prendre contact", href: "/contact" }}
-        secondaryCta={{ label: "Nos réalisations", href: "/work" }}
-      />
+      <CTA />
     </>
   );
 }

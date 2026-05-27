@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { WorkItem } from "@/types";
-import { event } from "@/lib/gtag";
 
 interface Props {
   items: WorkItem[];

@@ -145,12 +145,7 @@ export default function BlogPage() {
         </div>
       </section>
 
-      <CTA
-        eyebrow="Un projet en tête ?"
-        title="Transformons vos espaces ensemble"
-        primaryCta={{ label: "Prendre contact", href: "/contact" }}
-        secondaryCta={{ label: "Nos réalisations", href: "/work" }}
-      />
+      <CTA />
     </>
   );
 }
