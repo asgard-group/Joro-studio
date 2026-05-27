@@ -8,6 +8,7 @@ export const testimonials: Testimonial[] = [
     author: "Sophie Marchand",
     role: "Directrice Générale",
     company: "Groupe Meridian",
+    photo: "/images/work/portfolio-3.jpg",
   },
   {
     id: "2",
@@ -16,6 +17,7 @@ export const testimonials: Testimonial[] = [
     author: "Thomas Levesque",
     role: "Associé",
     company: "Capital Partners Fund",
+    photo: "/images/work/portfolio-4.jpg",
   },
   {
     id: "3",
@@ -23,6 +25,16 @@ export const testimonials: Testimonial[] = [
       "Un partenaire de confiance pour nos actifs tertiaires premium. Leur approche du réemploi et des matériaux responsables a séduit nos investisseurs institutionnels tout autant que nos locataires.",
     author: "Claire Bonnet",
     role: "Asset Manager",
-    company: "Investisseur institutionnel (confidentiel)",
+    company: "Investisseur institutionnel",
+    photo: "/images/work/portfolio-6.jpg",
+  },
+  {
+    id: "4",
+    quote:
+      "Une équipe qui comprend les enjeux de l'immobilier d'entreprise. Le résultat final reflète parfaitement notre positionnement premium tout en respectant nos contraintes budgétaires.",
+    author: "Marc Dupont",
+    role: "Directeur Immobilier",
+    company: "Logis France",
+    photo: "/images/work/portfolio-2.jpg",
   },
 ];

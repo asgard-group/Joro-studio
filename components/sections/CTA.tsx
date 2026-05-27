@@ -1,75 +1,145 @@
 "use client";
 
+import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
-import { event } from "@/lib/gtag";
+import Image from "next/image";
+import { motion, useScroll, useTransform } from "framer-motion";
 
-interface CTAProps {
-  eyebrow?: string;
-  title: string;
-  description?: string;
-  primaryCta: { label: string; href: string };
-  secondaryCta?: { label: string; href: string };
-  dark?: boolean;
-}
+export default function CTA() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollY } = useScroll();
 
-export default function CTA({
-  eyebrow,
-  title,
-  description,
-  primaryCta,
-  secondaryCta,
-  dark = true,
-}: CTAProps) {
+  const [ranges, setRanges] = useState({
+    glisserFadeStart: 99999,
+    glisserFadeEnd:   109999,
+    contentFadeStart: 109999,
+    contentFadeEnd:   119999,
+    titleMoveStart:   99999,
+    titleMoveEnd:     119999,
+  });
+
+  useEffect(() => {
+    const calc = () => {
+      if (!containerRef.current) return;
+      const top = containerRef.current.offsetTop;
+      const vh = window.innerHeight;
+      setRanges({
+        glisserFadeStart: top,
+        glisserFadeEnd:   top + vh * 0.3,
+        contentFadeStart: top + vh * 0.35,
+        contentFadeEnd:   top + vh * 0.8,
+        titleMoveStart:   top,
+        titleMoveEnd:     top + vh * 0.8,
+      });
+    };
+    calc();
+    window.addEventListener("resize", calc);
+    return () => window.removeEventListener("resize", calc);
+  }, []);
+
+  const glisserOpacity = useTransform(
+    scrollY,
+    [ranges.glisserFadeStart, ranges.glisserFadeEnd],
+    [1, 0]
+  );
+
+  const contentOpacity = useTransform(
+    scrollY,
+    [ranges.contentFadeStart, ranges.contentFadeEnd],
+    [0, 1]
+  );
+
+  // Title moves from center (0) up toward top (~-27vh)
+  const titleY = useTransform(
+    scrollY,
+    [ranges.titleMoveStart, ranges.titleMoveEnd],
+    ["0vh", "-27vh"]
+  );
+
   return (
-    <section
-      className={`py-24 ${
-        dark ? "bg-charcoal text-cream" : "bg-cream-200 text-charcoal"
-      }`}
-    >
-      <div className="container-site">
-        <div className="mx-auto max-w-2xl text-center">
-          {eyebrow && (
-            <p
-              className={`label-eyebrow mb-4 ${
-                dark ? "text-terracotta-200" : ""
-              }`}
-            >
-              {eyebrow}
+    <div ref={containerRef} style={{ height: "200vh" }}>
+      <div
+        data-navbar-theme="dark"
+        className="sticky top-0 h-screen overflow-hidden"
+      >
+        {/* Background image */}
+        <Image
+          src="/images/background CTA.png"
+          alt=""
+          fill
+          className="object-cover"
+          priority
+        />
+
+        {/* Title block — centered, moves up on scroll */}
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center pointer-events-none">
+          <motion.div style={{ y: titleY }}>
+            <p className="text-[11px] font-medium uppercase tracking-[0.25em] text-[#F3F2ED]/50 mb-3 md:mb-5">
+              Nos contacter
             </p>
-          )}
-          <h2 className="heading-section mb-6">{title}</h2>
-          {description && (
-            <p
-              className={`mb-10 text-lg leading-relaxed ${
-                dark ? "text-cream/70" : "text-charcoal-muted"
-              }`}
-            >
-              {description}
-            </p>
-          )}
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            <Link
-              href={primaryCta.href}
-              className="btn-primary"
-              onClick={() => event("cta_click", { label: primaryCta.label })}
-            >
-              {primaryCta.label}
-            </Link>
-            {secondaryCta && (
-              <Link
-                href={secondaryCta.href}
-                className={`btn-outline ${
-                  dark
-                    ? "border-cream text-cream hover:bg-cream hover:text-charcoal"
-                    : ""
-                }`}
-              >
-                {secondaryCta.label}
-              </Link>
-            )}
-          </div>
+            <h2 className="text-[30px] md:text-[46px] font-semibold leading-tight text-[#F3F2ED] max-w-2xl">
+              Des espaces conçus<br />avec du savoir-faire
+            </h2>
+          </motion.div>
         </div>
+
+        {/* Glisser pour découvrir — fades out on scroll */}
+        <motion.div
+          className="absolute bottom-0 inset-x-0 z-10 flex flex-col items-center pointer-events-none"
+          style={{ opacity: glisserOpacity }}
+        >
+          <span className="text-[11px] font-medium uppercase tracking-[0.25em] text-[#F3F2ED]/50">
+            Glisser pour découvrir
+          </span>
+          <div className="h-5" />
+          <div className="w-px bg-[#F3F2ED]/30" style={{ height: 40 }} />
+        </motion.div>
+
+        {/* Two-column content — fades in after glisser disappears */}
+        <motion.div
+          className="absolute inset-x-0 bottom-[28vh] z-10 px-4 sm:px-6 lg:px-[60px]"
+          style={{ opacity: contentOpacity }}
+        >
+          <div className="relative grid grid-cols-1 sm:grid-cols-2">
+            {/* Vertical separator */}
+            <div className="hidden sm:block absolute left-1/2 top-0 bottom-0 w-px bg-[#F3F2ED]/20" />
+
+            {/* Left — Prendre rendez-vous */}
+            <div className="flex flex-col items-center text-center sm:pr-12 lg:pr-20 mb-10 sm:mb-0">
+              <p className="text-[20px] md:text-[24px] lg:text-[26px] font-normal text-[#F3F2ED] leading-snug mb-8 max-w-xs">
+                Tenez vous aux courants<br />des derniers projets
+              </p>
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center px-8 py-4 bg-[#F3F2ED] text-charcoal text-[11px] font-medium uppercase tracking-[0.18em] hover:bg-[#F3F2ED]/90 transition-colors"
+              >
+                Prendre rendez-vous
+              </Link>
+            </div>
+
+            {/* Right — Newsletter */}
+            <div className="flex flex-col items-center text-center sm:pl-12 lg:pl-20">
+              <p className="text-[20px] md:text-[24px] lg:text-[26px] font-normal text-[#F3F2ED] leading-snug mb-8 max-w-xs">
+                Tenez vous aux courants<br />des derniers projets
+              </p>
+              <div className="flex w-full max-w-sm">
+                <input
+                  type="email"
+                  placeholder="E-mail"
+                  className="flex-1 min-w-0 bg-transparent border border-[#F3F2ED]/40 px-4 py-4 text-[13px] text-[#F3F2ED] placeholder-[#F3F2ED]/40 focus:outline-none focus:border-[#F3F2ED]/70 transition-colors"
+                />
+                <button
+                  type="submit"
+                  className="shrink-0 bg-[#F3F2ED] text-charcoal px-5 text-[11px] font-medium uppercase tracking-[0.18em] hover:bg-[#F3F2ED]/90 transition-colors"
+                >
+                  Rejoindre
+                </button>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
       </div>
-    </section>
+    </div>
   );
 }

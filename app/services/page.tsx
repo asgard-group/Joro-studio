@@ -111,13 +111,7 @@ export default function ServicesPage() {
 
       <FAQ items={faqItems} />
 
-      <CTA
-        eyebrow="Passons à l'action"
-        title="Quel espace souhaitez-vous créer ?"
-        description="Notre équipe étudie votre projet et vous propose un premier diagnostic sous 72h."
-        primaryCta={{ label: "Demander un diagnostic", href: "/contact" }}
-        secondaryCta={{ label: "Voir nos réalisations", href: "/work" }}
-      />
+      <CTA />
     </>
   );
 }

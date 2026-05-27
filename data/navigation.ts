@@ -8,20 +8,18 @@ export const navItems: NavItem[] = [
 
 export const footerLinks = {
   offres: [
-    { label: "JÖRO Office", href: "/services#office" },
-    { label: "JÖRO Meeting", href: "/services#meeting" },
-    { label: "JÖRO Living", href: "/services#living" },
-    { label: "JÖRO Studio", href: "/services#studio" },
+    { label: "Design & Build", href: "/services#design-build" },
+    { label: "AMO", href: "/services#amo" },
+    { label: "Marketing Suite", href: "/services#marketing-suite" },
+    { label: "Conseil & Stratégie Immobilière", href: "/services#conseil-workplace" },
   ],
   studio: [
-    { label: "À propos", href: "/about" },
-    { label: "Réalisations", href: "/work" },
-    { label: "Blog & Insights", href: "/blog" },
+    { label: "Notre histoire", href: "/about" },
+    { label: "Nos réalisations", href: "/work" },
     { label: "Contact", href: "/contact" },
   ],
   legal: [
+    { label: "Politique de cookies", href: "/privacy#cookies" },
     { label: "Mentions légales", href: "/privacy" },
-    { label: "CGU", href: "/terms" },
-    { label: "Politique RGPD", href: "/privacy#rgpd" },
   ],
 };

@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
+
 import { motion, useScroll, useTransform } from "framer-motion";
 
 const serviceNav = [
@@ -87,15 +88,20 @@ export default function ServiceReveal({ activeId, title, description, image, vid
         {/* Droite — navigation verticale */}
         <div className="hidden md:flex flex-col items-end gap-[18px]">
           {serviceNav.map((item) => (
-            <a
+            <button
               key={item.id}
-              href={`#${item.id}`}
-              className={`text-[11px] font-medium uppercase tracking-[0.18em] transition-colors hover:text-[#F3F2ED] ${
+              onClick={() => {
+                const el = document.getElementById(item.id);
+                if (!el) return;
+                const top = el.getBoundingClientRect().top + window.scrollY;
+                window.scrollTo({ top, behavior: "smooth" });
+              }}
+              className={`text-[14px] font-medium uppercase tracking-[0.18em] transition-colors hover:text-[#F3F2ED] ${
                 item.id === activeId ? "text-[#F3F2ED]" : "text-[#F3F2ED]/30"
               }`}
             >
               {item.label}
-            </a>
+            </button>
           ))}
         </div>
       </motion.div>

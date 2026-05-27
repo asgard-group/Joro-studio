@@ -101,13 +101,7 @@ export default function WorkPage() {
         </div>
       </section>
 
-      <CTA
-        eyebrow="Votre projet"
-        title="Créons votre prochaine réalisation"
-        description="Partagez-nous votre projet. Nous vous proposons un premier retour sous 72h."
-        primaryCta={{ label: "Nous contacter", href: "/contact" }}
-        secondaryCta={{ label: "Nos offres", href: "/services" }}
-      />
+      <CTA />
     </>
   );
 }
