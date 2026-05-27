@@ -4,10 +4,10 @@ import { buildMetadata } from "@/lib/metadata";
 import Hero from "@/components/sections/Hero";
 import Testimonials from "@/components/sections/Testimonials";
 import CTA from "@/components/sections/CTA";
-import ParallaxImage from "@/components/ui/ParallaxImage";
 import ServicesAll from "@/components/sections/ServicesAll";
 import ServiceReveal from "@/components/sections/ServiceReveal";
 import FeaturedWork from "@/components/sections/FeaturedWork";
+import ServicesAccordion from "@/components/sections/ServicesAccordion";
 import { workItems } from "@/data/work";
 
 export const metadata: Metadata = buildMetadata({
@@ -31,30 +31,24 @@ export default function HomePage() {
       />
 
       {/* Notre vision */}
-      <section className="pt-[200px] pb-[200px] bg-[#F3F2ED] overflow-hidden">
-        <div className="container-site">
-          <div className="md:pl-[22%]">
-            <p className="text-[12px] font-medium uppercase tracking-widest text-charcoal mb-4">
-              Notre vision
-            </p>
-            <h2 className="text-[46px] font-semibold leading-tight tracking-tight text-charcoal mb-[40px] md:mb-[50px]">
-              Repenser les espaces dédiés aux<br />nouveaux usages urbains
-            </h2>
-          </div>
-        </div>
+      <section className="pt-[120px] pb-[160px] lg:pt-[160px] lg:pb-[200px] bg-[#F3F2ED] overflow-hidden">
 
-        {/* Photo — bord gauche aligné sur le heading, bord droit touche l'écran */}
-        <div className="mb-[40px] md:mb-[50px] pl-4 sm:pl-6 md:pl-[calc(0.84rem+22%)] lg:pl-[calc(1.12rem+22%)] xl:pl-[calc((100vw-80rem)/2+18.72rem)]">
-          <ParallaxImage
-            src="/images/desk.jpg"
-            alt="Espace JÖRO Studio"
-            aspectClass="aspect-[2/1]"
-          />
-        </div>
+        {/* Bloc texte : titre gauche / texte+lien droite sur desktop */}
+        <div className="px-4 sm:px-6 lg:px-[60px] mb-[60px] lg:mb-[145px]">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_550px] lg:gap-16">
 
-        <div className="container-site">
-          <div className="md:pl-[22%]">
-            <div className="max-w-[380px]">
+            {/* Gauche — eyebrow + titre */}
+            <div>
+              <p className="text-[12px] font-medium uppercase tracking-widest text-charcoal mb-4">
+                Notre vision
+              </p>
+              <h2 className="text-[36px] sm:text-[42px] lg:text-[46px] font-semibold leading-tight tracking-tight text-charcoal">
+                Une réflexion architecturale<br />au cœur de chaque projet
+              </h2>
+            </div>
+
+            {/* Droite — texte + lien, aligné sous le tag "Notre vision" */}
+            <div className="mt-10 lg:mt-0 lg:pt-[34px] flex flex-col justify-start">
               <p className="text-[16px] leading-relaxed text-charcoal-muted mb-8">
                 Chez Jöro Studio, nous transformons les espaces en lieux de vie authentiques,
                 conjuguant qualité haut de gamme, design contemporain et responsabilité
@@ -64,19 +58,29 @@ export default function HomePage() {
               </p>
               <Link
                 href="/about"
-                className="text-[12px] font-medium uppercase tracking-widest text-charcoal-muted border-b border-charcoal-muted pb-1 hover:text-charcoal hover:border-charcoal transition-colors"
+                className="text-[12px] font-medium uppercase tracking-widest text-charcoal-muted border-b border-charcoal-muted pb-1 hover:text-charcoal hover:border-charcoal transition-colors self-start"
               >
                 Découvrir notre histoire
               </Link>
             </div>
+
           </div>
         </div>
+
+        {/* Photo + Accordion services */}
+        <ServicesAccordion />
+
       </section>
 
       {/* Services — intro + 4 cartes dans le même conteneur sticky */}
       <ServicesAll />
-      <div className="relative" style={{ height: "450vh", marginTop: "-100vh" }}>
-        <div id="amo" className="sticky top-0 h-screen" style={{ zIndex: 40 }}>
+      <div className="relative" style={{ height: "350vh", marginTop: "-100vh" }}>
+        {/* Ancres absolues — non-sticky, position réelle dans le document */}
+        <div id="amo" style={{ position: "absolute", top: 0 }} />
+        <div id="marketing-suite" style={{ position: "absolute", top: "100vh" }} />
+        <div id="conseil-workplace" style={{ position: "absolute", top: "200vh" }} />
+
+        <div className="sticky top-0 h-screen" style={{ zIndex: 40 }}>
           <ServiceReveal
             activeId="amo"
             title="AMO"
@@ -84,7 +88,7 @@ export default function HomePage() {
             video="/vidéos/Composition 1.mp4"
           />
         </div>
-        <div id="marketing-suite" className="sticky top-0 h-screen" style={{ zIndex: 50 }}>
+        <div className="sticky top-0 h-screen" style={{ zIndex: 50 }}>
           <ServiceReveal
             activeId="marketing-suite"
             title="MARKETING SUITE"
@@ -93,7 +97,7 @@ export default function HomePage() {
             overlayClass="bg-[#1C2626]/20 mix-blend-color-burn"
           />
         </div>
-        <div id="conseil-workplace" className="sticky top-0 h-screen" style={{ zIndex: 60 }}>
+        <div className="sticky top-0 h-screen" style={{ zIndex: 60 }}>
           <ServiceReveal
             activeId="conseil-workplace"
             title={"CONSEIL WORKPLACE &\nSTRATÉGIE IMMOBILIÈRE"}
@@ -104,10 +108,9 @@ export default function HomePage() {
             overlayClass="bg-[#1C2626]/20 mix-blend-soft-light"
           />
         </div>
-        <div className="sticky top-0" style={{ zIndex: 65 }}>
-          <FeaturedWork items={featuredWork} />
-        </div>
       </div>
+
+      <FeaturedWork items={featuredWork} />
 
       <Testimonials />
 

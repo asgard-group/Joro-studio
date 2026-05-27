@@ -2,7 +2,7 @@
 
 import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
 
 const serviceNav = [
   { label: "DESIGN & BUILD", id: "design-build" },
@@ -11,16 +11,37 @@ const serviceNav = [
   { label: "CONSEIL & STRATÉGIE", id: "conseil-workplace" },
 ];
 
+// ─── Animated character ─────────────────────────────────────────
+const INTRO_TEXT = "Notre vision est de repenser les\nespaces dédiés aux nouveaux\nusages urbains";
+
+interface AnimatedCharProps {
+  char: string;
+  progress: MotionValue<number>;
+  start: number;
+  end: number;
+}
+
+function AnimatedChar({ char, progress, start, end }: AnimatedCharProps) {
+  const color = useTransform(
+    progress,
+    [start, end],
+    ["rgba(186, 182, 170, 0.3)", "rgba(255, 255, 255, 1)"]
+  );
+  if (char === "\n") return <br />;
+  return <motion.span style={{ color }}>{char}</motion.span>;
+}
+
+// ─── ServicesAll ─────────────────────────────────────────────────
 export default function ServicesAll() {
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const { scrollY } = useScroll();
 
-
   const [ranges, setRanges] = useState({
     fadeInStart: 99999, fadeInEnd: 109999,
     fadeOutStart: 109999, fadeOutEnd: 119999,
     splitStart: 119999, splitEnd: 129999,
+    textRevealStart: 99999, textRevealEnd: 109999,
   });
 
   useEffect(() => {
@@ -35,6 +56,8 @@ export default function ServicesAll() {
         fadeOutEnd: top + vh * 0.9,
         splitStart: top + vh * 0.9,
         splitEnd: top + vh * 2.2,
+        textRevealStart: top - vh * 0.3,
+        textRevealEnd: top + vh * 0.2,
       });
     };
     calc();
@@ -54,9 +77,18 @@ export default function ServicesAll() {
     [1, 0]
   );
 
-
   const leftX = useTransform(scrollY, [ranges.splitStart, ranges.splitEnd], ["0%", "-100%"]);
   const rightX = useTransform(scrollY, [ranges.splitStart, ranges.splitEnd], ["0%", "100%"]);
+
+  // Text reveal: 0 → 1 over the visible window
+  const textProgress = useTransform(
+    scrollY,
+    [ranges.textRevealStart, ranges.textRevealEnd],
+    [0, 1]
+  );
+
+  const chars = INTRO_TEXT.split("");
+  const n = chars.length;
 
   return (
     <div ref={containerRef} className="relative" style={{ height: "420vh" }}>
@@ -98,15 +130,20 @@ export default function ServicesAll() {
           </div>
           <div className="hidden md:flex flex-col items-end gap-[18px]">
             {serviceNav.map((item) => (
-              <a
+              <button
                 key={item.id}
-                href={`#${item.id}`}
-                className={`text-[11px] font-medium uppercase tracking-[0.18em] transition-colors hover:text-[#F3F2ED] ${
+                onClick={() => {
+                  const el = document.getElementById(item.id);
+                  if (!el) return;
+                  const top = el.getBoundingClientRect().top + window.scrollY;
+                  window.scrollTo({ top, behavior: "smooth" });
+                }}
+                className={`text-[14px] font-medium uppercase tracking-[0.18em] transition-colors hover:text-[#F3F2ED] ${
                   item.id === "design-build" ? "text-[#F3F2ED]" : "text-[#F3F2ED]/30"
                 }`}
               >
                 {item.label}
-              </a>
+              </button>
             ))}
           </div>
         </div>
@@ -120,8 +157,16 @@ export default function ServicesAll() {
             <p className="text-[11px] font-medium uppercase tracking-[0.25em] text-[#F3F2ED]/50 mb-3 md:mb-5">
               Nos offres
             </p>
-            <h2 className="text-[30px] md:text-[46px] font-semibold leading-tight text-[#F3F2ED] max-w-2xl">
-              Des espaces conçus<br />avec du savoir-faire
+            <h2 className="text-[30px] md:text-[46px] font-semibold leading-tight max-w-3xl">
+              {chars.map((char, i) => (
+                <AnimatedChar
+                  key={i}
+                  char={char}
+                  progress={textProgress}
+                  start={i / n}
+                  end={Math.min((i + 1) / n, 1)}
+                />
+              ))}
             </h2>
           </div>
           <div className="flex flex-col items-center pb-0">
