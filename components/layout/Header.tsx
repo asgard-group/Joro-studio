@@ -8,10 +8,9 @@ import ComingSoonLink from "@/components/ui/ComingSoonLink";
 
 interface NavContentProps {
   dark: boolean;
-  onOpenMenu: () => void;
 }
 
-function NavContent({ dark, onOpenMenu }: NavContentProps) {
+function NavContent({ dark }: NavContentProps) {
   return (
     <div className="px-4 sm:px-6 md:px-10 lg:px-[60px]">
       <div className="grid grid-cols-3 items-center py-3 sm:py-4 md:py-6 lg:py-[20px]">
@@ -112,7 +111,7 @@ export default function Header() {
     <>
       {/* 1. Static header — absolute overlay on the hero, scrolls with the page */}
       <header className="absolute inset-x-0 top-0 z-[70]">
-        <NavContent dark={true} onOpenMenu={() => setMenuOpen(true)} />
+        <NavContent dark={true} />
       </header>
 
       {/* 2. Fixed navbar — appears on scroll-up past hero, with backdrop blur */}
@@ -121,7 +120,7 @@ export default function Header() {
           fixedHidden ? "-translate-y-full" : "translate-y-0"
         }`}
       >
-        <NavContent dark={isDark} onOpenMenu={() => setMenuOpen(true)} />
+        <NavContent dark={isDark} />
       </div>
 
       {/* Full-screen overlay menu */}
