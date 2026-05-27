@@ -1,6 +1,7 @@
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 import { footerLinks } from "@/data/navigation";
+import ComingSoonLink from "@/components/ui/ComingSoonLink";
 
 export default function Footer() {
   return (
@@ -29,12 +30,9 @@ export default function Footer() {
             <ul className="flex flex-col gap-3">
               {footerLinks.offres.map((link) => (
                 <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-[11px] font-medium uppercase tracking-[0.12em] text-cream transition-colors hover:text-cream/60"
-                  >
+                  <ComingSoonLink className="text-[11px] font-medium uppercase tracking-[0.12em] text-cream/50">
                     {link.label}
-                  </Link>
+                  </ComingSoonLink>
                 </li>
               ))}
             </ul>
@@ -48,12 +46,9 @@ export default function Footer() {
             <ul className="flex flex-col gap-3">
               {footerLinks.studio.map((link) => (
                 <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-[11px] font-medium uppercase tracking-[0.12em] text-cream transition-colors hover:text-cream/60"
-                  >
+                  <ComingSoonLink className="text-[11px] font-medium uppercase tracking-[0.12em] text-cream/50">
                     {link.label}
-                  </Link>
+                  </ComingSoonLink>
                 </li>
               ))}
             </ul>
@@ -108,12 +103,9 @@ export default function Footer() {
             <ul className="flex flex-col gap-2">
               {footerLinks.legal.map((link) => (
                 <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-[12px] text-cream/40 transition-colors hover:text-cream/70"
-                  >
+                  <ComingSoonLink className="text-[12px] text-cream/25">
                     {link.label}
-                  </Link>
+                  </ComingSoonLink>
                 </li>
               ))}
             </ul>

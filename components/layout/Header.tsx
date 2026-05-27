@@ -4,11 +4,65 @@ import Link from "next/link";
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import { navItems } from "@/data/navigation";
+import ComingSoonLink from "@/components/ui/ComingSoonLink";
+
+interface NavContentProps {
+  dark: boolean;
+  onOpenMenu: () => void;
+}
+
+function NavContent({ dark, onOpenMenu }: NavContentProps) {
+  return (
+    <div className="px-4 sm:px-6 md:px-10 lg:px-[60px]">
+      <div className="grid grid-cols-3 items-center py-3 sm:py-4 md:py-6 lg:py-[20px]">
+        {/* Left — hamburger */}
+        <ComingSoonLink className="justify-self-start p-1">
+          <Image
+            src="/images/icon/menu-outline.svg"
+            alt=""
+            width={28}
+            height={28}
+            className="w-5 h-5 md:w-6 md:h-6"
+            style={{ filter: dark ? 'brightness(0) invert(1) sepia(1) saturate(0) brightness(0.953)' : 'brightness(0) invert(1) sepia(1) hue-rotate(155deg) saturate(400%) brightness(0.14)' }}
+          />
+        </ComingSoonLink>
+
+        {/* Center — logo */}
+        <Link
+          href="/"
+          className="justify-self-center"
+          aria-label="JÖRO Studio — retour à l'accueil"
+        >
+          <Image
+            src="/images/logos/joro-studio-ẢCHITECTURE-TRAVAUX@300x 2.png"
+            alt="JÖRO Studio — Architecture & Travaux"
+            width={320}
+            height={97}
+            priority
+            className="object-contain w-auto h-[35px] md:h-[53px]"
+            style={{ maxWidth: "none", filter: dark ? 'none' : 'brightness(0) invert(1) sepia(1) hue-rotate(155deg) saturate(400%) brightness(0.14)' }}
+          />
+        </Link>
+
+        {/* Right — search */}
+        <ComingSoonLink className="justify-self-end p-1">
+          <Image
+            src="/images/icon/search-line.svg"
+            alt=""
+            width={28}
+            height={28}
+            className="w-5 h-5 md:w-6 md:h-6"
+            style={{ filter: dark ? 'brightness(0) invert(1) sepia(1) saturate(0) brightness(0.953)' : 'brightness(0) invert(1) sepia(1) hue-rotate(155deg) saturate(400%) brightness(0.14)' }}
+          />
+        </ComingSoonLink>
+      </div>
+    </div>
+  );
+}
 
 export default function Header() {
   const [isDark, setIsDark] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
-  // fixedHidden: controls the fixed navbar (true = off-screen)
   const [fixedHidden, setFixedHidden] = useState(true);
   const lastYRef = React.useRef(0);
 
@@ -20,18 +74,14 @@ export default function Header() {
       const heroHeight = window.innerHeight;
 
       if (currentY <= heroHeight) {
-        // Dans le hero : fixed navbar toujours cachée
         setFixedHidden(true);
       } else if (currentY > lastYRef.current + 5) {
-        // Scroll vers le bas après le hero : cacher
         setFixedHidden(true);
       } else if (currentY < lastYRef.current - 5) {
-        // Scroll vers le haut après le hero : révéler
         setFixedHidden(false);
       }
       lastYRef.current = currentY;
 
-      // Couleur adaptative pour la fixed navbar
       const midNavbar = 40;
       const sections = document.querySelectorAll("[data-navbar-theme]");
       let theme = "light";
@@ -58,63 +108,11 @@ export default function Header() {
     return () => { document.body.style.overflow = ""; };
   }, [menuOpen]);
 
-  // Shared nav content — reused in both static and fixed headers
-  const NavContent = ({ dark }: { dark: boolean }) => (
-    <div className="px-4 sm:px-6 md:px-10 lg:px-[60px]">
-      <div className="grid grid-cols-3 items-center py-3 sm:py-4 md:py-6 lg:py-[20px]">
-        {/* Left — hamburger */}
-        <button
-          onClick={() => setMenuOpen(true)}
-          aria-label="Ouvrir le menu"
-          className="justify-self-start p-1"
-        >
-          <Image
-            src="/images/icon/menu-outline.svg"
-            alt=""
-            width={28}
-            height={28}
-            className="w-5 h-5 md:w-6 md:h-6"
-            style={{ filter: dark ? 'brightness(0) invert(1) sepia(1) saturate(0) brightness(0.953)' : 'brightness(0) invert(1) sepia(1) hue-rotate(155deg) saturate(400%) brightness(0.14)' }}
-          />
-        </button>
-
-        {/* Center — logo */}
-        <Link
-          href="/"
-          className="justify-self-center"
-          aria-label="JÖRO Studio — retour à l'accueil"
-        >
-          <Image
-            src="/images/logos/joro-studio-ẢCHITECTURE-TRAVAUX@300x 2.png"
-            alt="JÖRO Studio — Architecture & Travaux"
-            width={320}
-            height={97}
-            priority
-            className="object-contain w-auto h-[35px] md:h-[53px]"
-            style={{ maxWidth: "none", filter: dark ? 'none' : 'brightness(0) invert(1) sepia(1) hue-rotate(155deg) saturate(400%) brightness(0.14)' }}
-          />
-        </Link>
-
-        {/* Right — search */}
-        <button aria-label="Rechercher" className="justify-self-end p-1">
-          <Image
-            src="/images/icon/search-line.svg"
-            alt=""
-            width={28}
-            height={28}
-            className="w-5 h-5 md:w-6 md:h-6"
-            style={{ filter: dark ? 'brightness(0) invert(1) sepia(1) saturate(0) brightness(0.953)' : 'brightness(0) invert(1) sepia(1) hue-rotate(155deg) saturate(400%) brightness(0.14)' }}
-          />
-        </button>
-      </div>
-    </div>
-  );
-
   return (
     <>
       {/* 1. Static header — absolute overlay on the hero, scrolls with the page */}
       <header className="absolute inset-x-0 top-0 z-[70]">
-        <NavContent dark={true} />
+        <NavContent dark={true} onOpenMenu={() => setMenuOpen(true)} />
       </header>
 
       {/* 2. Fixed navbar — appears on scroll-up past hero, with backdrop blur */}
@@ -123,7 +121,7 @@ export default function Header() {
           fixedHidden ? "-translate-y-full" : "translate-y-0"
         }`}
       >
-        <NavContent dark={isDark} />
+        <NavContent dark={isDark} onOpenMenu={() => setMenuOpen(true)} />
       </div>
 
       {/* Full-screen overlay menu */}
@@ -132,7 +130,6 @@ export default function Header() {
           menuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
       >
-        {/* Close button */}
         <button
           onClick={() => setMenuOpen(false)}
           aria-label="Fermer le menu"
@@ -149,24 +146,26 @@ export default function Header() {
             <ul className="flex flex-col gap-5 sm:gap-6 lg:gap-8">
               {navItems.map((item) => (
                 <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    onClick={() => setMenuOpen(false)}
-                    className="font-serif text-3xl text-cream transition-colors hover:text-terracotta sm:text-4xl lg:text-5xl"
-                  >
-                    {item.label}
-                  </Link>
+                  {item.href === "/" ? (
+                    <Link
+                      href={item.href}
+                      onClick={() => setMenuOpen(false)}
+                      className="font-serif text-3xl text-cream transition-colors hover:text-terracotta sm:text-4xl lg:text-5xl"
+                    >
+                      {item.label}
+                    </Link>
+                  ) : (
+                    <ComingSoonLink className="font-serif text-3xl text-cream/40 sm:text-4xl lg:text-5xl">
+                      {item.label}
+                    </ComingSoonLink>
+                  )}
                 </li>
               ))}
             </ul>
             <div className="mt-10 lg:mt-12">
-              <Link
-                href="/contact"
-                onClick={() => setMenuOpen(false)}
-                className="btn-primary"
-              >
+              <ComingSoonLink className="btn-primary inline-block">
                 Nous contacter
-              </Link>
+              </ComingSoonLink>
             </div>
           </nav>
         </div>

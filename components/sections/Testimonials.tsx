@@ -69,7 +69,7 @@ export default function Testimonials() {
   }, [progress, handlePct, scrollToProgress]);
 
   return (
-    <section data-navbar-theme="light" className="bg-[#F3F2ED] pt-[120px] pb-[80px] lg:pt-[160px] lg:pb-[100px]">
+    <section data-navbar-theme="light" className="bg-[#F3F2ED] pt-[120px] pb-[80px] lg:pt-[100px] lg:pb-[200px]">
 
       {/* Header */}
       <div className="text-center px-4 mb-[60px] lg:mb-[80px]">

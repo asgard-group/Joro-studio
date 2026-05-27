@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import ComingSoonLink from "@/components/ui/ComingSoonLink";
 
 import { motion, useScroll, useTransform } from "framer-motion";
 
@@ -77,12 +77,9 @@ export default function ServiceReveal({ activeId, title, description, image, vid
           <p className="max-w-[360px] text-[16px] leading-relaxed text-[#F3F2ED] mb-[25px]">
             {description}
           </p>
-          <Link
-            href={`/services#${activeId}`}
-            className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#F3F2ED] border-b border-[#F3F2ED]/50 pb-1 hover:border-[#F3F2ED] transition-colors"
-          >
+          <ComingSoonLink className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#F3F2ED] border-b border-[#F3F2ED]/50 pb-1">
             Découvrir l'offre
-          </Link>
+          </ComingSoonLink>
         </div>
 
         {/* Droite — navigation verticale */}

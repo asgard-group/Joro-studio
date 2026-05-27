@@ -8,7 +8,7 @@ export const testimonials: Testimonial[] = [
     author: "Sophie Marchand",
     role: "Directrice Générale",
     company: "Groupe Meridian",
-    photo: "/images/work/portfolio-3.jpg",
+    photo: "/images/390597989.jpg",
   },
   {
     id: "2",
@@ -17,7 +17,7 @@ export const testimonials: Testimonial[] = [
     author: "Thomas Levesque",
     role: "Associé",
     company: "Capital Partners Fund",
-    photo: "/images/work/portfolio-4.jpg",
+    photo: "/images/f11417fe33c2cc32ef0ecc7b3c1c059e.jpg",
   },
   {
     id: "3",
@@ -26,7 +26,7 @@ export const testimonials: Testimonial[] = [
     author: "Claire Bonnet",
     role: "Asset Manager",
     company: "Investisseur institutionnel",
-    photo: "/images/work/portfolio-6.jpg",
+    photo: "/images/Frame 275.png",
   },
   {
     id: "4",
