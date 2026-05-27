@@ -1,8 +1,8 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import Link from "next/link";
 import Image from "next/image";
+import ComingSoonLink from "@/components/ui/ComingSoonLink";
 import { motion, useScroll, useTransform } from "framer-motion";
 
 export default function CTA() {
@@ -49,7 +49,6 @@ export default function CTA() {
     [0, 1]
   );
 
-  // Title moves from center (0) up toward top (~-27vh)
   const titleY = useTransform(
     scrollY,
     [ranges.titleMoveStart, ranges.titleMoveEnd],
@@ -109,12 +108,9 @@ export default function CTA() {
               <p className="text-[20px] md:text-[24px] lg:text-[26px] font-normal text-[#F3F2ED] leading-snug mb-8 max-w-xs">
                 Tenez vous aux courants<br />des derniers projets
               </p>
-              <Link
-                href="/contact"
-                className="inline-flex items-center justify-center px-8 py-4 bg-[#F3F2ED] text-charcoal text-[11px] font-medium uppercase tracking-[0.18em] hover:bg-[#F3F2ED]/90 transition-colors"
-              >
+              <ComingSoonLink className="inline-flex items-center justify-center px-8 py-4 bg-[#F3F2ED] text-charcoal text-[11px] font-medium uppercase tracking-[0.18em]">
                 Prendre rendez-vous
-              </Link>
+              </ComingSoonLink>
             </div>
 
             {/* Right — Newsletter */}

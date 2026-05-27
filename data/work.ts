@@ -11,7 +11,7 @@ export const workItems: WorkItem[] = [
     tags: ["Bureaux", "Réemploi", "500 m²"],
     description:
       "Réhabilitation complète d'un plateau de 500 m² au cœur de Paris. Mobilier en réemploi, matériaux biosourcés et éclairage basse consommation pour un espace de travail inspirant et responsable.",
-    coverImage: "/images/work/portfolio-3.jpg",
+    coverImage: "/images/e16f619b3311b7a68a5b105a61a6c1b2.jpg",
     featured: true,
     caseStudy: true,
   },
@@ -25,7 +25,7 @@ export const workItems: WorkItem[] = [
     tags: ["Résidentiel", "Lounge", "320 m²"],
     description:
       "Transformation d'un rez-de-chaussée en espace lounge premium. Bar en carreaux terracotta, arches en pierre apparente et éclairage d'ambiance pour un lieu de vie unique.",
-    coverImage: "/images/work/portfolio-1.jpg",
+    coverImage: "/images/f11417fe33c2cc32ef0ecc7b3c1c059e.jpg",
     featured: true,
     caseStudy: true,
   },
@@ -39,7 +39,7 @@ export const workItems: WorkItem[] = [
     tags: ["Salle de réunion", "Prestige", "80 m²"],
     description:
       "Salle de réunion de prestige pour un actif premium en centre-ville. Mobilier en chêne massif, chaises de conférence haut de gamme et œuvre murale sur mesure.",
-    coverImage: "/images/work/portfolio-4.jpg",
+    coverImage: "/images/d5922a576de3b3a01d41ba83817842ef-1.jpg",
     featured: true,
     caseStudy: true,
   },

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import Link from "next/link";
+import ComingSoonLink from "@/components/ui/ComingSoonLink";
 import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
 
 const serviceNav = [
@@ -121,12 +121,9 @@ export default function ServicesAll() {
               conjuguant qualité haut de gamme, design contemporain
               et responsabilité écologique.
             </p>
-            <Link
-              href="/services#design-build"
-              className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#F3F2ED] border-b border-[#F3F2ED]/50 pb-1 hover:border-[#F3F2ED] transition-colors"
-            >
+            <ComingSoonLink className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#F3F2ED] border-b border-[#F3F2ED]/50 pb-1">
               Découvrir l'offre
-            </Link>
+            </ComingSoonLink>
           </div>
           <div className="hidden md:flex flex-col items-end gap-[18px]">
             {serviceNav.map((item) => (

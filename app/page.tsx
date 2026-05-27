@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import ComingSoonLink from "@/components/ui/ComingSoonLink";
 import { buildMetadata } from "@/lib/metadata";
 import Hero from "@/components/sections/Hero";
 import Testimonials from "@/components/sections/Testimonials";
@@ -56,12 +56,9 @@ export default function HomePage() {
                 d'espaces dédiés aux nouveaux usages urbains, bureaux, événementiel,
                 hôtellerie lifestyle.
               </p>
-              <Link
-                href="/about"
-                className="text-[12px] font-medium uppercase tracking-widest text-charcoal-muted border-b border-charcoal-muted pb-1 hover:text-charcoal hover:border-charcoal transition-colors self-start"
-              >
+              <ComingSoonLink className="text-[12px] font-medium uppercase tracking-widest text-charcoal-muted border-b border-charcoal-muted pb-1 self-start">
                 Découvrir notre histoire
-              </Link>
+              </ComingSoonLink>
             </div>
 
           </div>
