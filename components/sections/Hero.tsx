@@ -8,6 +8,7 @@ interface HeroProps {
   eyebrow?: string;
   title: React.ReactNode;
   image?: string;
+  video?: string;
   overlay?: boolean;
   scrollCta?: string;
 }
@@ -16,6 +17,7 @@ export default function Hero({
   eyebrow,
   title,
   image,
+  video,
   overlay = true,
   scrollCta = "Découvrir notre studio",
 }: HeroProps) {
@@ -32,44 +34,94 @@ export default function Hero({
   // "Découvrir" — opacité basée sur scrollY global (pixels absolus) pour rester à 0 sur tout le site
   const { scrollY } = useScroll();
   const [vh, setVh] = useState(800);
-  useEffect(() => { setVh(window.innerHeight); }, []);
+  useEffect(() => {
+    const update = () => setVh(window.innerHeight);
+    update();
+    window.addEventListener("resize", update);
+    window.addEventListener("orientationchange", update);
+    return () => {
+      window.removeEventListener("resize", update);
+      window.removeEventListener("orientationchange", update);
+    };
+  }, []);
   const ctaOpacity = useTransform(scrollY, [vh * 0.15, vh * 0.30], [1, 0]);
 
   return (
     <section ref={sectionRef} data-navbar-theme="dark" className="relative h-screen overflow-hidden">
 
-      {/* Background image — parallax via Framer Motion */}
-      {image && (
+      {/* Background — vidéo ou image, avec parallax via Framer Motion */}
+      {(video || image) ? (
         <motion.div
           className="absolute inset-0 scale-110"
           style={{ y: imageY }}
         >
-          <Image
-            src={image}
-            alt=""
-            fill
-            priority
-            className="object-cover"
-            sizes="100vw"
-          />
+          {video ? (
+            <video
+              src={video}
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+          ) : (
+            <Image
+              src={image!}
+              alt=""
+              fill
+              priority
+              className="object-cover"
+              sizes="100vw"
+            />
+          )}
           {overlay && (
-            <div className="absolute inset-0 bg-[#1C2626]/50 mix-blend-hard-light" />
+            <div
+              className={`absolute inset-0 mix-blend-hard-light ${
+                video ? "bg-[#1C2626]/30" : "bg-[#1C2626]/50"
+              }`}
+            />
           )}
         </motion.div>
+      ) : (
+        <div className="absolute inset-0 bg-cream" />
       )}
-      {!image && <div className="absolute inset-0 bg-cream" />}
 
       {/* Label + Title — ancré à 30vh du bas */}
       <div className="absolute inset-x-0 z-10 bottom-[30vh]">
-        <div className="flex flex-col gap-1 min-[1440px]:gap-2 px-6 lg:px-[40px] min-[1920px]:px-[185px] min-[1920px]:max-w-[1550px]">
-          {eyebrow && (
-            <p className="text-[12px] md:text-[15px] min-[1440px]:text-[20px] font-medium uppercase tracking-widest text-[#F3F2ED]">
-              {eyebrow}
-            </p>
-          )}
-          <h1 className="text-[26px] md:text-[50px] lg:text-[57px] min-[1440px]:text-[80px] font-semibold uppercase leading-none tracking-tight text-[#F3F2ED]">
-            {title}
-          </h1>
+        <div
+          className="w-full px-[20px] min-[840px]:px-[40px] min-[1200px]:px-[60px] inline-flex flex-col items-start justify-start"
+        >
+          <div
+            className="self-stretch flex flex-col items-start justify-start"
+            style={{ paddingBottom: 0.63 }}
+          >
+            {eyebrow && (
+              <p
+                className="uppercase text-[12px] min-[840px]:text-[18px] min-[1200px]:text-[20px]"
+                style={{
+                  color: '#F3F2ED',
+                  fontWeight: 500,
+                  lineHeight: '100%',
+                  letterSpacing: '0.05em',
+                  wordWrap: 'break-word',
+                }}
+              >
+                {eyebrow}
+              </p>
+            )}
+            <h1
+              className="uppercase text-[clamp(28px,6.857vw,48px)] min-[700px]:text-[48px] min-[840px]:text-[56px] min-[1200px]:text-[80px]"
+              style={{
+                color: '#F3F2ED',
+                fontWeight: 600,
+                lineHeight: '115%',
+                letterSpacing: '0.02em',
+                wordWrap: 'break-word',
+              }}
+            >
+              {title}
+            </h1>
+          </div>
         </div>
       </div>
 
