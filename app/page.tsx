@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import ComingSoonLink from "@/components/ui/ComingSoonLink";
+import Image from "next/image";
 import { buildMetadata } from "@/lib/metadata";
 import Hero from "@/components/sections/Hero";
 import Testimonials from "@/components/sections/Testimonials";
@@ -7,7 +7,6 @@ import CTA from "@/components/sections/CTA";
 import ServicesAll from "@/components/sections/ServicesAll";
 import ServiceReveal from "@/components/sections/ServiceReveal";
 import FeaturedWork from "@/components/sections/FeaturedWork";
-import ServicesAccordion from "@/components/sections/ServicesAccordion";
 import { workItems } from "@/data/work";
 
 export const metadata: Metadata = buildMetadata({
@@ -30,42 +29,87 @@ export default function HomePage() {
         scrollCta="Découvrir notre studio"
       />
 
-      {/* Notre vision */}
-      <section className="pt-[120px] pb-[160px] lg:pt-[160px] lg:pb-[200px] bg-[#F3F2ED] overflow-hidden">
+      {/* À propos — Notre histoire */}
+      <section className="py-[80px] lg:py-[200px] bg-[#F3F2ED] overflow-hidden">
 
-        {/* Bloc texte : titre gauche / texte+lien droite sur desktop */}
-        <div className="px-4 sm:px-6 lg:px-[60px] mb-[60px] lg:mb-[145px]">
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_550px] lg:gap-16">
+        {/* Bloc texte : titre gauche / description droite */}
+        <div className="px-4 sm:px-6 lg:px-[60px]">
+          <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-16">
 
-            {/* Gauche — eyebrow + titre */}
-            <div>
-              <p className="text-[12px] font-medium uppercase tracking-widest text-charcoal mb-4">
-                Notre vision
-              </p>
-              <h2 className="text-[36px] sm:text-[42px] lg:text-[46px] font-semibold leading-tight tracking-tight text-charcoal">
-                Une réflexion architecturale<br />au cœur de chaque projet
+            {/* Gauche — label pill + titre */}
+            <div className="flex flex-col" style={{ gap: 10 }}>
+              <div
+                className="inline-flex self-start items-center justify-center"
+                style={{
+                  paddingLeft: 20,
+                  paddingRight: 20,
+                  paddingTop: 5,
+                  paddingBottom: 5,
+                  borderRadius: 10000,
+                  outline: "1px black solid",
+                  outlineOffset: "-1px",
+                }}
+              >
+                <span
+                  style={{
+                    textAlign: "center",
+                    color: "#1C2626",
+                    fontSize: 12,
+                    fontWeight: 500,
+                  }}
+                >
+                  NOTRE HISTOIRE
+                </span>
+              </div>
+              <h2
+                className="font-semibold tracking-tight text-[40px] sm:text-[48px] lg:text-[64px]"
+                style={{ color: "#1C2626", lineHeight: "130%" }}
+              >
+                Une réflexion architecturale
               </h2>
             </div>
 
-            {/* Droite — texte + lien, aligné sous le tag "Notre vision" */}
-            <div className="mt-10 lg:mt-0 lg:pt-[34px] flex flex-col justify-start">
-              <p className="text-[16px] leading-relaxed text-charcoal-muted mb-8">
-                Chez Jöro Studio, nous transformons les espaces en lieux de vie authentiques,
-                conjuguant qualité haut de gamme, design contemporain et responsabilité
-                écologique. Notre studio a une vision claire : devenir leaders de la conception
-                d'espaces dédiés aux nouveaux usages urbains, bureaux, événementiel,
-                hôtellerie lifestyle.
+            {/* Droite — description */}
+            <div className="mt-10 lg:mt-0">
+              <p
+                className="font-medium"
+                style={{
+                  color: "#1C2626",
+                  fontSize: 16,
+                  lineHeight: "26px",
+                }}
+              >
+                Notre studio est né d&rsquo;un constat simple : il est aujourd&rsquo;hui difficile de concevoir des espaces qui allient innovation, élégance et respect de l&rsquo;environnement. Pour répondre à ce défi, nous avons créé JORO Studio, une approche nouvelle de l&rsquo;architecture et des travaux où chaque projet est pensé dans les moindres détails afin de conjuguer qualité haut de gamme, design contemporain et responsabilité écologique.
               </p>
-              <ComingSoonLink className="text-[12px] font-medium uppercase tracking-widest text-charcoal-muted border-b border-charcoal-muted pb-1 self-start">
-                Découvrir notre histoire
-              </ComingSoonLink>
             </div>
 
           </div>
         </div>
 
-        {/* Photo + Accordion services */}
-        <ServicesAccordion />
+        {/* Bloc 2 photos — pas de padding latéral, gap 30px */}
+        <div
+          className="mt-[60px] lg:mt-[150px] grid grid-cols-1 md:grid-cols-2"
+          style={{ gap: 30 }}
+        >
+          <div className="relative aspect-[4/3] lg:aspect-[16/10] overflow-hidden">
+            <Image
+              src="/images/1.png"
+              alt="JÖRO Office — salle de réunion"
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
+          </div>
+          <div className="relative aspect-[4/3] lg:aspect-[16/10] overflow-hidden">
+            <Image
+              src="/images/f11417fe33c2cc32ef0ecc7b3c1c059e.jpg"
+              alt="JÖRO Studio — espace lounge"
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
+          </div>
+        </div>
 
       </section>
 
