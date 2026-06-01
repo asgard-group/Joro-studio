@@ -45,6 +45,13 @@ const config: Config = {
       screens: {
         "3xl": "1441px",
       },
+      // Hiérarchie d'empilement centralisée (cf. components/layout/Header.tsx, CookieBanner.tsx)
+      zIndex: {
+        banner: "50",   // Bandeau cookies — base de l'overlay
+        tooltip: "50",  // Tooltips "À venir" (ComingSoonLink, FeaturedWork)
+        navbar: "70",   // Headers absolu + fixe
+        modal: "80",    // Menu plein-écran
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":

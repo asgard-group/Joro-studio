@@ -37,7 +37,7 @@ interface Props {
 
 interface CaptionBarProps {
   title: string;
-  subtitle: string;
+  subtitle?: string;
 }
 
 function CaptionBar({ title, subtitle }: CaptionBarProps) {
@@ -48,12 +48,14 @@ function CaptionBar({ title, subtitle }: CaptionBarProps) {
       >
         {title}
       </span>
-      <span
-        style={{ fontSize: "14px", fontWeight: 500, letterSpacing: "0.06em", color: "#1C2626" }}
-        className="shrink-0 ml-4"
-      >
-        {subtitle}
-      </span>
+      {subtitle && (
+        <span
+          style={{ fontSize: "14px", fontWeight: 500, letterSpacing: "0.06em", color: "#1C2626" }}
+          className="shrink-0 ml-4"
+        >
+          {subtitle}
+        </span>
+      )}
     </div>
   );
 }
@@ -100,7 +102,6 @@ export default function FeaturedWork({ items }: Props) {
               <ParallaxImg src={item0.coverImage} alt={item0.title} sizes="73vw" height="576px" />
               <CaptionBar
                 title={item0.title}
-                subtitle={`${item0.location} • ${item0.tags[0] ?? ""}`}
               />
             </>
           )}
@@ -135,7 +136,6 @@ export default function FeaturedWork({ items }: Props) {
             <ParallaxImg src={item0.coverImage} alt={item0.title} sizes="100vw" height="auto" className="aspect-[4/3]" />
             <CaptionBar
               title={item0.title}
-              subtitle={`${item0.location} • ${item0.tags[0] ?? ""}`}
             />
           </>
         )}
@@ -153,7 +153,6 @@ export default function FeaturedWork({ items }: Props) {
               <ParallaxImg src={item1.coverImage} alt={item1.title} sizes="47vw" height="743px" />
               <CaptionBar
                 title={item1.title}
-                subtitle={`${item1.location} • ${item1.tags[0] ?? ""}`}
               />
             </>
           )}
@@ -189,7 +188,6 @@ export default function FeaturedWork({ items }: Props) {
               </ParallaxImg>
               <CaptionBar
                 title={item2.title}
-                subtitle={`${item2.location} • ${item2.tags[0] ?? ""}`}
               />
             </>
           )}
@@ -203,7 +201,6 @@ export default function FeaturedWork({ items }: Props) {
             <ParallaxImg src={item1.coverImage} alt={item1.title} sizes="100vw" height="auto" className="aspect-[4/3]" />
             <CaptionBar
               title={item1.title}
-              subtitle={`${item1.location} • ${item1.tags[0] ?? ""}`}
             />
           </div>
         )}
@@ -227,7 +224,6 @@ export default function FeaturedWork({ items }: Props) {
             </ParallaxImg>
             <CaptionBar
               title={item2.title}
-              subtitle={`${item2.location} • ${item2.tags[0] ?? ""}`}
             />
           </div>
         )}
