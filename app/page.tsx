@@ -30,83 +30,73 @@ export default function HomePage() {
       />
 
       {/* À propos — Notre histoire */}
-      <section className="py-[80px] lg:py-[200px] bg-[#F3F2ED] overflow-hidden">
+      <section className="py-[80px] min-[1020px]:py-[200px] bg-[#F3F2ED] overflow-hidden">
 
-        {/* Bloc texte : titre gauche / description droite */}
-        <div className="px-4 sm:px-6 lg:px-[60px]">
-          <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-16">
-
-            {/* Gauche — label pill + titre */}
-            <div className="flex flex-col" style={{ gap: 10 }}>
-              <div
-                className="inline-flex self-start items-center justify-center"
+        {/* ROW TEXTES — sous 1020 : stack avec gap 50px / ≥1020 : 2 colonnes gap 30px */}
+        <div className="flex flex-col gap-[50px] min-[1020px]:flex-row min-[1020px]:gap-[30px]">
+          {/* Texte gauche : pill + titre — padding 20 sous 840, 40 entre 840-1439, 60 ≥1440 */}
+          <div className="flex-1 min-[1440px]:flex-[1129_1_0%] min-[1020px]:max-w-[1129px] flex flex-col pl-[20px] min-[840px]:pl-[40px] min-[1440px]:pl-[60px]" style={{ gap: 10 }}>
+            <div
+              className="inline-flex self-start items-center justify-center"
+              style={{
+                paddingLeft: 19,
+                paddingRight: 19,
+                paddingTop: 5,
+                paddingBottom: 5,
+                borderRadius: 10000,
+                outline: "1px black solid",
+                outlineOffset: "-1px",
+              }}
+            >
+              <span
                 style={{
-                  paddingLeft: 20,
-                  paddingRight: 20,
-                  paddingTop: 5,
-                  paddingBottom: 5,
-                  borderRadius: 10000,
-                  outline: "1px black solid",
-                  outlineOffset: "-1px",
-                }}
-              >
-                <span
-                  style={{
-                    textAlign: "center",
-                    color: "#1C2626",
-                    fontSize: 12,
-                    fontWeight: 500,
-                  }}
-                >
-                  NOTRE HISTOIRE
-                </span>
-              </div>
-              <h2
-                className="font-semibold tracking-tight text-[40px] sm:text-[48px] lg:text-[64px]"
-                style={{ color: "#1C2626", lineHeight: "130%" }}
-              >
-                Une réflexion architecturale
-              </h2>
-            </div>
-
-            {/* Droite — description */}
-            <div className="mt-10 lg:mt-0">
-              <p
-                className="font-medium"
-                style={{
+                  textAlign: "center",
                   color: "#1C2626",
-                  fontSize: 16,
-                  lineHeight: "26px",
+                  fontSize: 12,
+                  fontWeight: 500,
                 }}
               >
-                Notre studio est né d&rsquo;un constat simple : il est aujourd&rsquo;hui difficile de concevoir des espaces qui allient innovation, élégance et respect de l&rsquo;environnement. Pour répondre à ce défi, nous avons créé JORO Studio, une approche nouvelle de l&rsquo;architecture et des travaux où chaque projet est pensé dans les moindres détails afin de conjuguer qualité haut de gamme, design contemporain et responsabilité écologique.
-              </p>
+                NOTRE HISTOIRE
+              </span>
             </div>
-
+            <h2
+              className="font-semibold tracking-tight text-[46px] min-[1020px]:text-[64px]"
+              style={{ color: "#1C2626", lineHeight: "130%" }}
+            >
+              Une réflexion <br className="hidden min-[1020px]:inline min-[1601px]:hidden" />architecturale
+            </h2>
+          </div>
+          {/* Texte droite : description — padding 20 sous 840, 40 entre 840-1019, puis pl-0 + pr 40/60 ≥1020. Bornes 660/760 ≥1440 */}
+          <div className="flex-1 min-[1440px]:flex-[761_1_0%] min-[1440px]:min-w-[660px] min-[1440px]:max-w-[760px] min-[1020px]:pt-[36px] px-[20px] min-[840px]:px-[40px] min-[1020px]:pl-0 min-[1020px]:pr-[40px] min-[1440px]:pr-[60px]">
+            <p
+              className="font-medium text-[14px] leading-[24px] min-[1020px]:text-[16px] min-[1020px]:leading-[26px]"
+              style={{ color: "#1C2626" }}
+            >
+              Notre studio est né d&rsquo;un constat simple : il est aujourd&rsquo;hui difficile de concevoir des espaces qui allient innovation, élégance et respect de l&rsquo;environnement. Pour répondre à ce défi, nous avons créé JORO Studio, une approche nouvelle de l&rsquo;architecture et des travaux où chaque projet est pensé dans les moindres détails afin de conjuguer qualité haut de gamme, design contemporain et responsabilité écologique.
+            </p>
           </div>
         </div>
 
-        {/* Bloc 2 photos — pas de padding latéral, gap 30px */}
-        <div
-          className="mt-[60px] lg:mt-[150px] grid grid-cols-1 md:grid-cols-2"
-          style={{ gap: 30 }}
-        >
-          <div className="relative aspect-[4/3] lg:aspect-[16/10] overflow-hidden">
+        {/* ROW IMAGES — edge-to-edge à toutes tailles. mt 50 sous 1020 / 130 ≥1020 ; 2 colonnes items-stretch ≥1020 */}
+        <div className="mt-[50px] min-[1020px]:mt-[130px] flex flex-col gap-[30px] min-[1020px]:flex-row min-[1020px]:items-stretch">
+          {/* Image gauche — sous 1020 : aspect 1020/560 (h=560 à viewport 1020 edge-to-edge, scale uniforme). 1020-1439 : h 370. ≥1440 : aspect 1129/592 */}
+          <div className="flex-1 min-[1440px]:flex-[1129_1_0%] min-[1020px]:max-w-[1129px] relative aspect-[1020/560] min-[1020px]:aspect-auto min-[1020px]:h-[370px] min-[1440px]:h-auto min-[1440px]:aspect-[1129/592] overflow-hidden">
             <Image
               src="/images/1.png"
               alt="JÖRO Office — salle de réunion"
               fill
               className="object-cover"
-              sizes="(max-width: 768px) 100vw, 50vw"
+              sizes="(max-width: 1024px) 100vw, 60vw"
             />
           </div>
-          <div className="relative aspect-[4/3] lg:aspect-[16/10] overflow-hidden">
+          {/* Image droite — cachée sous 1020. Flex équivalent 1020-1440, ratio 761 ≥1440. Copie la hauteur via items-stretch */}
+          <div className="max-[1019px]:hidden flex-1 min-[1440px]:flex-[761_1_0%] min-[1440px]:min-w-[660px] min-[1440px]:max-w-[760px] relative aspect-[761/592] min-[1020px]:aspect-auto overflow-hidden">
             <Image
               src="/images/f11417fe33c2cc32ef0ecc7b3c1c059e.jpg"
               alt="JÖRO Studio — espace lounge"
               fill
               className="object-cover"
-              sizes="(max-width: 768px) 100vw, 50vw"
+              sizes="(max-width: 1024px) 100vw, 40vw"
             />
           </div>
         </div>
