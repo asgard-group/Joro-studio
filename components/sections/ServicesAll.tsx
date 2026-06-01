@@ -2,7 +2,7 @@
 
 import { useRef, useState, useEffect } from "react";
 import ComingSoonLink from "@/components/ui/ComingSoonLink";
-import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 const serviceNav = [
   { label: "DESIGN & BUILD", id: "design-build" },
@@ -11,26 +11,6 @@ const serviceNav = [
   { label: "CONSEIL & STRATÉGIE", id: "conseil-workplace" },
 ];
 
-// ─── Animated character ─────────────────────────────────────────
-const INTRO_TEXT = "Notre vision est de repenser les\nespaces dédiés aux nouveaux\nusages urbains";
-
-interface AnimatedCharProps {
-  char: string;
-  progress: MotionValue<number>;
-  start: number;
-  end: number;
-}
-
-function AnimatedChar({ char, progress, start, end }: AnimatedCharProps) {
-  const color = useTransform(
-    progress,
-    [start, end],
-    ["rgba(186, 182, 170, 0.3)", "rgba(255, 255, 255, 1)"]
-  );
-  if (char === "\n") return <br />;
-  return <motion.span style={{ color }}>{char}</motion.span>;
-}
-
 // ─── ServicesAll ─────────────────────────────────────────────────
 export default function ServicesAll() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -38,10 +18,9 @@ export default function ServicesAll() {
   const { scrollY } = useScroll();
 
   const [ranges, setRanges] = useState({
-    fadeInStart: 99999, fadeInEnd: 109999,
+    dissolveStart: 99999, dissolveEnd: 109999,
     fadeOutStart: 109999, fadeOutEnd: 119999,
     splitStart: 119999, splitEnd: 129999,
-    textRevealStart: 99999, textRevealEnd: 109999,
   });
 
   useEffect(() => {
@@ -50,14 +29,15 @@ export default function ServicesAll() {
       const top = containerRef.current.offsetTop;
       const vh = window.innerHeight;
       setRanges({
-        fadeInStart: top,
-        fadeInEnd: top + vh * 0.3,
-        fadeOutStart: top + vh * 0.5,
+        // Slide 1 (cream) → Slide 2 (charcoal) : crossfade court
+        dissolveStart: top + vh * 0.3,
+        dissolveEnd: top + vh * 0.45,
+        // Fade out du contenu intro avant le split
+        fadeOutStart: top + vh * 0.65,
         fadeOutEnd: top + vh * 0.9,
+        // Split des panneaux pour révéler DESIGN & BUILD
         splitStart: top + vh * 0.9,
         splitEnd: top + vh * 2.2,
-        textRevealStart: top - vh * 0.3,
-        textRevealEnd: top + vh * 0.2,
       });
     };
     calc();
@@ -71,24 +51,15 @@ export default function ServicesAll() {
     }
   }, []);
 
-  const contentOpacity = useTransform(
-    scrollY,
-    [ranges.fadeOutStart, ranges.fadeOutEnd],
-    [1, 0]
-  );
+  // Dissolve : slide 1 (cream) fade out → slide 2 (charcoal) visible derrière
+  const slide1Opacity = useTransform(scrollY, [ranges.dissolveStart, ranges.dissolveEnd], [1, 0]);
 
+  // Fade out global de l'intro (pour révéler DESIGN & BUILD via split)
+  const contentOpacity = useTransform(scrollY, [ranges.fadeOutStart, ranges.fadeOutEnd], [1, 0]);
+
+  // Split des panneaux
   const leftX = useTransform(scrollY, [ranges.splitStart, ranges.splitEnd], ["0%", "-100%"]);
   const rightX = useTransform(scrollY, [ranges.splitStart, ranges.splitEnd], ["0%", "100%"]);
-
-  // Text reveal: 0 → 1 over the visible window
-  const textProgress = useTransform(
-    scrollY,
-    [ranges.textRevealStart, ranges.textRevealEnd],
-    [0, 1]
-  );
-
-  const chars = INTRO_TEXT.split("");
-  const n = chars.length;
 
   return (
     <div ref={containerRef} className="relative" style={{ height: "420vh" }}>
@@ -98,7 +69,7 @@ export default function ServicesAll() {
         className="sticky top-0 h-screen overflow-hidden"
         style={{ zIndex: 35 }}
       >
-        {/* Vidéo de fond */}
+        {/* Vidéo de fond (révélée par le split) */}
         <video
           ref={videoRef}
           className="absolute inset-0 w-full h-full object-cover z-0 scale-x-[-1]"
@@ -110,8 +81,8 @@ export default function ServicesAll() {
         />
         <div className="absolute inset-0 z-0 bg-[#1C2626]/20 mix-blend-color-dodge" />
 
-        {/* Contenu DESIGN & BUILD — révélé par le split */}
-        <div className="absolute inset-0 z-10 flex items-center justify-between px-4 sm:px-6 lg:px-[60px]">
+        {/* Contenu DESIGN & BUILD — révélé par le split (z-5) */}
+        <div className="absolute inset-0 z-[5] flex items-center justify-between px-4 sm:px-6 lg:px-[60px]">
           <div className="max-w-[480px]">
             <h2 className="text-[48px] md:text-[64px] font-semibold uppercase leading-none tracking-tight text-[#F3F2ED] mb-[40px] md:mb-[70px] whitespace-nowrap">
               DESIGN & BUILD
@@ -145,48 +116,98 @@ export default function ServicesAll() {
           </div>
         </div>
 
-        {/* Contenu intro — fade in puis fade out */}
-        <motion.div
-          className="absolute inset-0 z-30 flex flex-col pointer-events-none"
-          style={{ opacity: contentOpacity }}
-        >
-          <div className="flex-1 flex flex-col items-center justify-center text-center px-6">
-            <p className="text-[11px] font-medium uppercase tracking-[0.25em] text-[#F3F2ED]/50 mb-3 md:mb-5">
-              Nos offres
-            </p>
-            <h2 className="text-[30px] md:text-[46px] font-semibold leading-tight max-w-3xl">
-              {chars.map((char, i) => (
-                <AnimatedChar
-                  key={i}
-                  char={char}
-                  progress={textProgress}
-                  start={i / n}
-                  end={Math.min((i + 1) / n, 1)}
-                />
-              ))}
-            </h2>
-          </div>
-          <div className="flex flex-col items-center pb-0">
-            <span className="text-[11px] font-medium uppercase tracking-[0.25em] text-[#F3F2ED]/50">
-              Glisser pour découvrir
-            </span>
-            <div className="h-5" />
-            <div className="w-px bg-[#F3F2ED]/30" style={{ height: 40 }} />
-          </div>
-        </motion.div>
-
-        {/* Panneau gauche */}
+        {/* Panneaux charcoal (toujours opaques) — glissent au split (z-20) */}
         <motion.div
           className="absolute top-0 left-0 h-full bg-[#1C2626] z-20"
           style={{ width: "50%", x: leftX }}
         />
-
-        {/* Panneau droit */}
         <motion.div
           className="absolute top-0 right-0 h-full bg-[#1C2626] z-20"
           style={{ width: "50%", x: rightX }}
         />
 
+        {/* Slide 2 (charcoal + texte cream) — derrière slide 1, fade out global (z-30) */}
+        <motion.div
+          className="absolute inset-0 z-30 pointer-events-none"
+          style={{ opacity: contentOpacity }}
+        >
+          <IntroSlide bgColor="#1C2626" textColor="#F3F2ED" />
+        </motion.div>
+
+        {/* Slide 1 (cream + texte charcoal) — devant slide 2, fade out pendant dissolve (z-31) */}
+        <motion.div
+          className="absolute inset-0 z-[31] pointer-events-none"
+          style={{ opacity: slide1Opacity }}
+        >
+          <IntroSlide bgColor="#F3F2ED" textColor="#1C2626" />
+        </motion.div>
+      </div>
+    </div>
+  );
+}
+
+// ─── IntroSlide ──────────────────────────────────────────────────
+function IntroSlide({ bgColor, textColor }: { bgColor: string; textColor: string }) {
+  return (
+    <div
+      className="absolute inset-0 flex flex-col"
+      style={{ backgroundColor: bgColor }}
+    >
+      <div className="flex-1 flex flex-col items-center justify-center text-center px-6">
+        {/* Label pill */}
+        <div
+          className="inline-flex items-center justify-center mb-6 md:mb-8"
+          style={{
+            paddingLeft: 20,
+            paddingRight: 20,
+            paddingTop: 5,
+            paddingBottom: 5,
+            borderRadius: 10000,
+            outline: `1px solid ${textColor}`,
+            outlineOffset: "-1px",
+          }}
+        >
+          <span
+            style={{
+              color: textColor,
+              fontSize: 12,
+              fontWeight: 500,
+              letterSpacing: "0.18em",
+            }}
+          >
+            NOS OFFRES
+          </span>
+        </div>
+        {/* Titre */}
+        <h2
+          className="font-semibold tracking-tight text-[28px] md:text-[36px] lg:text-[46px] max-w-[900px]"
+          style={{ color: textColor, lineHeight: "130%" }}
+        >
+          Notre vision est de repenser les
+          <br />
+          espaces dédiés aux nouveaux
+          <br />
+          usages urbains
+        </h2>
+      </div>
+      {/* CTA bas — collé au bas du viewport */}
+      <div className="flex flex-col items-center">
+        <span
+          style={{
+            color: textColor,
+            fontSize: 11,
+            fontWeight: 500,
+            letterSpacing: "0.25em",
+            opacity: 0.7,
+          }}
+        >
+          GLISSER POUR DÉCOUVRIR
+        </span>
+        <div className="h-5" />
+        <div
+          className="w-px"
+          style={{ backgroundColor: textColor, opacity: 0.4, height: 40 }}
+        />
       </div>
     </div>
   );

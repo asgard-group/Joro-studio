@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import ComingSoonLink from "@/components/ui/ComingSoonLink";
+import Image from "next/image";
 import { buildMetadata } from "@/lib/metadata";
 import Hero from "@/components/sections/Hero";
 import Testimonials from "@/components/sections/Testimonials";
@@ -7,7 +7,6 @@ import CTA from "@/components/sections/CTA";
 import ServicesAll from "@/components/sections/ServicesAll";
 import ServiceReveal from "@/components/sections/ServiceReveal";
 import FeaturedWork from "@/components/sections/FeaturedWork";
-import ServicesAccordion from "@/components/sections/ServicesAccordion";
 import { workItems } from "@/data/work";
 
 export const metadata: Metadata = buildMetadata({
@@ -30,42 +29,77 @@ export default function HomePage() {
         scrollCta="Découvrir notre studio"
       />
 
-      {/* Notre vision */}
-      <section className="pt-[120px] pb-[160px] lg:pt-[160px] lg:pb-[200px] bg-[#F3F2ED] overflow-hidden">
+      {/* À propos — Notre histoire */}
+      <section className="py-[80px] min-[1020px]:py-[200px] bg-[#F3F2ED] overflow-hidden">
 
-        {/* Bloc texte : titre gauche / texte+lien droite sur desktop */}
-        <div className="px-4 sm:px-6 lg:px-[60px] mb-[60px] lg:mb-[145px]">
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_550px] lg:gap-16">
-
-            {/* Gauche — eyebrow + titre */}
-            <div>
-              <p className="text-[12px] font-medium uppercase tracking-widest text-charcoal mb-4">
-                Notre vision
-              </p>
-              <h2 className="text-[36px] sm:text-[42px] lg:text-[46px] font-semibold leading-tight tracking-tight text-charcoal">
-                Une réflexion architecturale<br />au cœur de chaque projet
-              </h2>
+        {/* ROW TEXTES — sous 1020 : stack avec gap 50px / ≥1020 : 2 colonnes gap 30px */}
+        <div className="flex flex-col gap-[50px] min-[1020px]:flex-row min-[1020px]:gap-[30px]">
+          {/* Texte gauche : pill + titre — padding 20 sous 840, 40 entre 840-1439, 60 ≥1440 */}
+          <div className="flex-1 min-[1440px]:flex-[1129_1_0%] min-[1020px]:max-w-[1129px] flex flex-col pl-[20px] min-[840px]:pl-[40px] min-[1440px]:pl-[60px]" style={{ gap: 10 }}>
+            <div
+              className="inline-flex self-start items-center justify-center"
+              style={{
+                paddingLeft: 19,
+                paddingRight: 19,
+                paddingTop: 5,
+                paddingBottom: 5,
+                borderRadius: 10000,
+                outline: "1px black solid",
+                outlineOffset: "-1px",
+              }}
+            >
+              <span
+                style={{
+                  textAlign: "center",
+                  color: "#1C2626",
+                  fontSize: 12,
+                  fontWeight: 500,
+                }}
+              >
+                NOTRE HISTOIRE
+              </span>
             </div>
-
-            {/* Droite — texte + lien, aligné sous le tag "Notre vision" */}
-            <div className="mt-10 lg:mt-0 lg:pt-[34px] flex flex-col justify-start">
-              <p className="text-[16px] leading-relaxed text-charcoal-muted mb-8">
-                Chez Jöro Studio, nous transformons les espaces en lieux de vie authentiques,
-                conjuguant qualité haut de gamme, design contemporain et responsabilité
-                écologique. Notre studio a une vision claire : devenir leaders de la conception
-                d'espaces dédiés aux nouveaux usages urbains, bureaux, événementiel,
-                hôtellerie lifestyle.
-              </p>
-              <ComingSoonLink className="text-[12px] font-medium uppercase tracking-widest text-charcoal-muted border-b border-charcoal-muted pb-1 self-start">
-                Découvrir notre histoire
-              </ComingSoonLink>
-            </div>
-
+            <h2
+              className="font-semibold tracking-tight text-[46px] min-[1020px]:text-[64px]"
+              style={{ color: "#1C2626", lineHeight: "130%" }}
+            >
+              Une réflexion <br className="hidden min-[1020px]:inline min-[1601px]:hidden" />architecturale
+            </h2>
+          </div>
+          {/* Texte droite : description — padding 20 sous 840, 40 entre 840-1019, puis pl-0 + pr 40/60 ≥1020. Bornes 660/760 ≥1440 */}
+          <div className="flex-1 min-[1440px]:flex-[761_1_0%] min-[1440px]:min-w-[660px] min-[1440px]:max-w-[760px] min-[1020px]:pt-[36px] px-[20px] min-[840px]:px-[40px] min-[1020px]:pl-0 min-[1020px]:pr-[40px] min-[1440px]:pr-[60px]">
+            <p
+              className="font-medium text-[14px] leading-[24px] min-[1020px]:text-[16px] min-[1020px]:leading-[26px]"
+              style={{ color: "#1C2626" }}
+            >
+              Notre studio est né d&rsquo;un constat simple : il est aujourd&rsquo;hui difficile de concevoir des espaces qui allient innovation, élégance et respect de l&rsquo;environnement. Pour répondre à ce défi, nous avons créé JORO Studio, une approche nouvelle de l&rsquo;architecture et des travaux où chaque projet est pensé dans les moindres détails afin de conjuguer qualité haut de gamme, design contemporain et responsabilité écologique.
+            </p>
           </div>
         </div>
 
-        {/* Photo + Accordion services */}
-        <ServicesAccordion />
+        {/* ROW IMAGES — edge-to-edge à toutes tailles. mt 50 sous 1020 / 130 ≥1020 ; 2 colonnes items-stretch ≥1020 */}
+        <div className="mt-[50px] min-[1020px]:mt-[130px] flex flex-col gap-[30px] min-[1020px]:flex-row min-[1020px]:items-stretch">
+          {/* Image gauche — sous 1020 : aspect 1020/560 (h=560 à viewport 1020 edge-to-edge, scale uniforme). 1020-1439 : h 370. ≥1440 : aspect 1129/592 */}
+          <div className="flex-1 min-[1440px]:flex-[1129_1_0%] min-[1020px]:max-w-[1129px] relative aspect-[1020/560] min-[1020px]:aspect-auto min-[1020px]:h-[370px] min-[1440px]:h-auto min-[1440px]:aspect-[1129/592] overflow-hidden">
+            <Image
+              src="/images/1.png"
+              alt="JÖRO Office — salle de réunion"
+              fill
+              className="object-cover"
+              sizes="(max-width: 1024px) 100vw, 60vw"
+            />
+          </div>
+          {/* Image droite — cachée sous 1020. Flex équivalent 1020-1440, ratio 761 ≥1440. Copie la hauteur via items-stretch */}
+          <div className="max-[1019px]:hidden flex-1 min-[1440px]:flex-[761_1_0%] min-[1440px]:min-w-[660px] min-[1440px]:max-w-[760px] relative aspect-[761/592] min-[1020px]:aspect-auto overflow-hidden">
+            <Image
+              src="/images/f11417fe33c2cc32ef0ecc7b3c1c059e.jpg"
+              alt="JÖRO Studio — espace lounge"
+              fill
+              className="object-cover"
+              sizes="(max-width: 1024px) 100vw, 40vw"
+            />
+          </div>
+        </div>
 
       </section>
 
