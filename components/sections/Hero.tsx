@@ -47,7 +47,7 @@ export default function Hero({
   const ctaOpacity = useTransform(scrollY, [vh * 0.15, vh * 0.30], [1, 0]);
 
   return (
-    <section ref={sectionRef} data-navbar-theme="dark" className="relative h-screen overflow-hidden">
+    <section ref={sectionRef} data-navbar-theme="dark" className="relative min-h-[100svh] overflow-hidden">
 
       {/* Background — vidéo ou image, avec parallax via Framer Motion */}
       {(video || image) ? (
@@ -87,9 +87,9 @@ export default function Hero({
       )}
 
       {/* Label + Title — ancré à 30vh du bas */}
-      <div className="absolute inset-x-0 z-10 bottom-[30vh]">
+      <div className="absolute inset-x-0 z-10 bottom-[30svh]">
         <div
-          className="w-full px-[20px] min-[840px]:px-[40px] min-[1200px]:px-[60px] inline-flex flex-col items-start justify-start"
+          className="w-full px-[16px] min-[390px]:px-[20px] min-[840px]:px-[40px] min-[1200px]:px-[60px] inline-flex flex-col items-start justify-start"
         >
           <div
             className="self-stretch flex flex-col items-start justify-start"
@@ -110,7 +110,7 @@ export default function Hero({
               </p>
             )}
             <h1
-              className="uppercase text-[clamp(28px,6.857vw,48px)] min-[700px]:text-[48px] min-[840px]:text-[56px] min-[1200px]:text-[80px]"
+              className="uppercase text-[clamp(20px,calc(20px+28*(100vw-320px)/448),48px)] min-[840px]:text-[56px] min-[1200px]:text-[80px]"
               style={{
                 color: '#F3F2ED',
                 fontWeight: 600,
