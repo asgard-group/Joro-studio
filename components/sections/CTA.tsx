@@ -73,10 +73,10 @@ export default function CTA() {
         {/* Title block — centered, moves up on scroll */}
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center pointer-events-none">
           <motion.div style={{ y: titleY }}>
-            <p className="text-[11px] font-medium uppercase tracking-[0.25em] text-[#F3F2ED]/50 mb-3 md:mb-5">
+            <p className="text-[11px] font-medium uppercase tracking-[0.25em] text-cream/50 mb-3 md:mb-5">
               Nos contacter
             </p>
-            <h2 className="text-[30px] md:text-[46px] font-semibold leading-tight text-[#F3F2ED] max-w-2xl">
+            <h2 className="text-[30px] md:text-[46px] font-semibold leading-tight text-cream max-w-2xl">
               Des espaces conçus<br />avec du savoir-faire
             </h2>
           </motion.div>
@@ -87,11 +87,11 @@ export default function CTA() {
           className="absolute bottom-0 inset-x-0 z-10 flex flex-col items-center pointer-events-none"
           style={{ opacity: glisserOpacity }}
         >
-          <span className="text-[11px] font-medium uppercase tracking-[0.25em] text-[#F3F2ED]/50">
+          <span className="text-[11px] font-medium uppercase tracking-[0.25em] text-cream/50">
             Glisser pour découvrir
           </span>
           <div className="h-5" />
-          <div className="w-px bg-[#F3F2ED]/30" style={{ height: 40 }} />
+          <div className="w-px bg-cream/30" style={{ height: 40 }} />
         </motion.div>
 
         {/* Two-column content — fades in after glisser disappears */}
@@ -101,32 +101,32 @@ export default function CTA() {
         >
           <div className="relative grid grid-cols-1 sm:grid-cols-2">
             {/* Vertical separator */}
-            <div className="hidden sm:block absolute left-1/2 top-0 bottom-0 w-px bg-[#F3F2ED]/20" />
+            <div className="hidden sm:block absolute left-1/2 top-0 bottom-0 w-px bg-cream/20" />
 
             {/* Left — Prendre rendez-vous */}
             <div className="flex flex-col items-center text-center sm:pr-12 lg:pr-20 mb-10 sm:mb-0">
-              <p className="text-[20px] md:text-[24px] lg:text-[26px] font-normal text-[#F3F2ED] leading-snug mb-8 max-w-xs">
+              <p className="text-[20px] md:text-[24px] lg:text-[26px] font-normal text-cream leading-snug mb-8 max-w-xs">
                 Tenez vous aux courants<br />des derniers projets
               </p>
-              <ComingSoonLink className="inline-flex items-center justify-center px-8 py-4 bg-[#F3F2ED] text-charcoal text-[11px] font-medium uppercase tracking-[0.18em]">
+              <ComingSoonLink className="inline-flex items-center justify-center px-8 py-4 bg-cream text-charcoal text-[11px] font-medium uppercase tracking-[0.18em]">
                 Prendre rendez-vous
               </ComingSoonLink>
             </div>
 
             {/* Right — Newsletter */}
             <div className="flex flex-col items-center text-center sm:pl-12 lg:pl-20">
-              <p className="text-[20px] md:text-[24px] lg:text-[26px] font-normal text-[#F3F2ED] leading-snug mb-8 max-w-xs">
+              <p className="text-[20px] md:text-[24px] lg:text-[26px] font-normal text-cream leading-snug mb-8 max-w-xs">
                 Tenez vous aux courants<br />des derniers projets
               </p>
               <div className="flex w-full max-w-sm">
                 <input
                   type="email"
                   placeholder="E-mail"
-                  className="flex-1 min-w-0 bg-transparent border border-[#F3F2ED]/40 px-4 py-4 text-[13px] text-[#F3F2ED] placeholder-[#F3F2ED]/40 focus:outline-none focus:border-[#F3F2ED]/70 transition-colors"
+                  className="flex-1 min-w-0 bg-transparent border border-cream/40 px-4 py-4 text-[13px] text-cream placeholder-cream/40 focus:outline-none focus:border-cream/70 transition-colors"
                 />
                 <button
                   type="submit"
-                  className="shrink-0 bg-[#F3F2ED] text-charcoal px-5 text-[11px] font-medium uppercase tracking-[0.18em] hover:bg-[#F3F2ED]/90 transition-colors"
+                  className="shrink-0 bg-cream text-charcoal px-5 text-[11px] font-medium uppercase tracking-[0.18em] hover:bg-cream/90 transition-colors"
                 >
                   Rejoindre
                 </button>

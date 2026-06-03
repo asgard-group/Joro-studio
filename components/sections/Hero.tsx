@@ -77,7 +77,7 @@ export default function Hero({
           {overlay && (
             <div
               className={`absolute inset-0 mix-blend-hard-light ${
-                video ? "bg-[#1C2626]/30" : "bg-[#1C2626]/50"
+                video ? "bg-charcoal/30" : "bg-charcoal/50"
               }`}
             />
           )}
@@ -97,9 +97,8 @@ export default function Hero({
           >
             {eyebrow && (
               <p
-                className="uppercase text-[12px] min-[840px]:text-[18px] min-[1200px]:text-[20px]"
+                className="uppercase text-[12px] min-[840px]:text-[18px] min-[1200px]:text-[20px] text-cream"
                 style={{
-                  color: '#F3F2ED',
                   fontWeight: 500,
                   lineHeight: '100%',
                   letterSpacing: '0.05em',
@@ -110,9 +109,8 @@ export default function Hero({
               </p>
             )}
             <h1
-              className="uppercase text-[clamp(20px,calc(20px+28*(100vw-320px)/448),48px)] min-[840px]:text-[56px] min-[1200px]:text-[80px]"
+              className="uppercase text-[clamp(20px,calc(20px+28*(100vw-320px)/448),48px)] min-[840px]:text-[56px] min-[1200px]:text-[80px] text-cream"
               style={{
-                color: '#F3F2ED',
                 fontWeight: 600,
                 lineHeight: '115%',
                 letterSpacing: '0.02em',
@@ -131,11 +129,11 @@ export default function Hero({
           className="absolute bottom-0 inset-x-0 z-10 flex flex-col items-center"
           style={{ opacity: ctaOpacity }}
         >
-          <span className="text-[11px] font-medium uppercase tracking-[0.2em] text-[#F3F2ED]">
+          <span className="text-[11px] font-medium uppercase tracking-[0.2em] text-cream">
             {scrollCta}
           </span>
           <div className="h-5" />
-          <div className="h-10 w-px bg-[#F3F2ED]/70" />
+          <div className="h-10 w-px bg-cream/70" />
         </motion.div>
       )}
 

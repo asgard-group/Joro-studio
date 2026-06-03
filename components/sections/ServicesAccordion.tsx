@@ -76,7 +76,7 @@ export default function ServicesAccordion() {
             >
               <div className="flex justify-between items-start gap-[37px]">
                 <div className="flex flex-col gap-3 flex-1">
-                  <span className="text-[20px] font-medium text-[#1C2626] leading-tight">
+                  <span className="text-[20px] font-medium text-charcoal leading-tight">
                     {item.title}
                   </span>
                   <div className="relative">
@@ -87,7 +87,7 @@ export default function ServicesAccordion() {
                       {active === i && (
                         <motion.span
                           key={item.id}
-                          className="absolute inset-0 text-[16px] font-normal text-[#1C2626] leading-snug"
+                          className="absolute inset-0 text-[16px] font-normal text-charcoal leading-snug"
                           initial={{ opacity: 0, y: -10 }}
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: -10 }}
@@ -118,7 +118,7 @@ export default function ServicesAccordion() {
               }`}
             >
               <div className="flex flex-col gap-3 flex-1">
-                <span className="text-[20px] font-medium text-[#1C2626] leading-tight">
+                <span className="text-[20px] font-medium text-charcoal leading-tight">
                   {item.title}
                 </span>
                 <div className="relative">
@@ -129,7 +129,7 @@ export default function ServicesAccordion() {
                     {active === i && (
                       <motion.span
                         key={item.id}
-                        className="absolute inset-0 text-[16px] font-normal text-[#1C2626] leading-snug"
+                        className="absolute inset-0 text-[16px] font-normal text-charcoal leading-snug"
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}

@@ -4,9 +4,9 @@
 
 @layer base {
   :root {
-    --color-cream: #F4EFE5;
+    --color-cream: #F3F2ED;
     --color-terracotta: #812403;
-    --color-charcoal: #1C1A18;
+    --color-charcoal: #1C2626;
   }
 
   html {
@@ -19,8 +19,8 @@
   }
 
   ::selection {
-    background-color: #812403;
-    color: #F4EFE5;
+    background-color: var(--color-terracotta);
+    color: var(--color-cream);
   }
 
   /* Focus visible only for keyboard nav */

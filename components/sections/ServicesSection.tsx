@@ -45,16 +45,16 @@ export default function ServicesSection() {
 
       {/* Fond sticky plein écran */}
       <div
-        className="sticky top-0 h-screen bg-[#1C2626] flex flex-col overflow-hidden"
+        className="sticky top-0 h-screen bg-charcoal flex flex-col overflow-hidden"
         data-navbar-theme="dark"
       >
         {/* Contenu centré — remonte et s'efface */}
         <div className="flex-1 flex flex-col items-center justify-center text-center px-6">
           <motion.div style={{ y: contentY, opacity: contentOpacity }}>
-            <p className="text-[11px] font-medium uppercase tracking-[0.25em] text-[#F3F2ED]/50 mb-3 md:mb-5">
+            <p className="text-[11px] font-medium uppercase tracking-[0.25em] text-cream/50 mb-3 md:mb-5">
               Nos offres
             </p>
-            <h2 className="text-[30px] md:text-[46px] font-semibold leading-tight text-[#F3F2ED] max-w-2xl">
+            <h2 className="text-[30px] md:text-[46px] font-semibold leading-tight text-cream max-w-2xl">
               Des espaces conçus<br />avec du savoir-faire
             </h2>
           </motion.div>
@@ -65,11 +65,11 @@ export default function ServicesSection() {
           className="flex flex-col items-center pb-0"
           style={{ opacity: ctaOpacity }}
         >
-          <span className="text-[11px] font-medium uppercase tracking-[0.25em] text-[#F3F2ED]/50">
+          <span className="text-[11px] font-medium uppercase tracking-[0.25em] text-cream/50">
             Glisser pour découvrir
           </span>
           <div className="h-5" />
-          <div className="h-10 w-px bg-[#F3F2ED]/30" />
+          <div className="h-10 w-px bg-cream/30" />
         </motion.div>
       </div>
 

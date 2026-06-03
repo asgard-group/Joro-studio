@@ -71,13 +71,13 @@ export default function ServiceReveal({ activeId, title, description, image, vid
       >
         {/* Gauche */}
         <div className={wide ? "max-w-[880px]" : "max-w-[480px]"}>
-          <h2 className={`text-[48px] md:text-[64px] font-semibold uppercase leading-none tracking-tight text-[#F3F2ED] mb-[40px] md:mb-[70px] ${title.includes('\n') ? 'whitespace-pre-line' : 'whitespace-nowrap'}`}>
+          <h2 className={`text-[48px] md:text-[64px] font-semibold uppercase leading-none tracking-tight text-cream mb-[40px] md:mb-[70px] ${title.includes('\n') ? 'whitespace-pre-line' : 'whitespace-nowrap'}`}>
             {title}
           </h2>
-          <p className="max-w-[360px] text-[16px] leading-relaxed text-[#F3F2ED] mb-[25px]">
+          <p className="max-w-[360px] text-[16px] leading-relaxed text-cream mb-[25px]">
             {description}
           </p>
-          <ComingSoonLink className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#F3F2ED] border-b border-[#F3F2ED]/50 pb-1">
+          <ComingSoonLink className="text-[11px] font-medium uppercase tracking-[0.18em] text-cream border-b border-cream/50 pb-1">
             Découvrir l'offre
           </ComingSoonLink>
         </div>
@@ -93,8 +93,8 @@ export default function ServiceReveal({ activeId, title, description, image, vid
                 const top = el.getBoundingClientRect().top + window.scrollY;
                 window.scrollTo({ top, behavior: "smooth" });
               }}
-              className={`text-[14px] font-medium uppercase tracking-[0.18em] transition-colors hover:text-[#F3F2ED] ${
-                item.id === activeId ? "text-[#F3F2ED]" : "text-[#F3F2ED]/30"
+              className={`text-[14px] font-medium uppercase tracking-[0.18em] transition-colors hover:text-cream ${
+                item.id === activeId ? "text-cream" : "text-cream/30"
               }`}
             >
               {item.label}

@@ -91,7 +91,7 @@ function ServiceCardItem({
       />
 
       {/* Overlay sombre */}
-      <div className="absolute inset-0 bg-[#1C2626]/55" />
+      <div className="absolute inset-0 bg-charcoal/55" />
 
       {/* Titre + bouton — centré, remonte jusqu'en haut au scroll */}
       <div className="absolute inset-0 z-10 flex items-center">
@@ -100,14 +100,14 @@ function ServiceCardItem({
           className="w-full mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
         >
           <div className="flex flex-col gap-6">
-            <h2 className="text-[48px] md:text-[53px] lg:text-[56px] min-[1440px]:text-[64px] font-semibold uppercase leading-none tracking-tight text-[#F3F2ED] whitespace-pre-line">
+            <h2 className="text-[48px] md:text-[53px] lg:text-[56px] min-[1440px]:text-[64px] font-semibold uppercase leading-none tracking-tight text-cream whitespace-pre-line">
               {offer.name}
             </h2>
             <Link href={offer.href} className="group flex flex-col gap-2 w-fit">
-              <span className="text-[11px] font-medium uppercase tracking-[0.2em] text-[#F3F2ED]">
+              <span className="text-[11px] font-medium uppercase tracking-[0.2em] text-cream">
                 Découvrir l'offre
               </span>
-              <span className="block h-px bg-[#F3F2ED]/60 transition-all group-hover:bg-[#F3F2ED]" />
+              <span className="block h-px bg-cream/60 transition-all group-hover:bg-cream" />
             </Link>
           </div>
         </motion.div>
@@ -119,7 +119,7 @@ function ServiceCardItem({
         className="absolute bottom-0 inset-x-0 z-10 pb-[100px]"
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex justify-end">
-          <p className="max-w-[348px] text-[16px] font-normal leading-relaxed text-[#F3F2ED]">
+          <p className="max-w-[348px] text-[16px] font-normal leading-relaxed text-cream">
             {offer.description}
           </p>
         </div>
