@@ -56,14 +56,14 @@ export default function CTA() {
   );
 
   return (
-    <div ref={containerRef} style={{ height: "200vh" }}>
+    <div ref={containerRef} className="bg-charcoal" style={{ height: "200vh" }}>
       <div
         data-navbar-theme="dark"
         className="sticky top-0 h-screen overflow-hidden"
       >
         {/* Background image */}
         <Image
-          src="/images/background CTA.png"
+          src="/images/Footer.png"
           alt=""
           fill
           className="object-cover"
