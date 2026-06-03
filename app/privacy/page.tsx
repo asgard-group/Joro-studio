@@ -56,7 +56,7 @@ export default function PrivacyPage() {
                 <p>
                   Pour exercer vos droits ou pour toute question relative à vos données
                   personnelles, contactez-nous à :{" "}
-                  <a href="mailto:contact@jorostudio.fr" className="text-terracotta underline">
+                  <a href="mailto:contact@jorostudio.fr" className="text-taupe underline">
                     contact@jorostudio.fr
                   </a>
                 </p>

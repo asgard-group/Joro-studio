@@ -23,7 +23,7 @@ export default function WorkPage() {
             <p className="label-eyebrow mb-6">Portfolio</p>
             <h1 className="heading-display mb-6">
               Nos{" "}
-              <em className="not-italic text-terracotta">réalisations</em>
+              <em className="not-italic text-taupe">réalisations</em>
             </h1>
             <p className="text-lg leading-relaxed text-charcoal-muted">
               Chaque projet est une conversation entre nos convictions et les
@@ -38,8 +38,8 @@ export default function WorkPage() {
                 key={cat}
                 className={`cursor-pointer border px-4 py-2 text-xs font-semibold uppercase tracking-wider transition-colors ${
                   cat === "Tous"
-                    ? "border-terracotta bg-terracotta text-cream"
-                    : "border-cream-300 text-charcoal-muted hover:border-terracotta hover:text-terracotta"
+                    ? "border-taupe bg-taupe text-cream"
+                    : "border-cream-300 text-charcoal-muted hover:border-taupe hover:text-taupe"
                 }`}
               >
                 {cat}

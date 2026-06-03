@@ -55,7 +55,7 @@ export default function WorkDetailPage({ params }: Props) {
             >
               ← Toutes les réalisations
             </Link>
-            <p className="label-eyebrow mb-4 text-terracotta-200">{item.category}</p>
+            <p className="label-eyebrow mb-4 text-taupe-200">{item.category}</p>
             <h1 className="heading-display max-w-2xl text-cream">{item.title}</h1>
           </div>
         </div>
@@ -138,7 +138,7 @@ export default function WorkDetailPage({ params }: Props) {
                   </div>
                   <div className="pt-4">
                     <p className="label-eyebrow mb-1">{w.category}</p>
-                    <h3 className="font-serif text-lg text-charcoal group-hover:text-terracotta transition-colors">
+                    <h3 className="font-serif text-lg text-charcoal group-hover:text-taupe transition-colors">
                       {w.title}
                     </h3>
                   </div>

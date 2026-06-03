@@ -5,7 +5,7 @@
 @layer base {
   :root {
     --color-cream: #F3F2ED;
-    --color-terracotta: #812403;
+    --color-taupe: #917C73;
     --color-charcoal: #1C2626;
   }
 
@@ -18,17 +18,12 @@
     font-feature-settings: "kern" 1, "liga" 1;
   }
 
-  ::selection {
-    background-color: var(--color-terracotta);
-    color: var(--color-cream);
-  }
-
   /* Focus visible only for keyboard nav */
   :focus:not(:focus-visible) {
     outline: none;
   }
   :focus-visible {
-    @apply outline-2 outline-offset-2 outline-terracotta;
+    @apply outline-2 outline-offset-2 outline-taupe;
   }
 }
 
@@ -46,11 +41,11 @@
   }
 
   .label-eyebrow {
-    @apply text-xs font-semibold uppercase tracking-widest text-terracotta;
+    @apply text-xs font-semibold uppercase tracking-widest text-taupe;
   }
 
   .btn-primary {
-    @apply inline-flex items-center gap-2 bg-terracotta px-6 py-3 text-sm font-semibold uppercase tracking-wider text-cream transition-all duration-200 hover:bg-terracotta-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta;
+    @apply inline-flex items-center gap-2 bg-taupe px-6 py-3 text-sm font-semibold uppercase tracking-wider text-cream transition-all duration-200 hover:bg-taupe-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-taupe;
   }
 
   .btn-outline {
@@ -58,10 +53,10 @@
   }
 
   .btn-ghost {
-    @apply inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold uppercase tracking-wider text-charcoal transition-all duration-200 hover:text-terracotta;
+    @apply inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold uppercase tracking-wider text-charcoal transition-all duration-200 hover:text-taupe;
   }
 
   .link-underline {
-    @apply relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-terracotta after:transition-all after:duration-300 hover:after:w-full;
+    @apply relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-taupe after:transition-all after:duration-300 hover:after:w-full;
   }
 }

@@ -47,10 +47,10 @@ export default function ServicesPage() {
       {/* Hero */}
       <section className="bg-charcoal pb-20 pt-36 text-cream">
         <div className="container-site">
-          <p className="label-eyebrow mb-6 text-terracotta-200">Nos offres</p>
+          <p className="label-eyebrow mb-6 text-taupe-200">Nos offres</p>
           <h1 className="heading-display max-w-3xl">
             L'écosystème{" "}
-            <em className="not-italic text-terracotta">JÖRO</em> — quatre
+            <em className="not-italic text-taupe">JÖRO</em> — quatre
             offres, une exigence
           </h1>
           <p className="mt-6 max-w-xl text-lg text-cream/70">
@@ -82,7 +82,7 @@ export default function ServicesPage() {
                 <ul className="mb-10 flex flex-col gap-3">
                   {service.features.map((feature) => (
                     <li key={feature} className="flex items-center gap-3 text-sm text-charcoal">
-                      <span className="h-1 w-4 shrink-0 bg-terracotta" />
+                      <span className="h-1 w-4 shrink-0 bg-taupe" />
                       {feature}
                     </li>
                   ))}

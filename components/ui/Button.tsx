@@ -17,9 +17,9 @@ interface ButtonLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> 
 }
 
 const variantClasses: Record<Variant, string> = {
-  primary: "bg-terracotta text-cream hover:bg-terracotta-600",
+  primary: "bg-taupe text-cream hover:bg-taupe-600",
   outline: "border border-current text-charcoal hover:bg-charcoal hover:text-cream",
-  ghost: "text-charcoal hover:text-terracotta",
+  ghost: "text-charcoal hover:text-taupe",
 };
 
 const sizeClasses: Record<Size, string> = {
@@ -29,7 +29,7 @@ const sizeClasses: Record<Size, string> = {
 };
 
 const base =
-  "inline-flex items-center gap-2 font-semibold uppercase tracking-wider transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta";
+  "inline-flex items-center gap-2 font-semibold uppercase tracking-wider transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-taupe";
 
 export function Button({
   variant = "primary",

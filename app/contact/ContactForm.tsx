@@ -79,7 +79,7 @@ export default function ContactForm() {
       <p className="text-xs text-charcoal-muted">
         En soumettant ce formulaire, vous acceptez que vos données soient
         utilisées pour traiter votre demande conformément à notre{" "}
-        <a href="/privacy" className="underline hover:text-terracotta">
+        <a href="/privacy" className="underline hover:text-taupe">
           politique de confidentialité
         </a>
         .

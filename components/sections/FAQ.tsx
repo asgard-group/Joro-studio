@@ -34,7 +34,7 @@ export default function FAQ({ items, title = "Questions fréquentes", eyebrow = 
                       {item.question}
                     </span>
                     <span
-                      className={`mt-1 shrink-0 text-terracotta transition-transform duration-200 ${
+                      className={`mt-1 shrink-0 text-taupe transition-transform duration-200 ${
                         open === i ? "rotate-45" : ""
                       }`}
                     >
