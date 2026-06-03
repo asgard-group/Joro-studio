@@ -14,8 +14,8 @@ export default function Navigation({ items, scrolled = false }: Props) {
   const pathname = usePathname();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
-  const textColor = scrolled ? "text-charcoal hover:text-terracotta" : "text-cream/90 hover:text-cream";
-  const activeColor = scrolled ? "text-terracotta" : "text-cream";
+  const textColor = scrolled ? "text-charcoal hover:text-taupe" : "text-cream/90 hover:text-cream";
+  const activeColor = scrolled ? "text-taupe" : "text-cream";
 
   return (
     <nav aria-label="Navigation principale" className="hidden lg:block">
@@ -63,7 +63,7 @@ export default function Navigation({ items, scrolled = false }: Props) {
                         <li key={child.href}>
                           <Link
                             href={child.href}
-                            className="block px-4 py-3 text-sm text-charcoal transition-colors hover:bg-cream-300 hover:text-terracotta"
+                            className="block px-4 py-3 text-sm text-charcoal transition-colors hover:bg-cream-300 hover:text-taupe"
                           >
                             {child.label}
                           </Link>

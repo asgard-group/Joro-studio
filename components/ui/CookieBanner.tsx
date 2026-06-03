@@ -13,7 +13,7 @@ export default function CookieBanner() {
         <p className="text-sm text-charcoal-muted">
           Nous utilisons des cookies d&apos;analyse pour comprendre comment vous
           naviguez sur le site.{" "}
-          <a href="/privacy" className="underline hover:text-terracotta">
+          <a href="/privacy" className="underline hover:text-taupe">
             En savoir plus
           </a>
         </p>

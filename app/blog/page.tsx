@@ -23,7 +23,7 @@ export default function BlogPage() {
         <div className="container-site">
           <p className="label-eyebrow mb-6">Insights & Tendances</p>
           <h1 className="heading-display max-w-2xl">
-            Le <em className="not-italic text-terracotta">Studio Dispatch</em>
+            Le <em className="not-italic text-taupe">Studio Dispatch</em>
           </h1>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-charcoal-muted">
             Nos analyses sur les espaces de travail, la durabilité en architecture
@@ -53,13 +53,13 @@ export default function BlogPage() {
                     <span>{formatDate(featured.date)}</span>
                     <span>{featured.readingTime} de lecture</span>
                   </div>
-                  <h2 className="heading-section mt-4 group-hover:text-terracotta transition-colors">
+                  <h2 className="heading-section mt-4 group-hover:text-taupe transition-colors">
                     {featured.title}
                   </h2>
                   <p className="mt-4 leading-relaxed text-charcoal-muted">
                     {featured.excerpt}
                   </p>
-                  <span className="mt-8 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-terracotta">
+                  <span className="mt-8 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-taupe">
                     Lire l'article
                     <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
@@ -96,7 +96,7 @@ export default function BlogPage() {
                     <span className="label-eyebrow">{post.category}</span>
                     <span>{post.readingTime}</span>
                   </div>
-                  <h3 className="font-serif text-lg leading-snug text-charcoal group-hover:text-terracotta transition-colors">
+                  <h3 className="font-serif text-lg leading-snug text-charcoal group-hover:text-taupe transition-colors">
                     {post.title}
                   </h3>
                   <p className="mt-auto text-sm leading-relaxed text-charcoal-muted line-clamp-2">
@@ -132,7 +132,7 @@ export default function BlogPage() {
                 placeholder="Votre adresse email"
                 required
                 aria-label="Adresse email pour la newsletter"
-                className="flex-1 border border-cream-300 bg-cream px-4 py-3 text-sm text-charcoal placeholder-charcoal-muted/50 focus:border-terracotta focus:outline-none"
+                className="flex-1 border border-cream-300 bg-cream px-4 py-3 text-sm text-charcoal placeholder-charcoal-muted/50 focus:border-taupe focus:outline-none"
               />
               <button type="submit" className="btn-primary whitespace-nowrap">
                 S'inscrire

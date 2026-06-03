@@ -295,7 +295,7 @@ export default function Header() {
                     <Link
                       href={item.href}
                       onClick={() => setMenuOpen(false)}
-                      className="font-serif text-3xl text-cream transition-colors hover:text-terracotta sm:text-4xl lg:text-5xl"
+                      className="font-serif text-3xl text-cream transition-colors hover:text-taupe sm:text-4xl lg:text-5xl"
                     >
                       {item.label}
                     </Link>

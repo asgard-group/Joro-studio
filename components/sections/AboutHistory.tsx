@@ -133,7 +133,7 @@ export default function AboutHistory() {
             {/* Image du dessous */}
             <Image
               src="/images/1.png"
-              alt="JÖRO Office — salle de réunion terracotta"
+              alt="JÖRO Office — salle de réunion taupe"
               fill
               className="object-cover"
               sizes="(max-width: 1440px) 50vw, 40vw"

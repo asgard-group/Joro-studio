@@ -75,10 +75,10 @@ export default function AboutPage() {
       {/* Page header */}
       <section className="bg-charcoal pb-20 pt-36 text-cream">
         <div className="container-site">
-          <p className="label-eyebrow mb-6 text-terracotta-200">À propos</p>
+          <p className="label-eyebrow mb-6 text-taupe-200">À propos</p>
           <h1 className="heading-display max-w-3xl">
             Une vision, une obsession : les espaces qui{" "}
-            <em className="not-italic text-terracotta">inspirent</em>
+            <em className="not-italic text-taupe">inspirent</em>
           </h1>
         </div>
       </section>
@@ -198,8 +198,8 @@ export default function AboutPage() {
           </div>
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {values.map((value, i) => (
-              <div key={value.title} className="flex flex-col gap-4 border-t-2 border-terracotta pt-6">
-                <span className="font-serif text-sm text-terracotta">
+              <div key={value.title} className="flex flex-col gap-4 border-t-2 border-taupe pt-6">
+                <span className="font-serif text-sm text-taupe">
                   0{i + 1}
                 </span>
                 <h3 className="font-serif text-xl text-charcoal">{value.title}</h3>
@@ -216,16 +216,16 @@ export default function AboutPage() {
       <section className="bg-charcoal py-24 text-cream">
         <div className="container-site">
           <div className="mb-16 max-w-xl">
-            <p className="label-eyebrow mb-4 text-terracotta-200">Notre parcours</p>
+            <p className="label-eyebrow mb-4 text-taupe-200">Notre parcours</p>
             <h2 className="heading-section">De l'idée à l'ambition</h2>
           </div>
           <ol className="relative border-l border-cream/20">
             {timeline.map((item) => (
               <li key={item.year} className="mb-10 ml-8">
-                <span className="absolute -left-3 flex h-6 w-6 items-center justify-center rounded-full bg-terracotta">
+                <span className="absolute -left-3 flex h-6 w-6 items-center justify-center rounded-full bg-taupe">
                   <span className="h-2 w-2 rounded-full bg-cream" />
                 </span>
-                <p className="label-eyebrow mb-1 text-terracotta-200">{item.year}</p>
+                <p className="label-eyebrow mb-1 text-taupe-200">{item.year}</p>
                 <h3 className="mb-2 font-serif text-lg text-cream">{item.title}</h3>
                 <p className="text-sm text-cream/60">{item.desc}</p>
               </li>

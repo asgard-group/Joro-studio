@@ -24,7 +24,7 @@ export const workItems: WorkItem[] = [
     category: "JÖRO Living",
     tags: ["Résidentiel", "Lounge", "320 m²"],
     description:
-      "Transformation d'un rez-de-chaussée en espace lounge premium. Bar en carreaux terracotta, arches en pierre apparente et éclairage d'ambiance pour un lieu de vie unique.",
+      "Transformation d'un rez-de-chaussée en espace lounge premium. Bar en carreaux taupe, arches en pierre apparente et éclairage d'ambiance pour un lieu de vie unique.",
     coverImage: "/images/f11417fe33c2cc32ef0ecc7b3c1c059e.jpg",
     featured: true,
     caseStudy: true,
@@ -80,7 +80,7 @@ export const workItems: WorkItem[] = [
     category: "JÖRO Meeting",
     tags: ["Bureaux", "Hybride", "400 m²"],
     description:
-      "Aménagement d'un plateau hybride alliant open space, salles de réunion vitrées et espaces de concentration. Colonnes apparentes et panneaux acoustiques terracotta.",
+      "Aménagement d'un plateau hybride alliant open space, salles de réunion vitrées et espaces de concentration. Colonnes apparentes et panneaux acoustiques taupe.",
     coverImage: "/images/work/portfolio-6.jpg",
     featured: false,
     caseStudy: false,

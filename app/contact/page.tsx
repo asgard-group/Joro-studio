@@ -44,10 +44,10 @@ export default function ContactPage() {
         <div className="container-site">
           <div className="grid gap-16 lg:grid-cols-2">
             <div>
-              <p className="label-eyebrow mb-6 text-terracotta-200">Contact</p>
+              <p className="label-eyebrow mb-6 text-taupe-200">Contact</p>
               <h1 className="heading-display mb-6">
                 Parlons de votre{" "}
-                <em className="not-italic text-terracotta">projet</em>
+                <em className="not-italic text-taupe">projet</em>
               </h1>
               <p className="text-lg leading-relaxed text-cream/70">
                 Que vous ayez un projet précis ou une simple question, notre
@@ -56,7 +56,7 @@ export default function ContactPage() {
             </div>
             <div className="flex flex-col justify-end gap-8">
               {contactInfo.map((info) => (
-                <div key={info.label} className="border-l-2 border-terracotta pl-6">
+                <div key={info.label} className="border-l-2 border-taupe pl-6">
                   <p className="text-xs font-semibold uppercase tracking-wider text-cream/40">
                     {info.label}
                   </p>
@@ -65,7 +65,7 @@ export default function ContactPage() {
                       href={info.href}
                       target={info.href.startsWith("http") ? "_blank" : undefined}
                       rel={info.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                      className="mt-1 block text-cream transition-colors hover:text-terracotta-200"
+                      className="mt-1 block text-cream transition-colors hover:text-taupe-200"
                     >
                       {info.value}
                     </a>
