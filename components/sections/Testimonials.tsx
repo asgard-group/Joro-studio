@@ -69,14 +69,14 @@ export default function Testimonials() {
   }, [progress, handlePct, scrollToProgress]);
 
   return (
-    <section data-navbar-theme="light" className="bg-[#F3F2ED] pt-[120px] pb-[80px] lg:pt-[100px] lg:pb-[200px]">
+    <section data-navbar-theme="light" className="bg-cream pt-[120px] pb-[80px] lg:pt-[100px] lg:pb-[200px]">
 
       {/* Header */}
       <div className="text-center px-4 mb-[60px] lg:mb-[80px]">
-        <p className="text-[11px] font-medium uppercase tracking-[0.25em] text-[#1C2626]/50 mb-4">
+        <p className="text-[11px] font-medium uppercase tracking-[0.25em] text-charcoal/50 mb-4">
           Avis client
         </p>
-        <h2 className="text-[32px] lg:text-[46px] font-semibold text-[#1C2626] leading-tight">
+        <h2 className="text-[32px] lg:text-[46px] font-semibold text-charcoal leading-tight">
           Une réflexion architecturale<br />au cœur de chaque projet
         </h2>
       </div>
@@ -116,7 +116,7 @@ export default function Testimonials() {
               )}
 
               {/* Témoignage — révélé au survol */}
-              <div className="absolute inset-0 bg-[#1C2626] flex flex-col justify-between p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="absolute inset-0 bg-charcoal flex flex-col justify-between p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 {/* Guillemets + texte */}
                 <div>
                   <svg width="36" height="28" viewBox="0 0 36 28" fill="none" className="mb-5">
@@ -144,7 +144,7 @@ export default function Testimonials() {
 
             {/* Caption */}
             <div className="flex justify-between items-baseline pt-[14px]">
-              <span className="text-[15px] font-medium text-[#1C2626] leading-snug">
+              <span className="text-[15px] font-medium text-charcoal leading-snug">
                 {t.author}
               </span>
               <span
@@ -168,7 +168,7 @@ export default function Testimonials() {
         >
           <div
             onMouseDown={onHandleMouseDown}
-            className="absolute top-1/2 -translate-y-1/2 bg-[#1C2626] rounded-full cursor-grab active:cursor-grabbing transition-[left] duration-150 ease-out"
+            className="absolute top-1/2 -translate-y-1/2 bg-charcoal rounded-full cursor-grab active:cursor-grabbing transition-[left] duration-150 ease-out"
             style={{
               width: `${handlePct}%`,
               height: "2px",

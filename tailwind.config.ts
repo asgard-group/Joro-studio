@@ -10,10 +10,10 @@ const config: Config = {
     extend: {
       colors: {
         cream: {
-          DEFAULT: "#F4EFE5",
+          DEFAULT: "#F3F2ED",
           50: "#FDFCF9",
           100: "#F9F5EE",
-          200: "#F4EFE5",
+          200: "#F3F2ED",
           300: "#EDE4D3",
           400: "#DDD0B8",
           500: "#C9B898",
@@ -30,7 +30,7 @@ const config: Config = {
           700: "#4A1302",
         },
         charcoal: {
-          DEFAULT: "#1C1A18",
+          DEFAULT: "#1C2626",
           light: "#3D3A35",
           muted: "#6B6560",
         },

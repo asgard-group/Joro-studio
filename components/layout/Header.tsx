@@ -16,7 +16,7 @@ const LABEL_STYLE: CSSProperties = {
 };
 
 const labelClasses = (dark: boolean) =>
-  `font-medium ${dark ? "text-[#F3F2ED]" : "text-charcoal"}`;
+  `font-medium ${dark ? "text-cream" : "text-charcoal"}`;
 
 const iconFilter = (dark: boolean) =>
   dark

@@ -2,6 +2,7 @@
 
 import { useRef, useState, useEffect } from "react";
 import ComingSoonLink from "@/components/ui/ComingSoonLink";
+import Pill from "@/components/ui/Pill";
 import { motion, useScroll, useTransform } from "framer-motion";
 
 const serviceNav = [
@@ -79,20 +80,20 @@ export default function ServicesAll() {
           loop
           playsInline
         />
-        <div className="absolute inset-0 z-0 bg-[#1C2626]/20 mix-blend-color-dodge" />
+        <div className="absolute inset-0 z-0 bg-charcoal/20 mix-blend-color-dodge" />
 
         {/* Contenu DESIGN & BUILD — révélé par le split (z-5) */}
         <div className="absolute inset-0 z-[5] flex items-center justify-between px-4 sm:px-6 lg:px-[60px]">
           <div className="max-w-[480px]">
-            <h2 className="text-[48px] md:text-[64px] font-semibold uppercase leading-none tracking-tight text-[#F3F2ED] mb-[40px] md:mb-[70px] whitespace-nowrap">
+            <h2 className="text-[48px] md:text-[64px] font-semibold uppercase leading-none tracking-tight text-cream mb-[40px] md:mb-[70px] whitespace-nowrap">
               DESIGN & BUILD
             </h2>
-            <p className="max-w-[360px] text-[16px] leading-relaxed text-[#F3F2ED] mb-[25px]">
+            <p className="max-w-[360px] text-[16px] leading-relaxed text-cream mb-[25px]">
               Nous transformons les espaces en lieux de vie authentiques,
               conjuguant qualité haut de gamme, design contemporain
               et responsabilité écologique.
             </p>
-            <ComingSoonLink className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#F3F2ED] border-b border-[#F3F2ED]/50 pb-1">
+            <ComingSoonLink className="text-[11px] font-medium uppercase tracking-[0.18em] text-cream border-b border-cream/50 pb-1">
               Découvrir l'offre
             </ComingSoonLink>
           </div>
@@ -106,8 +107,8 @@ export default function ServicesAll() {
                   const top = el.getBoundingClientRect().top + window.scrollY;
                   window.scrollTo({ top, behavior: "smooth" });
                 }}
-                className={`text-[14px] font-medium uppercase tracking-[0.18em] transition-colors hover:text-[#F3F2ED] ${
-                  item.id === "design-build" ? "text-[#F3F2ED]" : "text-[#F3F2ED]/30"
+                className={`text-[14px] font-medium uppercase tracking-[0.18em] transition-colors hover:text-cream ${
+                  item.id === "design-build" ? "text-cream" : "text-cream/30"
                 }`}
               >
                 {item.label}
@@ -118,11 +119,11 @@ export default function ServicesAll() {
 
         {/* Panneaux charcoal (toujours opaques) — glissent au split (z-20) */}
         <motion.div
-          className="absolute top-0 left-0 h-full bg-[#1C2626] z-20"
+          className="absolute top-0 left-0 h-full bg-charcoal z-20"
           style={{ width: "50%", x: leftX }}
         />
         <motion.div
-          className="absolute top-0 right-0 h-full bg-[#1C2626] z-20"
+          className="absolute top-0 right-0 h-full bg-charcoal z-20"
           style={{ width: "50%", x: rightX }}
         />
 
@@ -131,7 +132,7 @@ export default function ServicesAll() {
           className="absolute inset-0 z-30 pointer-events-none"
           style={{ opacity: contentOpacity }}
         >
-          <IntroSlide bgColor="#1C2626" textColor="#F3F2ED" />
+          <IntroSlide dark={true} />
         </motion.div>
 
         {/* Slide 1 (cream + texte charcoal) — devant slide 2, fade out pendant dissolve (z-31) */}
@@ -139,7 +140,7 @@ export default function ServicesAll() {
           className="absolute inset-0 z-[31] pointer-events-none"
           style={{ opacity: slide1Opacity }}
         >
-          <IntroSlide bgColor="#F3F2ED" textColor="#1C2626" />
+          <IntroSlide dark={false} />
         </motion.div>
       </div>
     </div>
@@ -147,41 +148,23 @@ export default function ServicesAll() {
 }
 
 // ─── IntroSlide ──────────────────────────────────────────────────
-function IntroSlide({ bgColor, textColor }: { bgColor: string; textColor: string }) {
+function IntroSlide({ dark }: { dark: boolean }) {
+  // Toutes les couleurs passent par des classes Tailwind tokenisées (cream / charcoal).
+  const bgClass = dark ? "bg-charcoal" : "bg-cream";
+  const textClass = dark ? "text-cream" : "text-charcoal";
+  const subTextClass = dark ? "text-cream/70" : "text-charcoal/70";
+  const lineBgClass = dark ? "bg-cream/40" : "bg-charcoal/40";
+
   return (
-    <div
-      className="absolute inset-0 flex flex-col"
-      style={{ backgroundColor: bgColor }}
-    >
+    <div className={`absolute inset-0 flex flex-col ${bgClass}`}>
       <div className="flex-1 flex flex-col items-center justify-center text-center px-6">
-        {/* Label pill */}
-        <div
-          className="inline-flex items-center justify-center mb-6 md:mb-8"
-          style={{
-            paddingLeft: 20,
-            paddingRight: 20,
-            paddingTop: 5,
-            paddingBottom: 5,
-            borderRadius: 10000,
-            outline: `1px solid ${textColor}`,
-            outlineOffset: "-1px",
-          }}
-        >
-          <span
-            style={{
-              color: textColor,
-              fontSize: 12,
-              fontWeight: 500,
-              letterSpacing: "0.18em",
-            }}
-          >
-            NOS OFFRES
-          </span>
-        </div>
+        <Pill variant={dark ? "dark" : "light"} className="mb-6 md:mb-8">
+          NOS OFFRES
+        </Pill>
         {/* Titre */}
         <h2
-          className="font-semibold tracking-tight text-[28px] md:text-[36px] lg:text-[46px] max-w-[900px]"
-          style={{ color: textColor, lineHeight: "130%" }}
+          className={`font-semibold tracking-tight text-[28px] md:text-[36px] lg:text-[46px] max-w-[900px] ${textClass}`}
+          style={{ lineHeight: "130%" }}
         >
           Notre vision est de repenser les
           <br />
@@ -192,22 +175,11 @@ function IntroSlide({ bgColor, textColor }: { bgColor: string; textColor: string
       </div>
       {/* CTA bas — collé au bas du viewport */}
       <div className="flex flex-col items-center">
-        <span
-          style={{
-            color: textColor,
-            fontSize: 11,
-            fontWeight: 500,
-            letterSpacing: "0.25em",
-            opacity: 0.7,
-          }}
-        >
+        <span className={`text-[11px] font-medium tracking-[0.25em] ${subTextClass}`}>
           GLISSER POUR DÉCOUVRIR
         </span>
         <div className="h-5" />
-        <div
-          className="w-px"
-          style={{ backgroundColor: textColor, opacity: 0.4, height: 40 }}
-        />
+        <div className={`w-px h-10 ${lineBgClass}`} />
       </div>
     </div>
   );
