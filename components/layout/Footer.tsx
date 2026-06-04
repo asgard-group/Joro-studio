@@ -5,7 +5,7 @@ import ComingSoonLink from "@/components/ui/ComingSoonLink";
 
 export default function Footer() {
   return (
-    <footer className="bg-charcoal text-cream">
+    <footer className="bg-charcoal text-cream -mt-px">
       <div className="px-4 sm:px-6 lg:px-[60px] py-16 lg:py-20">
         <div className="grid grid-cols-2 gap-10 lg:grid-cols-4 lg:gap-12">
 

@@ -24,7 +24,7 @@ export default function AboutHistory() {
     // Pin-spacer : hauteur étendue = zone de scroll pendant laquelle la section reste pinnée.
     <div ref={wrapperRef} className="relative z-10" style={{ height: "250vh" }}>
       <section
-        className="sticky top-0 min-h-screen grid grid-rows-[auto_1fr] gap-[50px] min-[1020px]:gap-[100px] pt-[80px] min-[1020px]:pt-[200px] bg-cream overflow-hidden"
+        className="sticky top-0 min-h-screen grid grid-rows-[auto_1fr] gap-[50px] min-[1020px]:gap-[100px] py-[50px] bg-cream overflow-hidden"
       >
         {/* ROW TEXTES */}
         <div className="flex flex-col gap-[50px] min-[1020px]:flex-row min-[1020px]:gap-[30px]">

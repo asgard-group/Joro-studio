@@ -74,7 +74,7 @@ export default function ServicesAll() {
         <video
           ref={videoRef}
           className="absolute inset-0 w-full h-full object-cover z-0 scale-x-[-1]"
-          src="/vidéos/vecteezy_unrecognizable-female-carpenter-or-furniture-designer_71265347.mp4"
+          src="/videos/vecteezy_unrecognizable-female-carpenter-or-furniture-designer_71265347.mp4"
           autoPlay
           muted
           loop
@@ -166,11 +166,7 @@ function IntroSlide({ dark }: { dark: boolean }) {
           className={`font-semibold tracking-tight text-[28px] md:text-[36px] lg:text-[46px] max-w-[900px] ${textClass}`}
           style={{ lineHeight: "130%" }}
         >
-          Notre vision est de repenser les
-          <br />
-          espaces dédiés aux nouveaux
-          <br />
-          usages urbains
+          QUATRE EXPERTISES,<br />UN SEUL INTERLOCUTEUR
         </h2>
       </div>
       {/* CTA bas — collé au bas du viewport */}

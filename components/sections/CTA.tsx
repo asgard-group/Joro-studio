@@ -63,7 +63,7 @@ export default function CTA() {
       >
         {/* Background image */}
         <Image
-          src="/images/Footer.png"
+          src="/images/bg-cta.png"
           alt=""
           fill
           className="object-cover"
