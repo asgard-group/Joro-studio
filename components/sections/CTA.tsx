@@ -3,6 +3,7 @@
 import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import ComingSoonLink from "@/components/ui/ComingSoonLink";
+import Pill from "@/components/ui/Pill";
 import { motion, useScroll, useTransform } from "framer-motion";
 
 export default function CTA() {
@@ -72,12 +73,10 @@ export default function CTA() {
 
         {/* Title block — centered, moves up on scroll */}
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center pointer-events-none">
-          <motion.div style={{ y: titleY }}>
-            <p className="text-[11px] font-medium uppercase tracking-[0.25em] text-cream/50 mb-3 md:mb-5">
-              Nos contacter
-            </p>
-            <h2 className="text-[30px] md:text-[46px] font-semibold leading-tight text-cream max-w-2xl">
-              Des espaces conçus<br />avec du savoir-faire
+          <motion.div style={{ y: titleY }} className="flex flex-col items-center">
+            <Pill variant="dark" className="mb-5">NOUS CONTACTER</Pill>
+            <h2 className="text-[46px] font-semibold leading-tight text-cream max-w-3xl uppercase">
+              Transformons<br />vos idées en réalité
             </h2>
           </motion.div>
         </div>
@@ -106,7 +105,7 @@ export default function CTA() {
             {/* Left — Prendre rendez-vous */}
             <div className="flex flex-col items-center text-center sm:pr-12 lg:pr-20 mb-10 sm:mb-0">
               <p className="text-[20px] md:text-[24px] lg:text-[26px] font-normal text-cream leading-snug mb-8 max-w-xs">
-                Tenez vous aux courants<br />des derniers projets
+                Rencontrez notre équipe<br />dès maintenant
               </p>
               <ComingSoonLink className="inline-flex items-center justify-center px-8 py-4 bg-cream text-charcoal text-[11px] font-medium uppercase tracking-[0.18em]">
                 Prendre rendez-vous
