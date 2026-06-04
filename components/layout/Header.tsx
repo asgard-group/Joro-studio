@@ -56,7 +56,7 @@ function NavContent({ dark, langOpen, setLangOpen, langTriggerId }: NavContentPr
     <div className="px-[20px] min-[840px]:px-[40px] min-[1200px]:px-[60px]">
       <div className="grid grid-cols-3 items-center py-[20px]">
         {/* Left — hamburger + label */}
-        <ComingSoonLink className="justify-self-start inline-flex items-center gap-[8px] min-[700px]:gap-[10px]">
+        <ComingSoonLink className="justify-self-start w-full inline-flex items-center gap-[8px] min-[700px]:gap-[10px]">
           <Image
             src="/images/icon/menu.svg"
             alt=""
@@ -91,7 +91,7 @@ function NavContent({ dark, langOpen, setLangOpen, langTriggerId }: NavContentPr
         </Link>
 
         {/* Right — contact + language switcher */}
-        <div className="justify-self-end inline-flex items-center" style={{ gap: '20px' }}>
+        <div className="justify-self-end w-full inline-flex items-center justify-end" style={{ gap: '20px' }}>
           <ComingSoonLink>
             <span
               className={`text-[12px] min-[700px]:text-[16px] ${labelClasses(dark)}`}

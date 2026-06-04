@@ -17,7 +17,7 @@ export const metadata: Metadata = buildMetadata({
 });
 
 export default function HomePage() {
-  const featuredWork = workItems.filter((w) => w.featured).slice(0, 3);
+  const featuredWork = workItems.filter((w) => w.featured).slice(0, 2);
 
   return (
     <>
@@ -25,9 +25,12 @@ export default function HomePage() {
       <Hero
         eyebrow="Architecture & Design d'intérieur"
         title={<>Concevoir les espaces<br />hybrides de demain</>}
-        video="/vidéos/final.mp4"
+        video="/videos/Transition 3_5.webm"
         scrollCta="Découvrir notre studio"
       />
+
+      {/* Spacer entre le hero et AboutHistory */}
+      <div style={{ height: "150px" }} />
 
       {/* À propos — Notre histoire (avec animation clip-path révélation au scroll) */}
       <AboutHistory />
@@ -45,7 +48,7 @@ export default function HomePage() {
             activeId="amo"
             title="AMO"
             description="Assistance à maîtrise d'ouvrage : nous vous accompagnons à chaque étape de votre projet, de la définition du programme jusqu'à la livraison."
-            video="/vidéos/Composition 1.mp4"
+            video="/videos/Composition 1.mp4"
           />
         </div>
         <div className="sticky top-0 h-screen" style={{ zIndex: 50 }}>
@@ -54,7 +57,7 @@ export default function HomePage() {
             title="MARKETING SUITE"
             description="Des espaces de démonstration et de commercialisation pensés pour valoriser vos actifs immobiliers et séduire vos futurs acquéreurs."
             image="/images/Frame 207.png"
-            overlayClass="bg-charcoal/20 mix-blend-color-burn"
+            overlayClass="bg-charcoal/25"
           />
         </div>
         <div className="sticky top-0 h-screen" style={{ zIndex: 60 }}>
@@ -62,7 +65,7 @@ export default function HomePage() {
             activeId="conseil-workplace"
             title={"CONSEIL WORKPLACE &\nSTRATÉGIE IMMOBILIÈRE"}
             description="Nous vous aidons à définir votre stratégie immobilière, optimiser vos espaces de travail et anticiper les nouveaux usages urbains."
-            video="/vidéos/vecteezy_4k-animation-angled-view-of-modern-building-with-clear-blue_40552327.mp4"
+            video="/videos/vecteezy_4k-animation-angled-view-of-modern-building-with-clear-blue_40552327.mp4"
             flipX
             wide
             overlayClass="bg-charcoal/20 mix-blend-soft-light"

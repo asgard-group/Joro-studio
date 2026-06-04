@@ -3,6 +3,7 @@
 import { useRef, useState, useCallback } from "react";
 import Image from "next/image";
 import { testimonials } from "@/data/testimonials";
+import Pill from "@/components/ui/Pill";
 
 export default function Testimonials() {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -69,106 +70,106 @@ export default function Testimonials() {
   }, [progress, handlePct, scrollToProgress]);
 
   return (
-    <section data-navbar-theme="light" className="bg-cream pt-[120px] pb-[80px] lg:pt-[100px] lg:pb-[200px]">
+    <section data-navbar-theme="light" className="bg-cream pt-[80px] pb-[80px]">
 
-      {/* Header */}
-      <div className="text-center px-4 mb-[60px] lg:mb-[80px]">
-        <p className="text-[11px] font-medium uppercase tracking-[0.25em] text-charcoal/50 mb-4">
-          Avis client
-        </p>
-        <h2 className="text-[32px] lg:text-[46px] font-semibold text-charcoal leading-tight">
-          Une réflexion architecturale<br />au cœur de chaque projet
-        </h2>
+      {/* Label pill */}
+      <div className="px-[24px] sm:px-[40px] lg:px-[60px] mb-[40px]">
+        <Pill>TÉMOIGNAGES</Pill>
       </div>
 
-      {/* Carousel */}
-      <div
-        ref={scrollRef}
-        onScroll={handleScroll}
-        className="flex gap-[30px] overflow-x-auto px-4 sm:px-6 lg:px-[60px]"
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none", scrollSnapType: "x mandatory" }}
-      >
-        {testimonials.map((t) => (
-          <div
-            key={t.id}
-            className="group flex-shrink-0"
+      {/* Corps : titre vertical + carousel */}
+      <div className="flex items-stretch">
+
+        {/* AVIS CLIENT — texte vertical aligné en haut */}
+        <div className="hidden lg:flex items-start justify-center shrink-0 pl-[60px] pr-[20px]">
+          <span
+            className="font-semibold uppercase text-[52px] text-charcoal select-none"
             style={{
-              width: "calc((100vw - 210px) / 4)",
-              minWidth: "260px",
-              scrollSnapAlign: "start",
+              writingMode: "vertical-rl",
+              transform: "rotate(180deg)",
+              lineHeight: 1,
+              letterSpacing: "0.04em",
             }}
           >
-            {/* Photo + hover overlay */}
-            <div
-              className="relative w-full overflow-hidden"
-              style={{ height: "450px" }}
-            >
-              {t.photo ? (
-                <Image
-                  src={t.photo}
-                  alt={t.author}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 80vw, 25vw"
-                />
-              ) : (
-                <div className="w-full h-full bg-[#BAB6AA]/40" />
-              )}
+            AVIS CLIENT
+          </span>
+        </div>
 
-              {/* Témoignage — révélé au survol */}
-              <div className="absolute inset-0 bg-charcoal flex flex-col justify-between p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                {/* Guillemets + texte */}
-                <div>
-                  <svg width="36" height="28" viewBox="0 0 36 28" fill="none" className="mb-5">
-                    <path d="M0 28V17.2C0 13.467 0.933 10.2 2.8 7.4C4.667 4.533 7.4 2.2 11 0.399999L13.4 4C11 5.4 9.167 7 8 8.8C6.9 10.6 6.367 12.667 6.4 15H13.4V28H0ZM22.6 28V17.2C22.6 13.467 23.533 10.2 25.4 7.4C27.267 4.533 30 2.2 33.6 0.399999L36 4C33.6 5.4 31.767 7 30.6 8.8C29.5 10.6 28.967 12.667 29 15H36V28H22.6Z" fill="white" fillOpacity="0.25"/>
+        {/* Carousel */}
+        <div
+          ref={scrollRef}
+          onScroll={handleScroll}
+          className="flex gap-[20px] overflow-x-auto pr-[24px] sm:pr-[40px] lg:pr-[60px]"
+          style={{
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+            scrollSnapType: "x mandatory",
+          }}
+        >
+          {testimonials.map((t) => (
+            <div
+              key={t.id}
+              className="group flex-shrink-0 flex flex-col"
+              style={{
+                width: "clamp(280px, calc((100vw - 220px) / 3), 420px)",
+                scrollSnapAlign: "start",
+              }}
+            >
+              {/* Image */}
+              <div className="relative w-full overflow-hidden" style={{ height: "520px" }}>
+                {t.photo ? (
+                  <Image
+                    src={t.photo}
+                    alt={t.author}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 80vw, 33vw"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-[#BAB6AA]/30" />
+                )}
+
+                {/* Overlay citation — visible au survol */}
+                <div className="absolute inset-0 bg-charcoal/60 flex flex-col justify-end p-[28px] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <svg width="32" height="24" viewBox="0 0 36 28" fill="none" className="mb-[16px]">
+                    <path d="M0 28V17.2C0 13.467 0.933 10.2 2.8 7.4C4.667 4.533 7.4 2.2 11 0.399999L13.4 4C11 5.4 9.167 7 8 8.8C6.9 10.6 6.367 12.667 6.4 15H13.4V28H0ZM22.6 28V17.2C22.6 13.467 23.533 10.2 25.4 7.4C27.267 4.533 30 2.2 33.6 0.399999L36 4C33.6 5.4 31.767 7 30.6 8.8C29.5 10.6 28.967 12.667 29 15H36V28H22.6Z" fill="white" fillOpacity="0.5"/>
                   </svg>
-                  <p className="text-white text-[14px] leading-relaxed">
+                  <p className="text-white text-[14px] leading-[1.65] mb-[20px]">
                     {t.quote}
                   </p>
-                </div>
-
-                {/* Auteur */}
-                <div className="flex items-center gap-3">
-                  <div className="relative w-11 h-11 rounded-full overflow-hidden flex-shrink-0">
-                    {t.photo && (
-                      <Image src={t.photo} alt={t.author} fill className="object-cover" sizes="44px" />
-                    )}
-                  </div>
-                  <div>
-                    <p className="text-white text-[14px] font-semibold leading-snug">{t.author}</p>
-                    <p className="text-white/50 text-[12px] mt-0.5">{t.company}</p>
-                  </div>
+                  <p className="text-white/60 text-[12px] font-medium tracking-[0.06em]">
+                    — {t.author}, {t.company}
+                  </p>
                 </div>
               </div>
-            </div>
 
-            {/* Caption */}
-            <div className="flex justify-between items-baseline pt-[14px]">
-              <span className="text-[15px] font-medium text-charcoal leading-snug">
-                {t.author}
-              </span>
-              <span
-                className="text-[13px] text-[#BAB6AA] shrink-0 ml-3"
-                style={{ letterSpacing: "0.02em" }}
-              >
-                {t.company}
-              </span>
+              {/* Caption sous l'image */}
+              {(
+                <div className="flex justify-between items-baseline pt-[14px]">
+                  <span className="text-[15px] font-medium text-charcoal">
+                    {t.author}
+                  </span>
+                  <span className="text-[13px] text-[#BAB6AA] shrink-0 ml-3" style={{ letterSpacing: "0.02em" }}>
+                    {t.company}
+                  </span>
+                </div>
+              )}
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
-      {/* Slider */}
+      {/* Pagination */}
       <div className="flex justify-center mt-[48px]">
         <div
           ref={trackRef}
           onClick={onTrackClick}
-          className="relative rounded-full bg-[#BAB6AA]/30 cursor-pointer"
+          className="relative bg-[#BAB6AA]/30 cursor-pointer"
           style={{ width: "180px", height: "2px" }}
         >
           <div
             onMouseDown={onHandleMouseDown}
-            className="absolute top-1/2 -translate-y-1/2 bg-charcoal rounded-full cursor-grab active:cursor-grabbing transition-[left] duration-150 ease-out"
+            className="absolute top-1/2 -translate-y-1/2 bg-charcoal cursor-grab active:cursor-grabbing transition-[left] duration-150 ease-out"
             style={{
               width: `${handlePct}%`,
               height: "2px",

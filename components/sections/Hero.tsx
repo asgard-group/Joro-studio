@@ -57,13 +57,17 @@ export default function Hero({
         >
           {video ? (
             <video
-              src={video}
               autoPlay
               muted
               loop
               playsInline
               className="absolute inset-0 h-full w-full object-cover"
-            />
+            >
+              <source
+                src={video}
+                type={video.endsWith(".webm") ? "video/webm" : video.endsWith(".mp4") ? "video/mp4" : undefined}
+              />
+            </video>
           ) : (
             <Image
               src={image!}
