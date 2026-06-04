@@ -106,7 +106,7 @@ export default function Testimonials() {
             scrollSnapType: "x mandatory",
           }}
         >
-          {testimonials.map((t, i) => (
+          {testimonials.map((t) => (
             <div
               key={t.id}
               className="group flex-shrink-0 flex flex-col"

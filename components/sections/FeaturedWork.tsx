@@ -4,7 +4,6 @@ import Image from "next/image";
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import type { WorkItem } from "@/types";
-import ComingSoonLink from "@/components/ui/ComingSoonLink";
 
 interface Props {
   items: WorkItem[];
