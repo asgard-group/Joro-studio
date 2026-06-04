@@ -45,7 +45,7 @@ export default function AboutHistory() {
             <p
               className="font-medium text-[14px] leading-[24px] min-[1020px]:text-[16px] min-[1020px]:leading-[26px] text-charcoal"
             >
-              Notre studio est né d&rsquo;un constat simple : il est aujourd&rsquo;hui difficile de concevoir des espaces qui allient innovation, élégance et respect de l&rsquo;environnement. Pour répondre à ce défi, nous avons créé JORO Studio, une approche nouvelle de l&rsquo;architecture et des travaux où chaque projet est pensé dans les moindres détails afin de conjuguer qualité haut de gamme, design contemporain et responsabilité écologique.
+              JÖRO Studio est né d&rsquo;un constat simple&nbsp;: pourquoi l&rsquo;élégance, l&rsquo;innovation et l&rsquo;environnement ne pourraient-ils pas coexister&nbsp;? Aujourd&rsquo;hui, chaque projet que nous concevons, des bureaux aux lieux de vie, est une réponse concrète à ce défi&nbsp;: créer des espaces hybrides, durables et inspirants, pensés pour les usages urbains de demain.
             </p>
           </div>
         </div>
