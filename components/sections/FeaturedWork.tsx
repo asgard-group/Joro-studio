@@ -47,9 +47,9 @@ function ProjectRow({ item, reversed = false }: { item: WorkItem; reversed?: boo
           </div>
         </div>
         <div className="relative overflow-hidden w-full" style={{ height: "500px" }}>
-          <motion.div className="absolute inset-x-0" style={{ y: imageY, top: "-10%", height: "120%" }}>
+          <div className="absolute inset-0">
             <Image src={item.coverImage} alt={item.title} fill className="object-cover" sizes="100vw" />
-          </motion.div>
+          </div>
         </div>
       </div>
 
