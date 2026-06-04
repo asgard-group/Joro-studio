@@ -17,6 +17,7 @@ interface Props {
   activeId: string;
   title: string;
   description: string;
+  ctaLabel?: string;
   image?: string;
   video?: string;
   flipX?: boolean;
@@ -25,7 +26,7 @@ interface Props {
   overlayClass?: string;
 }
 
-export default function ServiceReveal({ activeId, title, description, image, video, flipX, noFadeIn, wide, overlayClass }: Props) {
+export default function ServiceReveal({ activeId, title, description, ctaLabel = "Découvrir l'offre", image, video, flipX, noFadeIn, wide, overlayClass }: Props) {
   const sectionRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -70,15 +71,15 @@ export default function ServiceReveal({ activeId, title, description, image, vid
         viewport={{ once: true, margin: "-10%" }}
       >
         {/* Gauche */}
-        <div className={wide ? "max-w-[880px]" : "max-w-[480px]"}>
+        <div className={wide ? "max-w-[880px]" : "max-w-[580px]"}>
           <h2 className={`text-[48px] md:text-[64px] font-semibold uppercase leading-none tracking-tight text-cream mb-[40px] md:mb-[70px] ${title.includes('\n') ? 'whitespace-pre-line' : 'whitespace-nowrap'}`}>
             {title}
           </h2>
-          <p className="max-w-[360px] text-[16px] leading-relaxed text-cream mb-[25px]">
+          <p className="max-w-[460px] text-[16px] leading-relaxed text-cream mb-[25px]">
             {description}
           </p>
           <ComingSoonLink className="text-[11px] font-medium uppercase tracking-[0.18em] text-cream border-b border-cream/50 pb-1">
-            Découvrir l'offre
+            {ctaLabel}
           </ComingSoonLink>
         </div>
 

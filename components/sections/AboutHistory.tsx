@@ -24,7 +24,7 @@ export default function AboutHistory() {
     // Pin-spacer : hauteur étendue = zone de scroll pendant laquelle la section reste pinnée.
     <div ref={wrapperRef} className="relative z-10" style={{ height: "250vh" }}>
       <section
-        className="sticky top-0 min-h-screen grid grid-rows-[auto_1fr] gap-[50px] min-[1020px]:gap-[100px] py-[50px] bg-cream overflow-hidden"
+        className="sticky top-0 min-h-screen grid grid-rows-[auto_1fr] gap-[50px] min-[1020px]:gap-[100px] pt-[50px] pb-[20px] bg-cream overflow-hidden"
       >
         {/* ROW TEXTES */}
         <div className="flex flex-col gap-[50px] min-[1020px]:flex-row min-[1020px]:gap-[30px]">
@@ -41,11 +41,11 @@ export default function AboutHistory() {
             </h2>
           </div>
           {/* Texte droite : description */}
-          <div className="flex-1 min-[1440px]:flex-[761_1_0%] min-[1440px]:min-w-[660px] min-[1020px]:pt-[36px] px-[20px] min-[840px]:px-[40px] min-[1020px]:pl-0 min-[1020px]:pr-[40px] min-[1440px]:pr-[60px]">
+          <div className="flex-1 min-[1440px]:flex-[761_1_0%] min-[1440px]:min-w-[660px] px-[20px] min-[840px]:px-[40px] min-[1020px]:pt-[46px] min-[1020px]:pl-0 min-[1020px]:pr-[40px] min-[1440px]:pr-[60px]">
             <p
               className="font-medium text-[14px] leading-[24px] min-[1020px]:text-[16px] min-[1020px]:leading-[26px] text-charcoal"
             >
-              Notre studio est né d&rsquo;un constat simple : il est aujourd&rsquo;hui difficile de concevoir des espaces qui allient innovation, élégance et respect de l&rsquo;environnement. Pour répondre à ce défi, nous avons créé JORO Studio, une approche nouvelle de l&rsquo;architecture et des travaux où chaque projet est pensé dans les moindres détails afin de conjuguer qualité haut de gamme, design contemporain et responsabilité écologique.
+              JÖRO Studio est né d&rsquo;un constat simple&nbsp;: pourquoi l&rsquo;élégance, l&rsquo;innovation et l&rsquo;environnement ne pourraient-ils pas coexister&nbsp;? Aujourd&rsquo;hui, chaque projet que nous concevons, des bureaux aux lieux de vie, est une réponse concrète à ce défi&nbsp;: créer des espaces hybrides, durables et inspirants, pensés pour les usages urbains de demain.
             </p>
           </div>
         </div>
@@ -56,10 +56,10 @@ export default function AboutHistory() {
           className="flex flex-col gap-[30px] min-[1020px]:flex-row min-[1020px]:items-stretch"
         >
           {/* Côté gauche : superposition — aspect fixe sur mobile, hauteur dynamique sur desktop */}
-          <div className="flex-1 min-[1440px]:flex-[1129_1_0%] min-[1020px]:max-w-[749px] min-[1921px]:max-w-[1129px] relative aspect-[1020/560] min-[1020px]:aspect-auto min-[1020px]:h-full overflow-hidden">
+          <div className="max-[1019px]:hidden flex-1 min-[1440px]:flex-[1129_1_0%] min-[1020px]:max-w-[749px] min-[1921px]:max-w-[1129px] relative aspect-[1020/560] min-[1020px]:aspect-auto min-[1020px]:h-full overflow-hidden">
             {/* Image du dessous — visible dès le départ */}
             <Image
-              src="/images/f11417fe33c2cc32ef0ecc7b3c1c059e.jpg"
+              src="/images/Frame253.webp"
               alt="JÖRO Studio — espace lounge"
               fill
               className="object-cover"
@@ -68,7 +68,7 @@ export default function AboutHistory() {
             {/* Image du dessus — révélée via clip-path animé au scroll */}
             <motion.div className="absolute inset-0" style={{ clipPath }}>
               <Image
-                src="/images/DSC01645-HDR.jpg"
+                src="/images/1762939680941-1.webp"
                 alt="Salle de réunion — chaises orange"
                 fill
                 className="object-cover"
@@ -78,10 +78,10 @@ export default function AboutHistory() {
           </div>
 
           {/* Côté droit : superposition — caché sous 1020 (anciennement à gauche) */}
-          <div className="max-[1019px]:hidden flex-1 min-[1440px]:flex-[761_1_0%] min-[1440px]:min-w-[660px] relative min-[1020px]:h-full overflow-hidden">
+          <div className="flex-1 min-[1440px]:flex-[761_1_0%] min-[1440px]:min-w-[660px] relative aspect-[1020/560] min-[1020px]:aspect-auto min-[1020px]:h-full overflow-hidden">
             {/* Image du dessous */}
             <Image
-              src="/images/1.png"
+              src="/images/2024-10-Retines-Asgard-parquet-Pigalle-DSC04495.webp"
               alt="JÖRO Office — salle de réunion taupe"
               fill
               className="object-cover"
@@ -90,7 +90,7 @@ export default function AboutHistory() {
             {/* Image du dessus — révélée via clip-path animé au scroll */}
             <motion.div className="absolute inset-0" style={{ clipPath }}>
               <Image
-                src="/images/Retines-Asgard-Banque-_23A2171-web.jpg"
+                src="/images/1762939681123-1.webp"
                 alt="CoinShares — espace lounge"
                 fill
                 className="object-cover"

@@ -21,12 +21,12 @@ interface PillProps {
 export default function Pill({ children, variant = "light", className = "" }: PillProps) {
   const colorClasses =
     variant === "dark"
-      ? "outline-cream text-cream"
-      : "outline-charcoal text-charcoal";
+      ? "border-cream/30 text-cream"
+      : "border-charcoal/30 text-charcoal";
 
   return (
     <div
-      className={`inline-flex items-center justify-center rounded-full px-5 py-[5px] outline outline-1 -outline-offset-1 ${colorClasses} ${className}`}
+      className={`inline-flex items-center justify-center rounded-full px-[14px] py-[4px] border ${colorClasses} ${className}`}
     >
       <span className="text-[12px] font-medium tracking-[0.18em] uppercase">
         {children}
