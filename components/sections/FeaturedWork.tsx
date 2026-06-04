@@ -55,7 +55,7 @@ function ProjectRow({ item, reversed = false }: { item: WorkItem; reversed?: boo
 
       {/* DESKTOP — texte sticky à gauche, image à droite */}
       <div className={`hidden lg:flex items-start py-[100px]${reversed ? " flex-row-reverse" : ""}`}>
-        <div className={`w-[35%] sticky top-[200px] ${reversed ? "pr-[60px] pl-[40px]" : "pl-[60px] pr-[40px]"}`}>
+        <div className={`w-[35%] sticky top-[200px] py-[60px] ${reversed ? "pr-[60px] pl-[40px]" : "pl-[60px] pr-[40px]"}`}>
           <div className="flex flex-col gap-[24px]">
             <h2
               className="font-semibold uppercase text-[40px] min-[1200px]:text-[52px] text-charcoal"
@@ -63,7 +63,7 @@ function ProjectRow({ item, reversed = false }: { item: WorkItem; reversed?: boo
             >
               {item.title}
             </h2>
-            <p className="text-[14px] text-charcoal" style={{ lineHeight: 1.7, maxWidth: "380px" }}>
+            <p className="text-[16px] text-charcoal" style={{ lineHeight: 1.7 }}>
               {item.description}
             </p>
             <div className="flex flex-wrap gap-[8px]">
@@ -78,7 +78,7 @@ function ProjectRow({ item, reversed = false }: { item: WorkItem; reversed?: boo
             </div>
           </div>
         </div>
-        <div className="w-[65%] relative overflow-hidden" style={{ height: "789px" }}>
+        <div className="w-[65%] relative overflow-hidden" style={{ height: "670px" }}>
           <motion.div className="absolute inset-x-0" style={{ y: imageY, top: "-10%", height: "120%" }}>
             <Image src={item.coverImage} alt={item.title} fill className="object-cover" sizes="65vw" />
           </motion.div>

@@ -47,7 +47,8 @@ export default function HomePage() {
           <ServiceReveal
             activeId="amo"
             title="AMO"
-            description="Assistance à maîtrise d'ouvrage : nous vous accompagnons à chaque étape de votre projet, de la définition du programme jusqu'à la livraison."
+            description="Assistance à la maîtrise d'ouvrage : conseil en faisabilité, diagnostic RSE et accompagnement à la certification, nous vous guidons à chaque étape stratégique de votre projet."
+            ctaLabel="Être accompagné"
             video="/videos/Composition 1.mp4"
           />
         </div>
@@ -55,7 +56,8 @@ export default function HomePage() {
           <ServiceReveal
             activeId="marketing-suite"
             title="MARKETING SUITE"
-            description="Des espaces de démonstration et de commercialisation pensés pour valoriser vos actifs immobiliers et séduire vos futurs acquéreurs."
+            description="Des supports visuels et des espaces de présentation pensés pour valoriser vos actifs immobiliers pour que votre projet trouve son acquéreur avant même d'être livré."
+            ctaLabel="Valoriser mon actif"
             image="/images/Frame 207.png"
             overlayClass="bg-charcoal/25"
           />
@@ -64,7 +66,8 @@ export default function HomePage() {
           <ServiceReveal
             activeId="conseil-workplace"
             title={"CONSEIL WORKPLACE &\nSTRATÉGIE IMMOBILIÈRE"}
-            description="Nous vous aidons à définir votre stratégie immobilière, optimiser vos espaces de travail et anticiper les nouveaux usages urbains."
+            description="Nous vous aidons à définir une stratégie immobilière alignée sur vos ambitions. Une approche conseil qui conjugue vision long terme, culture d'entreprise et exigence de qualité."
+            ctaLabel="Affiner ma stratégie"
             video="/videos/vecteezy_4k-animation-angled-view-of-modern-building-with-clear-blue_40552327.mp4"
             flipX
             wide

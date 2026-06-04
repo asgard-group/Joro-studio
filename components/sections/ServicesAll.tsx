@@ -88,13 +88,11 @@ export default function ServicesAll() {
             <h2 className="text-[48px] md:text-[64px] font-semibold uppercase leading-none tracking-tight text-cream mb-[40px] md:mb-[70px] whitespace-nowrap">
               DESIGN & BUILD
             </h2>
-            <p className="max-w-[360px] text-[16px] leading-relaxed text-cream mb-[25px]">
-              Nous transformons les espaces en lieux de vie authentiques,
-              conjuguant qualité haut de gamme, design contemporain
-              et responsabilité écologique.
+            <p className="max-w-[460px] text-[16px] leading-relaxed text-cream mb-[25px]">
+              Chaque espace est pensé dans ses moindres détails pour conjuguer esthétique et performance durable. Une vision cohérente, du premier trait jusqu'à la remise des clés.
             </p>
             <ComingSoonLink className="text-[11px] font-medium uppercase tracking-[0.18em] text-cream border-b border-cream/50 pb-1">
-              Découvrir l'offre
+              Lancer un projet
             </ComingSoonLink>
           </div>
           <div className="hidden md:flex flex-col items-end gap-[18px]">
