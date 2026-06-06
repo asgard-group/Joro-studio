@@ -72,7 +72,7 @@ export default function ServiceReveal({ activeId, title, description, ctaLabel =
       >
         {/* Gauche */}
         <div className={wide ? "max-w-[880px]" : "max-w-[580px]"}>
-          <h2 className={`text-[48px] md:text-[64px] font-semibold uppercase leading-none tracking-tight text-cream mb-[40px] md:mb-[70px] ${title.includes('\n') ? 'whitespace-pre-line' : 'whitespace-nowrap'}`}>
+          <h2 className={`text-[48px] md:text-[64px] font-semibold uppercase tracking-tight text-cream mb-[40px] ${title.includes('\n') ? 'whitespace-pre-line leading-[1.2]' : 'whitespace-nowrap leading-none'}`}>
             {title}
           </h2>
           <p className="max-w-[460px] text-[16px] leading-relaxed text-cream mb-[25px]">
