@@ -17,7 +17,7 @@ export const metadata: Metadata = buildMetadata({
 });
 
 export default function HomePage() {
-  const featuredWork = workItems.filter((w) => w.featured).slice(0, 2);
+  const featuredWork = workItems.filter((w) => w.featured).slice(0, 3);
 
   return (
     <>
@@ -37,7 +37,7 @@ export default function HomePage() {
 
       {/* Services + FeaturedWork — un seul conteneur sticky pour tout l'enchaînement */}
       <ServicesAll />
-      <div className="relative" style={{ height: "700vh", marginTop: "-100vh" }}>
+      <div className="relative" style={{ height: "800vh", marginTop: "-100vh" }}>
         {/* Ancres absolues */}
         <div id="amo" style={{ position: "absolute", top: 0 }} />
         <div id="marketing-suite" style={{ position: "absolute", top: "100vh" }} />
