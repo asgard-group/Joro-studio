@@ -70,10 +70,10 @@ export default function Testimonials() {
   }, [progress, handlePct, scrollToProgress]);
 
   return (
-    <section data-navbar-theme="light" className="bg-cream pt-[80px] pb-[80px]">
+    <section data-navbar-theme="light" className="bg-cream pt-[150px] pb-[150px]">
 
       {/* Label pill */}
-      <div className="px-[24px] sm:px-[40px] lg:px-[60px] mb-[40px]">
+      <div className="px-[24px] sm:px-[40px] lg:px-[60px] mb-[60px]">
         <Pill>TÉMOIGNAGES</Pill>
       </div>
 
@@ -81,7 +81,7 @@ export default function Testimonials() {
       <div className="flex items-stretch">
 
         {/* AVIS CLIENT — texte vertical aligné en haut */}
-        <div className="hidden lg:flex items-start justify-center shrink-0 pl-[60px] pr-[20px]">
+        <div className="hidden lg:flex items-start justify-center shrink-0 pl-[60px] pr-[60px]">
           <span
             className="font-semibold uppercase text-[52px] text-charcoal select-none"
             style={{

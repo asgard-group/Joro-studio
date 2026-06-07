@@ -11,12 +11,12 @@ interface Props {
 }
 
 const LEFT_IMAGES = [
-  "/images/work/portfolio-1.jpg",
-  "/images/work/portfolio-2.jpg",
-  "/images/work/portfolio-3.jpg",
-  "/images/work/portfolio-4.jpg",
-  "/images/work/portfolio-5.jpg",
-  "/images/work/portfolio-6.jpg",
+  "/images/taibout1.webp",
+  "/images/taibout2.webp",
+  "/images/lepire1.webp",
+  "/images/lempire2.webp",
+  "/images/mail1.webp",
+  "/images/mail2.webp",
 ];
 
 export default function FeaturedWork({ items, total }: Props) {
@@ -71,6 +71,7 @@ export default function FeaturedWork({ items, total }: Props) {
       });
 
       const currentStep = Math.min(items.length - 1, Math.floor(p * items.length));
+
       if (currentStep !== lastStepRef.current) {
         const title = titleRef.current;
         const subtitle = subtitleRef.current;
