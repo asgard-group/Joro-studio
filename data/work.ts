@@ -3,14 +3,14 @@ import type { WorkItem } from "@/types";
 export const workItems: WorkItem[] = [
   {
     id: "opco-paris",
-    title: "25 MAIL",
+    title: "JÖRO TAITBOUT",
     client: "Opérateur de compétences",
     location: "Paris, 9e arrondissement",
     year: "2024",
     category: "JÖRO Studio",
-    tags: ["Bureaux", "Paris 2"],
+    tags: ["Résidentiel", "Rénovation"],
     description:
-      "Des bureaux lumineux avec une belle hauteur sous plafond, un espace conférence équipé d'un rétroprojecteur, une cuisine aménagée, des salles de réunion tout équipées, et le mobilier JÖRO, gage de confort et de qualité.",
+      "Situé dans le 9e à paris, à deux pas de l'iconique Opéra Garnier, quatre nouveaux appartements design ont vu le jour rue Taitbout. Anciennement un plateau de bureaux, cet espace a été métamorphosé en logements élégants et fonctionnels, alliant design contemporain et prestations haut de gamme.",
     coverImage: "/images/1.webp",
     featured: true,
     caseStudy: true,

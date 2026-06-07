@@ -35,10 +35,10 @@ export default function HomePage() {
       {/* À propos — Notre histoire (avec animation clip-path révélation au scroll) */}
       <AboutHistory />
 
-      {/* Services — intro + 4 cartes dans le même conteneur sticky */}
+      {/* Services + FeaturedWork — un seul conteneur sticky pour tout l'enchaînement */}
       <ServicesAll />
-      <div className="relative" style={{ height: "350vh", marginTop: "-100vh" }}>
-        {/* Ancres absolues — non-sticky, position réelle dans le document */}
+      <div className="relative" style={{ height: "700vh", marginTop: "-100vh" }}>
+        {/* Ancres absolues */}
         <div id="amo" style={{ position: "absolute", top: 0 }} />
         <div id="marketing-suite" style={{ position: "absolute", top: "100vh" }} />
         <div id="conseil-workplace" style={{ position: "absolute", top: "200vh" }} />
@@ -74,11 +74,14 @@ export default function HomePage() {
             overlayClass="bg-charcoal/20 mix-blend-soft-light"
           />
         </div>
+
+        {/* FeaturedWork — révélation clip-path sur CONSEIL WORKPLACE puis scroll entre projets */}
+        <FeaturedWork items={featuredWork} total={featuredWork.length} />
       </div>
 
-      <FeaturedWork items={featuredWork} />
-
-      <Testimonials />
+      <div style={{ marginTop: "-1px" }}>
+        <Testimonials />
+      </div>
 
       <CTA />
     </>
