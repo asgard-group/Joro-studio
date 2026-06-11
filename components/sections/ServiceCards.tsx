@@ -100,7 +100,7 @@ function ServiceCardItem({
           className="w-full mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
         >
           <div className="flex flex-col gap-6">
-            <h2 className="text-[48px] md:text-[53px] lg:text-[56px] min-[1440px]:text-[64px] font-semibold uppercase leading-none tracking-tight text-cream whitespace-pre-line">
+            <h2 className="text-[26px] md:text-[53px] lg:text-[56px] min-[1440px]:text-[64px] font-semibold uppercase leading-none tracking-tight text-cream whitespace-pre-line">
               {offer.name}
             </h2>
             <Link href={offer.href} className="group flex flex-col gap-2 w-fit">

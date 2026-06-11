@@ -75,7 +75,7 @@ export default function CTA() {
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center pointer-events-none">
           <motion.div style={{ y: titleY }} className="flex flex-col items-center">
             <Pill variant="dark" className="mb-5">NOUS CONTACTER</Pill>
-            <h2 className="text-[46px] font-semibold leading-tight text-cream max-w-3xl uppercase">
+            <h2 className="text-[26px] md:text-[46px] font-semibold leading-tight text-cream max-w-3xl uppercase">
               Transformons<br />vos idées en réalité
             </h2>
           </motion.div>

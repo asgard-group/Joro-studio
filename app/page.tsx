@@ -5,7 +5,7 @@ import Testimonials from "@/components/sections/Testimonials";
 import CTA from "@/components/sections/CTA";
 import ServicesAll from "@/components/sections/ServicesAll";
 import ServiceReveal from "@/components/sections/ServiceReveal";
-import FeaturedWork from "@/components/sections/FeaturedWork";
+import FeaturedWork, { MobileFeaturedWork } from "@/components/sections/FeaturedWork";
 import AboutHistory from "@/components/sections/AboutHistory";
 import { workItems } from "@/data/work";
 
@@ -37,7 +37,7 @@ export default function HomePage() {
 
       {/* Services + FeaturedWork — un seul conteneur sticky pour tout l'enchaînement */}
       <ServicesAll />
-      <div className="relative" style={{ height: "800vh", marginTop: "-100vh" }}>
+      <div className="relative h-[350vh] md:h-[800vh]" style={{ marginTop: "-100vh" }}>
         {/* Ancres absolues */}
         <div id="amo" style={{ position: "absolute", top: 0 }} />
         <div id="marketing-suite" style={{ position: "absolute", top: "100vh" }} />
@@ -75,9 +75,12 @@ export default function HomePage() {
           />
         </div>
 
-        {/* FeaturedWork — révélation clip-path sur CONSEIL WORKPLACE puis scroll entre projets */}
+        {/* FeaturedWork — desktop split-screen + mobile empilé */}
         <FeaturedWork items={featuredWork} total={featuredWork.length} />
       </div>
+
+      {/* Réalisations mobile — après le container des services */}
+      <MobileFeaturedWork items={featuredWork} />
 
       <div style={{ marginTop: "-1px" }}>
         <Testimonials />
