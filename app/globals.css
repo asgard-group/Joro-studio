@@ -14,8 +14,14 @@
   }
 
   body {
-    @apply bg-cream text-charcoal antialiased;
+    @apply bg-cream text-charcoal antialiased text-[14px] md:text-base;
     font-feature-settings: "kern" 1, "liga" 1;
+  }
+
+  @media (max-width: 767px) {
+    p, li {
+      font-size: 14px !important;
+    }
   }
 
   /* Focus visible only for keyboard nav */
@@ -37,7 +43,7 @@
   }
 
   .heading-section {
-    @apply font-serif text-3xl font-normal leading-snug lg:text-4xl;
+    @apply font-serif text-[26px] font-normal leading-snug lg:text-4xl;
   }
 
   .label-eyebrow {

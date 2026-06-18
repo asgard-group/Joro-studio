@@ -19,6 +19,37 @@ const LEFT_IMAGES = [
   "/images/mail2.webp",
 ];
 
+export function MobileFeaturedWork({ items }: { items: WorkItem[] }) {
+  return (
+    <div className="md:hidden flex flex-col" style={{ position: "relative", zIndex: 70 }}>
+      {items.map((item, i) => (
+        <div key={item.id} className="flex flex-col">
+          <div className="relative w-full" style={{ height: "410px" }}>
+            <Image src={item.coverImage} alt={item.title} fill className="object-cover" sizes="100vw" />
+            <div className="absolute top-4 left-4 right-4 flex justify-between items-center">
+              <Pill variant="dark">NOS RÉALISATIONS</Pill>
+              <span className="text-white font-medium" style={{ fontSize: "13px", letterSpacing: "0.1em" }}>
+                {i + 1} / {items.length}
+              </span>
+            </div>
+          </div>
+          <div className="bg-cream px-5 pt-[50px] pb-[80px]">
+            <h2 className="font-semibold uppercase text-charcoal leading-none mb-3" style={{ fontSize: "26px", letterSpacing: "-0.01em" }}>
+              {item.title}
+            </h2>
+            <p className="font-medium uppercase text-charcoal/50 mb-[20px]" style={{ fontSize: "12px", letterSpacing: "0.08em" }}>
+              {item.tags.join(" • ")}
+            </p>
+            <p className="text-charcoal leading-relaxed" style={{ fontSize: "14px" }}>
+              {item.description}
+            </p>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function FeaturedWork({ items, total }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const colLeftRef = useRef<HTMLDivElement>(null);
@@ -107,10 +138,12 @@ export default function FeaturedWork({ items, total }: Props) {
   const totalHeight = `${100 + items.length * 100 + 100}vh`;
 
   return (
-    <div
-      ref={containerRef}
-      style={{ position: "relative", height: totalHeight, zIndex: 69 }}
-    >
+    <>
+      <div
+        ref={containerRef}
+        className="hidden md:block"
+        style={{ position: "relative", height: totalHeight, zIndex: 69 }}
+      >
       <div
         style={{
           position: "sticky",
@@ -205,5 +238,6 @@ export default function FeaturedWork({ items, total }: Props) {
         </div>
       </div>
     </div>
+    </>
   );
 }

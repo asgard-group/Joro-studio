@@ -54,7 +54,7 @@ export default function ServicesSection() {
             <p className="text-[11px] font-medium uppercase tracking-[0.25em] text-cream/50 mb-3 md:mb-5">
               Nos offres
             </p>
-            <h2 className="text-[30px] md:text-[46px] font-semibold leading-tight text-cream max-w-2xl">
+            <h2 className="text-[26px] md:text-[46px] font-semibold leading-tight text-cream max-w-2xl">
               Des espaces conçus<br />avec du savoir-faire
             </h2>
           </motion.div>

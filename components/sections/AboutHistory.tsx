@@ -34,7 +34,7 @@ export default function AboutHistory() {
           >
             <Pill className="self-start">NOTRE HISTOIRE</Pill>
             <h2
-              className="font-semibold tracking-tight uppercase text-[36px] min-[1020px]:text-[64px] text-charcoal"
+              className="font-semibold tracking-tight uppercase text-[26px] min-[1020px]:text-[64px] text-charcoal"
               style={{ lineHeight: "130%" }}
             >
               Penser l&rsquo;espace <br className="hidden min-[1020px]:inline min-[1601px]:hidden" />autrement

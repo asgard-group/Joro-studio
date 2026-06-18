@@ -1,8 +1,9 @@
 "use client";
 
 import { useRef, useState, useCallback } from "react";
-import Image from "next/image";
+import AnimatedImage from "@/components/ui/AnimatedImage";
 import { testimonials } from "@/data/testimonials";
+import type { TestimonialCard } from "@/data/testimonials";
 import Pill from "@/components/ui/Pill";
 
 export default function Testimonials() {
@@ -106,54 +107,41 @@ export default function Testimonials() {
             scrollSnapType: "x mandatory",
           }}
         >
-          {testimonials.map((t) => (
+          {(testimonials as TestimonialCard[]).map((t) => (
             <div
               key={t.id}
-              className="group flex-shrink-0 flex flex-col"
+              className="flex-shrink-0 flex flex-col"
               style={{
-                width: "clamp(280px, calc((100vw - 220px) / 3), 420px)",
+                width: "clamp(280px, 527px, 527px)",
                 scrollSnapAlign: "start",
               }}
             >
-              {/* Image */}
-              <div className="relative w-full overflow-hidden" style={{ height: "520px" }}>
-                {t.photo ? (
-                  <Image
-                    src={t.photo}
+              {/* Image galerie hover */}
+              <div className="relative w-full overflow-hidden" style={{ height: "clamp(360px, 660px, 660px)" }}>
+                {t.images?.length ? (
+                  <AnimatedImage
+                    images={t.images}
                     alt={t.author}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 80vw, 33vw"
                   />
                 ) : (
                   <div className="w-full h-full bg-[#BAB6AA]/30" />
                 )}
-
-                {/* Overlay citation — visible au survol */}
-                <div className="absolute inset-0 bg-charcoal/60 flex flex-col justify-end p-[28px] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <svg width="32" height="24" viewBox="0 0 36 28" fill="none" className="mb-[16px]">
-                    <path d="M0 28V17.2C0 13.467 0.933 10.2 2.8 7.4C4.667 4.533 7.4 2.2 11 0.399999L13.4 4C11 5.4 9.167 7 8 8.8C6.9 10.6 6.367 12.667 6.4 15H13.4V28H0ZM22.6 28V17.2C22.6 13.467 23.533 10.2 25.4 7.4C27.267 4.533 30 2.2 33.6 0.399999L36 4C33.6 5.4 31.767 7 30.6 8.8C29.5 10.6 28.967 12.667 29 15H36V28H22.6Z" fill="white" fillOpacity="0.5"/>
-                  </svg>
-                  <p className="text-white text-[14px] leading-[1.65] mb-[20px]">
-                    {t.quote}
-                  </p>
-                  <p className="text-white/60 text-[12px] font-medium tracking-[0.06em]">
-                    — {t.author}, {t.company}
-                  </p>
-                </div>
               </div>
 
-              {/* Caption sous l'image */}
-              {(
-                <div className="flex justify-between items-baseline pt-[14px]">
-                  <span className="text-[15px] font-medium text-charcoal">
-                    {t.author}
-                  </span>
-                  <span className="text-[13px] text-[#BAB6AA] shrink-0 ml-3" style={{ letterSpacing: "0.02em" }}>
-                    {t.company}
-                  </span>
-                </div>
-              )}
+              {/* Caption : nom + localisation */}
+              <div className="flex justify-between items-baseline pt-[14px] pb-[10px]">
+                <span className="text-[15px] font-medium text-charcoal uppercase tracking-wide">
+                  {t.author}
+                </span>
+                <span className="text-[13px] text-[#BAB6AA] shrink-0 ml-3" style={{ letterSpacing: "0.02em" }}>
+                  {t.location ?? t.company}
+                </span>
+              </div>
+
+              {/* Citation visible en permanence */}
+              <p className="text-[13px] text-charcoal/60 leading-relaxed">
+                &ldquo;{t.quote}&rdquo;
+              </p>
             </div>
           ))}
         </div>

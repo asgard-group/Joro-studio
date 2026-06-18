@@ -85,7 +85,7 @@ export default function ServicesAll() {
         {/* Contenu DESIGN & BUILD — révélé par le split (z-5) */}
         <div className="absolute inset-0 z-[5] flex items-center justify-between px-4 sm:px-6 lg:px-[60px]">
           <div className="max-w-[480px]">
-            <h2 className="text-[48px] md:text-[64px] font-semibold uppercase leading-none tracking-tight text-cream mb-[40px] whitespace-nowrap">
+            <h2 className="text-[26px] md:text-[64px] font-semibold uppercase leading-none tracking-tight text-cream mb-[40px] whitespace-nowrap">
               DESIGN & BUILD
             </h2>
             <p className="max-w-[460px] text-[16px] leading-relaxed text-cream mb-[25px]">
@@ -161,7 +161,7 @@ function IntroSlide({ dark }: { dark: boolean }) {
         </Pill>
         {/* Titre */}
         <h2
-          className={`font-semibold tracking-tight text-[28px] md:text-[36px] lg:text-[46px] max-w-[900px] ${textClass}`}
+          className={`font-semibold tracking-tight text-[26px] md:text-[36px] lg:text-[46px] max-w-[900px] ${textClass}`}
           style={{ lineHeight: "130%" }}
         >
           QUATRE EXPERTISES,<br />UN SEUL INTERLOCUTEUR

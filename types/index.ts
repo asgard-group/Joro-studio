@@ -35,6 +35,7 @@ export interface Testimonial {
   author: string;
   role: string;
   company: string;
+  location?: string;
   photo?: string;
   logo?: string;
 }

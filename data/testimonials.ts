@@ -1,40 +1,69 @@
 import type { Testimonial } from "@/types";
 
-export const testimonials: Testimonial[] = [
+export interface TestimonialCard extends Testimonial {
+  location: string;
+  images: string[];
+}
+
+export const testimonials: TestimonialCard[] = [
   {
-    id: "1",
+    id: "haiku",
+    author: "Haiku",
+    role: "Fondateur",
+    company: "Haiku",
+    location: "Paris 9e",
     quote:
-      "JÖRO Studio a transformé nos plateaux en un espace qui incarne véritablement nos valeurs. L'équipe a su allier exigence esthétique, fonctionnalité opérationnelle et engagement environnemental avec une maîtrise rare.",
-    author: "Sophie Marchand",
-    role: "Directrice Générale",
-    company: "Groupe Meridian",
-    photo: "/images/390597989.jpg",
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod",
+    images: [
+      "/images/haiku/1 (1).webp",
+      "/images/haiku/2 (1).webp",
+      "/images/haiku/3 (1).webp",
+      "/images/haiku/4 (1).webp",
+      "/images/haiku/5 (1).webp",
+      "/images/haiku/6 (1).webp",
+      "/images/haiku/7 (1).webp",
+      "/images/haiku/8 (2).webp",
+      "/images/haiku/9 (2).webp",
+    ],
   },
   {
-    id: "2",
+    id: "coinshare",
+    author: "Coinshare",
+    role: "Fondateur",
+    company: "Coinshare",
+    location: "Paris 8e",
     quote:
-      "Ce qui distingue JÖRO, c'est leur capacité à piloter un projet de A à Z sans jamais perdre de vue les contraintes opérationnelles. Livré dans les délais, dans le budget, avec un résultat qui dépasse nos attentes.",
-    author: "Thomas Levesque",
-    role: "Associé",
-    company: "Capital Partners Fund",
-    photo: "/images/f11417fe33c2cc32ef0ecc7b3c1c059e.jpg",
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod",
+    images: [
+      "/images/coinshare/1.webp",
+      "/images/coinshare/2.webp",
+      "/images/coinshare/3.webp",
+      "/images/coinshare/4.webp",
+      "/images/coinshare/5.webp",
+      "/images/coinshare/6.webp",
+      "/images/coinshare/7.webp",
+      "/images/coinshare/8.webp",
+      "/images/coinshare/9.webp",
+    ],
   },
   {
-    id: "3",
+    id: "lemlist",
+    author: "Lemlist",
+    role: "Fondateur",
+    company: "Lemlist",
+    location: "Paris 11e",
     quote:
-      "Un partenaire de confiance pour nos actifs tertiaires premium. Leur approche du réemploi et des matériaux responsables a séduit nos investisseurs institutionnels tout autant que nos locataires.",
-    author: "Claire Bonnet",
-    role: "Asset Manager",
-    company: "Investisseur institutionnel",
-    photo: "/images/Frame 275.png",
-  },
-  {
-    id: "4",
-    quote:
-      "Une équipe qui comprend les enjeux de l'immobilier d'entreprise. Le résultat final reflète parfaitement notre positionnement premium tout en respectant nos contraintes budgétaires.",
-    author: "Marc Dupont",
-    role: "Directeur Immobilier",
-    company: "Logis France",
-    photo: "/images/work/portfolio-2.jpg",
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod",
+    images: [
+      "/images/lemlist/1 (2).webp",
+      "/images/lemlist/2 (2).webp",
+      "/images/lemlist/3 (2).webp",
+      "/images/lemlist/4 (2).webp",
+      "/images/lemlist/5 (2).webp",
+      "/images/lemlist/6 (2).webp",
+      "/images/lemlist/7 (2).webp",
+      "/images/lemlist/8 (3).webp",
+      "/images/lemlist/9 (3).webp",
+    ],
   },
 ];
