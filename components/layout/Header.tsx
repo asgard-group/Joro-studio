@@ -3,7 +3,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import React, { type CSSProperties, useState, useEffect, useRef, useId } from "react";
-import { navItems } from "@/data/navigation";
 import ComingSoonLink from "@/components/ui/ComingSoonLink";
 import { headerStrings } from "@/lib/strings";
 import FullscreenMenu from "@/components/layout/FullscreenMenu";
