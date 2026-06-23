@@ -6,6 +6,7 @@ import React, { type CSSProperties, useState, useEffect, useRef, useId } from "r
 import { navItems } from "@/data/navigation";
 import ComingSoonLink from "@/components/ui/ComingSoonLink";
 import { headerStrings } from "@/lib/strings";
+import FullscreenMenu from "@/components/layout/FullscreenMenu";
 
 // — Styles & couleurs partagés du header —
 // fontSize n'est PAS inclus pour permettre l'override responsive via Tailwind
@@ -29,9 +30,10 @@ interface NavContentProps {
   langOpen: boolean;
   setLangOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
   langTriggerId: string;
+  onOpenMenu: () => void;
 }
 
-function NavContent({ dark, langOpen, setLangOpen, langTriggerId }: NavContentProps) {
+function NavContent({ dark, langOpen, setLangOpen, langTriggerId, onOpenMenu }: NavContentProps) {
   const langRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -56,7 +58,12 @@ function NavContent({ dark, langOpen, setLangOpen, langTriggerId }: NavContentPr
     <div className="px-[20px] min-[840px]:px-[40px] min-[1200px]:px-[60px]">
       <div className="grid grid-cols-3 items-center py-[20px]">
         {/* Left — hamburger + label */}
-        <ComingSoonLink className="justify-self-start w-full inline-flex items-center gap-[8px] min-[700px]:gap-[10px]">
+        <button
+          type="button"
+          onClick={onOpenMenu}
+          aria-label={headerStrings.menu}
+          className="justify-self-start w-full inline-flex items-center gap-[8px] min-[700px]:gap-[10px] bg-transparent border-0 p-0 cursor-pointer"
+        >
           <Image
             src="/images/icon/menu.svg"
             alt=""
@@ -71,7 +78,7 @@ function NavContent({ dark, langOpen, setLangOpen, langTriggerId }: NavContentPr
           >
             {headerStrings.menu}
           </span>
-        </ComingSoonLink>
+        </button>
 
         {/* Center — logo */}
         <Link
@@ -251,6 +258,7 @@ export default function Header() {
           langOpen={onHero ? langOpen : false}
           setLangOpen={setLangOpen}
           langTriggerId={`${langTriggerId}-hero`}
+          onOpenMenu={() => setMenuOpen(true)}
         />
       </header>
 
@@ -266,55 +274,12 @@ export default function Header() {
           langOpen={onHero ? false : langOpen}
           setLangOpen={setLangOpen}
           langTriggerId={`${langTriggerId}-sticky`}
+          onOpenMenu={() => setMenuOpen(true)}
         />
       </div>
 
-      {/* Full-screen overlay menu */}
-      <div
-        className={`fixed inset-0 z-modal bg-charcoal transition-opacity duration-300 ${
-          menuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-        }`}
-      >
-        <button
-          onClick={() => setMenuOpen(false)}
-          aria-label={headerStrings.menuOverlay.closeAriaLabel}
-          className="absolute right-5 top-5 p-2 text-cream sm:right-6 sm:top-6 lg:right-10 lg:top-8"
-        >
-          <svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.5" className="sm:w-8 sm:h-8">
-            <line x1="6" y1="6" x2="26" y2="26" />
-            <line x1="26" y1="6" x2="6" y2="26" />
-          </svg>
-        </button>
-
-        <div className="container-site flex h-full flex-col justify-center">
-          <nav aria-label={headerStrings.menuOverlay.navAriaLabel}>
-            <ul className="flex flex-col gap-5 sm:gap-6 lg:gap-8">
-              {navItems.map((item) => (
-                <li key={item.href}>
-                  {item.href === "/" ? (
-                    <Link
-                      href={item.href}
-                      onClick={() => setMenuOpen(false)}
-                      className="font-serif text-3xl text-cream transition-colors hover:text-taupe sm:text-4xl lg:text-5xl"
-                    >
-                      {item.label}
-                    </Link>
-                  ) : (
-                    <ComingSoonLink className="font-serif text-3xl text-cream/40 sm:text-4xl lg:text-5xl">
-                      {item.label}
-                    </ComingSoonLink>
-                  )}
-                </li>
-              ))}
-            </ul>
-            <div className="mt-10 lg:mt-12">
-              <ComingSoonLink className="btn-primary inline-block">
-                {headerStrings.menuOverlay.contactCta}
-              </ComingSoonLink>
-            </div>
-          </nav>
-        </div>
-      </div>
+      {/* Full-screen split menu */}
+      <FullscreenMenu isOpen={menuOpen} onClose={() => setMenuOpen(false)} />
     </>
   );
 }
