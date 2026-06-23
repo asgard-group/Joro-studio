@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import React, { type CSSProperties, useState, useEffect, useRef, useId } from "react";
+import { type CSSProperties, useState, useEffect, useRef, useId } from "react";
 import { navItems } from "@/data/navigation";
 import ComingSoonLink from "@/components/ui/ComingSoonLink";
 import { headerStrings } from "@/lib/strings";
@@ -16,7 +16,7 @@ const LABEL_STYLE: CSSProperties = {
 };
 
 const labelClasses = (dark: boolean) =>
-  `font-medium ${dark ? "text-cream" : "text-charcoal"}`;
+  `font-medium uppercase ${dark ? "text-cream" : "text-charcoal"}`;
 
 const iconFilter = (dark: boolean) =>
   dark
@@ -25,13 +25,13 @@ const iconFilter = (dark: boolean) =>
 
 interface NavContentProps {
   dark: boolean;
-  // State du dropdown remonté au parent — partagé entre les 2 instances de NavContent
+  onHero: boolean;
   langOpen: boolean;
   setLangOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
   langTriggerId: string;
 }
 
-function NavContent({ dark, langOpen, setLangOpen, langTriggerId }: NavContentProps) {
+function NavContent({ dark, onHero, langOpen, setLangOpen, langTriggerId }: NavContentProps) {
   const langRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -66,7 +66,7 @@ function NavContent({ dark, langOpen, setLangOpen, langTriggerId }: NavContentPr
             style={{ filter: iconFilter(dark) }}
           />
           <span
-            className={`text-[12px] min-[700px]:text-[16px] ${labelClasses(dark)}`}
+            className={`text-[13px] ${labelClasses(dark)}`}
             style={LABEL_STYLE}
           >
             {headerStrings.menu}
@@ -79,22 +79,32 @@ function NavContent({ dark, langOpen, setLangOpen, langTriggerId }: NavContentPr
           className="justify-self-center"
           aria-label={headerStrings.logoAriaLabel}
         >
-          <Image
-            src="/images/logos/joro-studio-ẢCHITECTURE-TRAVAUX@300x 2.png"
-            alt={headerStrings.logoAlt}
-            width={320}
-            height={97}
-            priority
-            className="object-contain w-auto h-[34px] min-[700px]:h-[53px]"
-            style={{ maxWidth: "none", filter: dark ? "none" : iconFilter(false) }}
-          />
+          {/* Wrapper clippe la tagline "architecture & travaux" (partie basse) hors du hero */}
+          <div
+            className="overflow-hidden transition-all duration-300"
+            style={{ height: onHero ? "53px" : "42px" }}
+          >
+            <Image
+              src="/images/logos/joro-studio-ẢCHITECTURE-TRAVAUX@300x 2.png"
+              alt={headerStrings.logoAlt}
+              width={320}
+              height={97}
+              priority
+              style={{
+                width: "auto",
+                height: "53px",
+                maxWidth: "none",
+                filter: dark ? "none" : iconFilter(false),
+              }}
+            />
+          </div>
         </Link>
 
         {/* Right — contact + language switcher */}
         <div className="justify-self-end w-full inline-flex items-center justify-end" style={{ gap: '20px' }}>
           <ComingSoonLink>
             <span
-              className={`text-[12px] min-[700px]:text-[16px] ${labelClasses(dark)}`}
+              className={`text-[13px] ${labelClasses(dark)}`}
               style={LABEL_STYLE}
             >
               {headerStrings.contact}
@@ -114,7 +124,7 @@ function NavContent({ dark, langOpen, setLangOpen, langTriggerId }: NavContentPr
               className="inline-flex items-center cursor-pointer"
               style={{ gap: '0px' }}
             >
-              <span className={`text-[16px] ${labelClasses(dark)}`} style={LABEL_STYLE}>
+              <span className={`text-[13px] ${labelClasses(dark)}`} style={LABEL_STYLE}>
                 {headerStrings.currentLanguage}
               </span>
               <span className="inline-flex items-center justify-center" style={{ width: '16px', height: '24px' }}>
@@ -145,7 +155,7 @@ function NavContent({ dark, langOpen, setLangOpen, langTriggerId }: NavContentPr
                   <button
                     type="button"
                     onClick={() => { setLangOpen(false); /* TODO: switch to English */ }}
-                    className={`text-[16px] cursor-pointer ${labelClasses(dark)}`}
+                    className={`text-[13px] cursor-pointer ${labelClasses(dark)}`}
                     style={LABEL_STYLE}
                   >
                     {headerStrings.alternateLanguage}
@@ -163,36 +173,17 @@ function NavContent({ dark, langOpen, setLangOpen, langTriggerId }: NavContentPr
 export default function Header() {
   const [isDark, setIsDark] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
-  // fixedHidden=true → la navbar fixe (post-hero) est slidée hors viewport.
-  // onHero=true → on est sur le hero ; la navbar fixe est masquée, la navbar absolue est visible.
-  const [fixedHidden, setFixedHidden] = useState(true);
   const [onHero, setOnHero] = useState(true);
-  // State du dropdown langue partagé entre les 2 instances de NavContent
   const [langOpen, setLangOpen] = useState(false);
   const langTriggerId = useId();
-  const lastYRef = React.useRef(0);
 
   useEffect(() => {
-    lastYRef.current = window.scrollY;
     let ticking = false;
 
     const update = () => {
       const currentY = window.scrollY;
       const heroHeight = window.innerHeight;
-      const overHero = currentY <= heroHeight;
-
-      setOnHero(overHero);
-
-      // Sur le hero : navbar fixe masquée (la navbar absolue prend le relais et scrolle avec la page).
-      // Après le hero : la navbar fixe se révèle quand on scrolle vers le haut, se cache quand on descend.
-      if (overHero) {
-        setFixedHidden(true);
-      } else if (currentY > lastYRef.current + 5) {
-        setFixedHidden(true);
-      } else if (currentY < lastYRef.current - 5) {
-        setFixedHidden(false);
-      }
-      lastYRef.current = currentY;
+      setOnHero(currentY < 10);
 
       // Détection du thème de la section sous la navbar
       const midNavbar = 40;
@@ -207,7 +198,6 @@ export default function Header() {
       setIsDark(theme === "dark");
     };
 
-    // rAF throttle : un seul update par frame, jamais plus
     const handleScroll = () => {
       if (ticking) return;
       ticking = true;
@@ -233,41 +223,16 @@ export default function Header() {
 
   return (
     <>
-      {/*
-        Architecture à 2 navbars (préservée volontairement pour l'effet "navbar scrolle avec le hero") :
-        - Navbar #1 absolue : sur le hero, scrolle naturellement avec la page
-        - Navbar #2 fixe : apparaît au scroll-up après le hero, avec backdrop-blur
-        Le state du dropdown langue (langOpen, langTriggerId) est partagé via props pour éviter la désync.
-        aria-hidden cache la navbar inactive aux lecteurs d'écran pour éviter les doublons d'annonces.
-      */}
-
-      {/* Navbar #1 — absolue, sur le hero, scrolle avec la page */}
-      <header
-        className="absolute inset-x-0 top-0 z-navbar"
-        aria-hidden={!onHero}
-      >
-        <NavContent
-          dark={true}
-          langOpen={onHero ? langOpen : false}
-          setLangOpen={setLangOpen}
-          langTriggerId={`${langTriggerId}-hero`}
-        />
-      </header>
-
-      {/* Navbar #2 — fixe, glisse depuis le haut après le hero */}
-      <div
-        className={`fixed inset-x-0 top-0 z-navbar backdrop-blur-md transition-transform duration-300 ${
-          fixedHidden ? "-translate-y-full" : "translate-y-0"
-        }`}
-        aria-hidden={onHero}
-      >
+      {/* Navbar unique — fixe, toujours visible, backdrop-blur actif hors hero */}
+      <header className={`fixed inset-x-0 top-0 z-navbar transition-[backdrop-filter] duration-300 ${onHero ? "" : "backdrop-blur-md"}`}>
         <NavContent
           dark={isDark}
-          langOpen={onHero ? false : langOpen}
+          onHero={onHero}
+          langOpen={langOpen}
           setLangOpen={setLangOpen}
-          langTriggerId={`${langTriggerId}-sticky`}
+          langTriggerId={langTriggerId}
         />
-      </div>
+      </header>
 
       {/* Full-screen overlay menu */}
       <div

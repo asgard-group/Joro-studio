@@ -22,8 +22,8 @@ export const headerStrings = {
   contact: "Contact",
 
   // Sélecteur de langue (droite)
-  currentLanguage: "Fr",
-  alternateLanguage: "En",
+  currentLanguage: "FR",
+  alternateLanguage: "EN",
   languageSwitcherAriaLabel: "Sélectionner la langue",
 
   // Menu plein-écran
