@@ -33,10 +33,14 @@ export default function HomePage() {
       <div style={{ height: "150px" }} />
 
       {/* À propos — Notre histoire (avec animation clip-path révélation au scroll) */}
-      <AboutHistory />
+      <div id="notre-studio">
+        <AboutHistory />
+      </div>
 
       {/* Services + FeaturedWork — un seul conteneur sticky pour tout l'enchaînement */}
-      <ServicesAll />
+      <div id="nos-offres">
+        <ServicesAll />
+      </div>
       <div className="relative h-[350vh] md:h-[800vh]" style={{ marginTop: "-100vh" }}>
         {/* Ancres absolues */}
         <div id="amo" style={{ position: "absolute", top: 0 }} />
@@ -76,7 +80,9 @@ export default function HomePage() {
         </div>
 
         {/* FeaturedWork — desktop split-screen + mobile empilé */}
-        <FeaturedWork items={featuredWork} total={featuredWork.length} />
+        <div id="nos-realisations">
+          <FeaturedWork items={featuredWork} total={featuredWork.length} />
+        </div>
       </div>
 
       {/* Réalisations mobile — après le container des services */}
@@ -86,7 +92,9 @@ export default function HomePage() {
         <Testimonials />
       </div>
 
-      <CTA />
+      <div id="contact">
+        <CTA />
+      </div>
     </>
   );
 }
