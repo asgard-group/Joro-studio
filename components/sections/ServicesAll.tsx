@@ -141,6 +141,17 @@ export default function ServicesAll() {
           <IntroSlide dark={false} />
         </motion.div>
       </div>
+      {/*
+        Marqueur "light" pour la navbar pendant la phase crème (slide 1 visible).
+        Placé après le sticky div → il override "dark" quand les deux sont sous la navbar.
+        Height = dissolveEnd = 45vh : une fois scrollé au-delà, seul "dark" s'applique.
+      */}
+      <div
+        data-navbar-theme="light"
+        aria-hidden
+        className="absolute inset-x-0 top-0 pointer-events-none"
+        style={{ height: "45vh" }}
+      />
     </div>
   );
 }
