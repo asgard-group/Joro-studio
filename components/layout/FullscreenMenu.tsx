@@ -25,8 +25,6 @@ interface Props {
 export default function FullscreenMenu({ isOpen, onClose }: Props) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
-  const activeImage =
-    hoveredIndex !== null ? menuLinks[hoveredIndex].image : menuLinks[0].image;
 
   return (
     <>
