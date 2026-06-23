@@ -29,9 +29,6 @@ export default function HomePage() {
         scrollCta="Découvrir notre studio"
       />
 
-      {/* Spacer entre le hero et AboutHistory */}
-      <div style={{ height: "150px" }} />
-
       {/* À propos — Notre histoire (avec animation clip-path révélation au scroll) */}
       <div id="notre-studio">
         <AboutHistory />

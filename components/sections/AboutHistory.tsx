@@ -1,105 +1,119 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
-import { motion, useScroll, useTransform } from "framer-motion";
 import Pill from "@/components/ui/Pill";
 
-const CLIP_HIDDEN = "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)";
-const CLIP_VISIBLE = "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)";
-
 export default function AboutHistory() {
-  const wrapperRef = useRef<HTMLDivElement>(null);
+  const wrapRef = useRef<HTMLDivElement>(null);
 
-  const { scrollYProgress } = useScroll({
-    target: wrapperRef,
-    offset: ["start start", "end end"],
-  });
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
 
-  // 0 → 0.15 : pause initiale (user voit bien les photos de départ)
-  // 0.15 → 1  : reveal clip-path
-  const clipPath = useTransform(scrollYProgress, [0.15, 1], [CLIP_HIDDEN, CLIP_VISIBLE]);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.intersectionRatio >= 0.2) {
+            e.target.classList.add("is-revealed");
+          } else if (e.intersectionRatio === 0) {
+            e.target.classList.remove("is-revealed");
+          }
+        });
+      },
+      { threshold: [0, 0.2] }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    // Pin-spacer : hauteur étendue = zone de scroll pendant laquelle la section reste pinnée.
-    <div ref={wrapperRef} className="relative z-10" style={{ height: "250vh" }}>
-      <section
-        className="sticky top-0 min-h-screen grid grid-rows-[auto_1fr] gap-[50px] min-[1020px]:gap-[100px] pt-[50px] pb-[20px] bg-cream overflow-hidden"
-      >
-        {/* ROW TEXTES */}
-        <div className="flex flex-col gap-[50px] min-[1020px]:flex-row min-[1020px]:gap-[30px]">
-          {/* Texte gauche : pill + titre — container max 749px ≤1920px, 1129px au-dessus */}
-          <div
-            className="flex-1 min-[1440px]:flex-[1129_1_0%] min-[1020px]:max-w-[749px] min-[1921px]:max-w-[1129px] flex flex-col gap-[10px] pl-[20px] min-[840px]:pl-[40px] min-[1440px]:pl-[60px]"
-          >
-            <Pill className="self-start">NOTRE HISTOIRE</Pill>
-            <h2
-              className="font-semibold tracking-tight uppercase text-[26px] min-[1020px]:text-[64px] text-charcoal"
-              style={{ lineHeight: "130%" }}
-            >
-              Penser l&rsquo;espace <br className="hidden min-[1020px]:inline min-[1601px]:hidden" />autrement
-            </h2>
-          </div>
-          {/* Texte droite : description */}
-          <div className="flex-1 min-[1440px]:flex-[761_1_0%] min-[1440px]:min-w-[660px] px-[20px] min-[840px]:px-[40px] min-[1020px]:pt-[46px] min-[1020px]:pl-0 min-[1020px]:pr-[40px] min-[1440px]:pr-[60px]">
-            <p
-              className="font-medium text-[14px] leading-[24px] min-[1020px]:text-[16px] min-[1020px]:leading-[26px] text-charcoal"
-            >
-              JÖRO Studio est né d&rsquo;un constat simple&nbsp;: pourquoi l&rsquo;élégance, l&rsquo;innovation et l&rsquo;environnement ne pourraient-ils pas coexister&nbsp;? Aujourd&rsquo;hui, chaque projet que nous concevons, des bureaux aux lieux de vie, est une réponse concrète à ce défi&nbsp;: créer des espaces hybrides, durables et inspirants, pensés pour les usages urbains de demain.
-            </p>
-          </div>
-        </div>
-
-        {/* ROW IMAGES — chaque côté a 2 images superposées, la 2ème se révèle via clip-path.
-            Ref `photoRowRef` : sa position .bottom sert à caler la sticky top dynamique. */}
+    <section className="bg-cream overflow-hidden" style={{ paddingTop: "200px" }}>
+      <div className="flex flex-col lg:flex-row lg:items-center gap-12 lg:gap-24">
+        {/* Colonne gauche — texte */}
         <div
-          className="flex flex-col gap-[30px] min-[1020px]:flex-row min-[1020px]:items-stretch"
+          className="uc-text-col flex-1 px-5 md:px-10 lg:pl-[60px] lg:pr-0"
         >
-          {/* Côté gauche : superposition — aspect fixe sur mobile, hauteur dynamique sur desktop */}
-          <div className="max-[1019px]:hidden flex-1 min-[1440px]:flex-[1129_1_0%] min-[1020px]:max-w-[749px] min-[1921px]:max-w-[1129px] relative aspect-[1020/560] min-[1020px]:aspect-auto min-[1020px]:h-full overflow-hidden">
-            {/* Image du dessous — visible dès le départ */}
-            <Image
-              src="/images/Frame253.webp"
-              alt="JÖRO Studio — espace lounge"
-              fill
-              className="object-cover"
-              sizes="(max-width: 1020px) 100vw, (max-width: 1440px) 50vw, 60vw"
-            />
-            {/* Image du dessus — révélée via clip-path animé au scroll */}
-            <motion.div className="absolute inset-0" style={{ clipPath }}>
-              <Image
-                src="/images/1762939680941-1.webp"
-                alt="Salle de réunion — chaises orange"
-                fill
-                className="object-cover"
-                sizes="(max-width: 1020px) 100vw, (max-width: 1440px) 50vw, 60vw"
-              />
-            </motion.div>
-          </div>
-
-          {/* Côté droit : superposition — caché sous 1020 (anciennement à gauche) */}
-          <div className="flex-1 min-[1440px]:flex-[761_1_0%] min-[1440px]:min-w-[660px] relative aspect-[1020/560] min-[1020px]:aspect-auto min-[1020px]:h-full overflow-hidden">
-            {/* Image du dessous */}
-            <Image
-              src="/images/2024-10-Retines-Asgard-parquet-Pigalle-DSC04495.webp"
-              alt="JÖRO Office — salle de réunion taupe"
-              fill
-              className="object-cover"
-              sizes="(max-width: 1440px) 50vw, 40vw"
-            />
-            {/* Image du dessus — révélée via clip-path animé au scroll */}
-            <motion.div className="absolute inset-0" style={{ clipPath }}>
-              <Image
-                src="/images/1762939681123-1.webp"
-                alt="CoinShares — espace lounge"
-                fill
-                className="object-cover"
-                sizes="(max-width: 1440px) 50vw, 40vw"
-              />
-            </motion.div>
-          </div>
+          <Pill className="self-start mb-4">NOTRE STUDIO</Pill>
+          <h2
+            className="uc-title font-semibold tracking-tight uppercase text-charcoal"
+            style={{ fontSize: "64px", lineHeight: "110%", marginBottom: "70px" }}
+          >
+            Repenser <br />les espaces de <br />vie autrement
+          </h2>
+          <p
+            className="uc-desc font-medium text-charcoal max-w-[520px]"
+            style={{ fontSize: "16px", lineHeight: "26px" }}
+          >
+            JÖRO Studio est né d&rsquo;un constat simple&nbsp;: pourquoi l&rsquo;élégance,
+            l&rsquo;innovation et l&rsquo;environnement ne pourraient-ils pas
+            coexister&nbsp;? Aujourd&rsquo;hui, chaque projet que nous concevons, des
+            bureaux aux lieux de vie, est une réponse concrète à ce défi&nbsp;:
+            créer des espaces hybrides, inspirants et durables, pensés pour les
+            usages urbains de demain.
+          </p>
         </div>
-      </section>
-    </div>
+
+        {/* Colonne droite — photo avec animation reveal */}
+        <div
+          ref={wrapRef}
+          className="uc-reveal-wrap uc-photo"
+        >
+          <Image
+            src="/images/2024-10-Retines-Asgard-parquet-Pigalle-DSC04495.webp"
+            alt="JÖRO Studio — atelier"
+            fill
+            className="object-cover"
+            sizes="(max-width: 1024px) 100vw, 60vw"
+          />
+          <div className="uc-overlay" />
+        </div>
+      </div>
+
+      <style>{`
+        .uc-reveal-wrap {
+          position: relative;
+          overflow: hidden;
+        }
+        .uc-overlay {
+          position: absolute;
+          inset: 0;
+          left: 0;
+          background: #f5f0eb;
+          z-index: 2;
+          transform-origin: left center;
+          transform: scaleX(1);
+          transition: transform ease-in-out 2s 250ms;
+        }
+        .uc-reveal-wrap.is-revealed .uc-overlay {
+          transform: scaleX(0);
+        }
+        @media (max-width: 1023px) {
+          .uc-title { font-size: 26px !important; }
+          .uc-title br { display: none; }
+          .uc-desc { font-size: 12px !important; line-height: 20px !important; }
+        }
+        /* Photo responsive */
+        .uc-photo {
+          width: 100%;
+          aspect-ratio: 16/9;
+          flex-shrink: 0;
+        }
+        @media (min-width: 1024px) {
+          .uc-text-col { min-width: 620px; }
+          .uc-photo {
+            flex: 0 1 1102px;
+            height: 569px;
+          }
+        }
+        @media (min-width: 1920px) {
+          .uc-photo {
+            width: 1102px;
+            height: 632px;
+          }
+        }
+      `}</style>
+    </section>
   );
 }

@@ -69,7 +69,7 @@ function NavContent({ dark, onHero, langOpen, setLangOpen, langTriggerId, onOpen
             style={{ filter: iconFilter(dark) }}
           />
           <span
-            className={`text-[13px] ${labelClasses(dark)}`}
+            className={`nav-label text-[13px] ${labelClasses(dark)}`}
             style={LABEL_STYLE}
           >
             {headerStrings.menu}
@@ -83,8 +83,15 @@ function NavContent({ dark, onHero, langOpen, setLangOpen, langTriggerId, onOpen
           aria-label={headerStrings.logoAriaLabel}
         >
           {/* Wrapper clippe la tagline "architecture & travaux" (partie basse) hors du hero */}
+          <style>{`
+            @media (max-width: 1023px) {
+              .logo-mobile-img { width: 125px !important; height: auto !important; }
+              .logo-mobile-wrap { height: ${onHero ? "38px" : "20px"} !important; }
+              .nav-label { font-size: 12px !important; }
+            }
+          `}</style>
           <div
-            className="overflow-hidden transition-all duration-300"
+            className="logo-mobile-wrap overflow-hidden transition-all duration-300"
             style={{ height: onHero ? "53px" : "42px" }}
           >
             <Image
@@ -93,6 +100,7 @@ function NavContent({ dark, onHero, langOpen, setLangOpen, langTriggerId, onOpen
               width={320}
               height={97}
               priority
+              className="logo-mobile-img"
               style={{
                 width: "auto",
                 height: "53px",
@@ -107,7 +115,7 @@ function NavContent({ dark, onHero, langOpen, setLangOpen, langTriggerId, onOpen
         <div className="justify-self-end w-full inline-flex items-center justify-end" style={{ gap: '20px' }}>
           <ComingSoonLink>
             <span
-              className={`text-[13px] ${labelClasses(dark)}`}
+              className={`nav-label text-[13px] ${labelClasses(dark)}`}
               style={LABEL_STYLE}
             >
               {headerStrings.contact}
