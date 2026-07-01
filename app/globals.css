@@ -94,7 +94,7 @@
   display: flex;
   flex-direction: column;
   padding: 0 60px;
-  width: 50%;
+  width: 100%;
   height: 100%;
 }
 .joro-menu__left nav {
@@ -112,18 +112,24 @@
 }
 .joro-menu__nav a {
   display: block;
-  font-size: clamp(16px, calc((50vw - 120px) / 9.6), 64px);
+  font-size: clamp(16px, calc((100vw - 120px) / 14), 80px);
   font-weight: 700;
   line-height: 1.15;
   letter-spacing: -0.01em;
   text-transform: uppercase;
   white-space: nowrap;
-  color: #fff;
+  color: #F3F2ED;
   text-decoration: none;
-  transition: opacity 0.25s ease;
+  transition: color 0.25s ease;
 }
-.joro-menu__nav li.is-dimmed a { opacity: 0.35; }
-.joro-menu__nav li.is-active a { opacity: 1; }
+.joro-menu__nav a:hover { color: #BAB6AA; }
+.joro-menu__logo-br {
+  position: absolute;
+  bottom: 28px;
+  right: 60px;
+  z-index: 10;
+  display: block;
+}
 .joro-menu__social {
   display: flex;
   gap: 20px;
@@ -138,27 +144,6 @@
   transition: color 0.2s ease;
 }
 .joro-menu__social a:hover { color: #fff; }
-.joro-menu__right {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  right: 0;
-  bottom: 0;
-  overflow: hidden;
-  z-index: 1;
-  transform: translateX(-5%);
-  transition: transform 0.8s 0.2s cubic-bezier(.25,.74,.22,.99);
-}
-.joro-menu.is-open .joro-menu__right { transform: translateX(0); }
-.joro-menu__image {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  opacity: 0;
-  transition: opacity 0.55s ease;
-}
-.joro-menu__image.is-visible { opacity: 1; }
 .joro-menu__backdrop {
   position: fixed;
   inset: 0;
@@ -170,6 +155,5 @@
 }
 .joro-menu__backdrop.is-visible { opacity: 0.5; }
 @media (max-width: 768px) {
-  .joro-menu__right { display: none; }
-  .joro-menu__left { padding: 32px 24px 40px; width: 100%; }
+  .joro-menu__left { padding: 32px 24px 40px; }
 }

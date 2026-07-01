@@ -44,7 +44,7 @@ export default function AboutHistory() {
           </h2>
           <p
             className="uc-desc font-medium text-charcoal max-w-[520px]"
-            style={{ fontSize: "16px", lineHeight: "26px" }}
+            style={{ fontSize: "14px", lineHeight: "24px" }}
           >
             JÖRO Studio est né d&rsquo;un constat simple&nbsp;: pourquoi l&rsquo;élégance,
             l&rsquo;innovation et l&rsquo;environnement ne pourraient-ils pas

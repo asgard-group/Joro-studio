@@ -25,7 +25,7 @@ export default function HomePage() {
       <Hero
         eyebrow="Architecture & Design d'intérieur"
         title={<>Concevoir les espaces<br />hybrides de demain</>}
-        video="/videos/Transition 3_5.webm"
+        image="/images/hero2.png"
         scrollCta="Découvrir notre studio"
       />
 
