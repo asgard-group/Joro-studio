@@ -52,8 +52,8 @@ export default function ServicesAll() {
     }
   }, []);
 
-  // Dissolve : slide 1 (cream) fade out → slide 2 (charcoal) visible derrière
-  const slide1Opacity = useTransform(scrollY, [ranges.dissolveStart, ranges.dissolveEnd], [1, 0]);
+  // Dissolve : slide 1 (cream) — masquée mais conservée pour réactivation
+  // const slide1Opacity = useTransform(scrollY, [ranges.dissolveStart, ranges.dissolveEnd], [1, 0]);
 
   // Fade out global de l'intro (pour révéler DESIGN & BUILD via split)
   const contentOpacity = useTransform(scrollY, [ranges.fadeOutStart, ranges.fadeOutEnd], [1, 0]);
