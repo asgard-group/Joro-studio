@@ -7,7 +7,6 @@ import type { WorkItem } from "@/types";
 
 interface Props {
   items: WorkItem[];
-  total: number;
 }
 
 export function MobileFeaturedWork({ items }: { items: WorkItem[] }) {
