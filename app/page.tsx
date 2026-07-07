@@ -82,7 +82,7 @@ export default function HomePage() {
 
       {/* FeaturedWork — se superpose aux offres depuis l'arrivée de Conseil Workplace */}
       <div id="nos-realisations" style={{ marginTop: "-250vh" }}>
-        <FeaturedWork items={featuredWork} total={featuredWork.length} />
+        <FeaturedWork items={featuredWork} />
       </div>
 
       {/* Réalisations mobile */}
