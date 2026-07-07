@@ -41,7 +41,7 @@ export function MobileFeaturedWork({ items }: { items: WorkItem[] }) {
   );
 }
 
-export default function FeaturedWork({ items, total }: Props) {
+export default function FeaturedWork({ items }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   // Pour chaque item : { left, right }
   const itemRefs = useRef<Array<{ left: HTMLDivElement | null; right: HTMLDivElement | null }>>(
