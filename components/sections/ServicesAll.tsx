@@ -133,13 +133,14 @@ export default function ServicesAll() {
           <IntroSlide dark={true} />
         </motion.div>
 
-        {/* Slide 1 (cream + texte charcoal) — devant slide 2, fade out pendant dissolve (z-31) */}
+        {/* Slide 1 (cream + texte charcoal) — masquée, décommenter pour réactiver
         <motion.div
           className="absolute inset-0 z-[31] pointer-events-none"
           style={{ opacity: slide1Opacity }}
         >
           <IntroSlide dark={false} />
         </motion.div>
+        */}
       </div>
       {/*
         Marqueur "light" pour la navbar pendant la phase crème (slide 1 visible).

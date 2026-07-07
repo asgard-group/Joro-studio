@@ -24,9 +24,10 @@ interface Props {
   noFadeIn?: boolean;
   wide?: boolean;
   overlayClass?: string;
+  noParallax?: boolean;
 }
 
-export default function ServiceReveal({ activeId, title, description, ctaLabel = "Découvrir l'offre", image, video, flipX, noFadeIn, wide, overlayClass }: Props) {
+export default function ServiceReveal({ activeId, title, description, ctaLabel = "Découvrir l'offre", image, video, flipX, noFadeIn, wide, overlayClass, noParallax }: Props) {
   const sectionRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -34,7 +35,7 @@ export default function ServiceReveal({ activeId, title, description, ctaLabel =
     offset: ["start end", "end start"],
   });
 
-  const bgY = useTransform(scrollYProgress, [0, 1], ["-12%", "12%"]);
+  const bgY = useTransform(scrollYProgress, [0, 1], noParallax ? ["0%", "0%"] : ["-12%", "12%"]);
 
   return (
     <div
