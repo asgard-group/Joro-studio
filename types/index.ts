@@ -24,6 +24,8 @@ export interface WorkItem {
   tags: string[];
   description: string;
   coverImage: string;
+  rightImage?: string;
+  accentColor?: string;
   images?: string[];
   featured?: boolean;
   caseStudy?: boolean;

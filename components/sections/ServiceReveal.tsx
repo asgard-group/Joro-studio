@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import Image from "next/image";
-import ComingSoonLink from "@/components/ui/ComingSoonLink";
+import Link from "next/link";
 
 import { motion, useScroll, useTransform } from "framer-motion";
 
@@ -24,9 +24,10 @@ interface Props {
   noFadeIn?: boolean;
   wide?: boolean;
   overlayClass?: string;
+  noParallax?: boolean;
 }
 
-export default function ServiceReveal({ activeId, title, description, ctaLabel = "Découvrir l'offre", image, video, flipX, noFadeIn, wide, overlayClass }: Props) {
+export default function ServiceReveal({ activeId, title, description, ctaLabel = "Découvrir l'offre", image, video, flipX, noFadeIn, wide, overlayClass, noParallax }: Props) {
   const sectionRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -34,7 +35,7 @@ export default function ServiceReveal({ activeId, title, description, ctaLabel =
     offset: ["start end", "end start"],
   });
 
-  const bgY = useTransform(scrollYProgress, [0, 1], ["-12%", "12%"]);
+  const bgY = useTransform(scrollYProgress, [0, 1], noParallax ? ["0%", "0%"] : ["-12%", "12%"]);
 
   return (
     <div
@@ -75,12 +76,12 @@ export default function ServiceReveal({ activeId, title, description, ctaLabel =
           <h2 className={`text-[26px] md:text-[64px] font-semibold uppercase tracking-tight text-cream mb-[40px] ${title.includes('\n') ? 'whitespace-pre-line leading-[1.2]' : 'whitespace-nowrap leading-none'}`}>
             {title}
           </h2>
-          <p className="max-w-[460px] text-[16px] leading-relaxed text-cream mb-[25px]">
+          <p className="max-w-[460px] text-[14px] leading-relaxed text-cream mb-[25px]">
             {description}
           </p>
-          <ComingSoonLink className="text-[11px] font-medium uppercase tracking-[0.18em] text-cream border-b border-cream/50 pb-1">
+          <Link href="/contact" className="text-[11px] font-medium uppercase tracking-[0.18em] text-cream border-b border-cream/50 pb-1">
             {ctaLabel}
-          </ComingSoonLink>
+          </Link>
         </div>
 
         {/* Droite — navigation verticale */}

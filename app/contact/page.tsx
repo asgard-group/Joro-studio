@@ -1,117 +1,157 @@
-import type { Metadata } from "next";
-import { buildMetadata } from "@/lib/metadata";
+"use client";
+
+import { useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 import ContactForm from "./ContactForm";
 
-export const metadata: Metadata = buildMetadata({
-  title: "Contact — JÖRO Studio",
-  description:
-    "Contactez JÖRO Studio pour discuter de votre projet d'aménagement ou de rénovation. Notre équipe vous répond sous 48h.",
-  alternates: { canonical: "/contact" },
-});
-
-const contactInfo = [
-  {
-    label: "Email",
-    value: "contact@jorostudio.fr",
-    href: "mailto:contact@jorostudio.fr",
-  },
-  {
-    label: "Localisation",
-    value: "Paris, France",
-    href: null,
-  },
-  {
-    label: "LinkedIn",
-    value: "linkedin.com/company/joro-studio",
-    href: "https://www.linkedin.com/company/joro-studio",
-  },
-];
-
-const projectTypes = [
-  "Bureaux & Open space",
-  "Salle de réunion",
-  "Résidence / Appartement",
-  "Hôtel & Hospitality",
-  "Showroom & Retail",
-  "Autre",
-];
-
 export default function ContactPage() {
+  const router = useRouter();
+  const overlayRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = overlayRef.current;
+    if (!el) return;
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        el.classList.add("is-open");
+      });
+    });
+  }, []);
+
+  function handleClose() {
+    const el = overlayRef.current;
+    if (!el) { router.push("/"); return; }
+    el.classList.remove("is-open");
+    setTimeout(() => router.push("/"), 900);
+  }
+
   return (
     <>
-      {/* Header */}
-      <section className="bg-charcoal pb-20 pt-36 text-cream">
-        <div className="container-site">
-          <div className="grid gap-16 lg:grid-cols-2">
-            <div>
-              <p className="label-eyebrow mb-6 text-taupe-200">Contact</p>
-              <h1 className="heading-display mb-6">
-                Parlons de votre{" "}
-                <em className="not-italic text-taupe">projet</em>
-              </h1>
-              <p className="text-lg leading-relaxed text-cream/70">
-                Que vous ayez un projet précis ou une simple question, notre
-                équipe est disponible pour vous répondre sous 48h ouvrées.
-              </p>
-            </div>
-            <div className="flex flex-col justify-end gap-8">
-              {contactInfo.map((info) => (
-                <div key={info.label} className="border-l-2 border-taupe pl-6">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-cream/40">
-                    {info.label}
-                  </p>
-                  {info.href ? (
-                    <a
-                      href={info.href}
-                      target={info.href.startsWith("http") ? "_blank" : undefined}
-                      rel={info.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                      className="mt-1 block text-cream transition-colors hover:text-taupe-200"
-                    >
-                      {info.value}
-                    </a>
-                  ) : (
-                    <p className="mt-1 text-cream">{info.value}</p>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
+      <div ref={overlayRef} className="joro-contact">
+        {/* Photo — left half */}
+        <div className="joro-contact__photo">
+          <Image
+            src="/images/2024-10-Retines-Asgard-parquet Pigalle-DSC04495.webp"
+            alt="JÖRO Studio — atelier"
+            fill
+            className="object-cover"
+            sizes="50vw"
+            priority
+          />
         </div>
-      </section>
 
-      {/* Form section */}
-      <section className="py-24">
-        <div className="container-site">
-          <div className="grid gap-16 lg:grid-cols-2">
-            <div>
-              <h2 className="heading-section mb-4">Nous envoyer un message</h2>
-              <p className="mb-8 text-charcoal-muted">
-                Décrivez votre projet, vos contraintes et votre calendrier. Plus
-                votre message est précis, plus notre réponse sera utile.
-              </p>
+        {/* Content — right half */}
+        <div className="joro-contact__content">
+          {/* Close button */}
+          <button
+            type="button"
+            onClick={handleClose}
+            aria-label="Fermer"
+            className="joro-contact__close"
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            >
+              <line x1="2" y1="2" x2="14" y2="14" />
+              <line x1="14" y1="2" x2="2" y2="14" />
+            </svg>
+            <span>Fermer</span>
+          </button>
 
-              {/* Project types */}
-              <div className="mb-8">
-                <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-charcoal-light">
-                  Typologies de projets que nous accompagnons
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {projectTypes.map((type) => (
-                    <span
-                      key={type}
-                      className="border border-cream-300 px-3 py-1 text-xs text-charcoal-muted"
-                    >
-                      {type}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-
+          <div className="joro-contact__body">
+            <h1 className="joro-contact__title">CONTACTEZ-NOUS</h1>
             <ContactForm />
           </div>
         </div>
-      </section>
+      </div>
+
+      <style>{`
+        .joro-contact {
+          position: fixed;
+          inset: 0;
+          z-index: 9999;
+          display: flex;
+          background: #F3F2ED;
+          clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%);
+          transform: translateX(5%);
+          transition: clip-path 1s cubic-bezier(.25,.74,.22,.99), transform 1s cubic-bezier(.25,.74,.22,.99);
+        }
+        .joro-contact.is-open {
+          clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+          transform: translateX(0);
+        }
+
+        /* Photo — left 50% */
+        .joro-contact__photo {
+          position: relative;
+          width: 50%;
+          flex-shrink: 0;
+          overflow: hidden;
+          transform: translateX(-5%);
+          transition: transform 0.8s 0.2s cubic-bezier(.25,.74,.22,.99);
+        }
+        .joro-contact.is-open .joro-contact__photo {
+          transform: translateX(0);
+        }
+
+        /* Content — right 50% */
+        .joro-contact__content {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          padding: 28px 60px 60px;
+          overflow-y: auto;
+          position: relative;
+        }
+
+        /* Close button — top right */
+        .joro-contact__close {
+          align-self: flex-end;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          background: transparent;
+          border: none;
+          cursor: pointer;
+          padding: 0;
+          color: #1C1A18;
+          font-size: 13px;
+          font-weight: 500;
+          letter-spacing: 0.02em;
+          line-height: 1;
+          margin-bottom: 60px;
+        }
+        .joro-contact__close:hover { opacity: 0.6; }
+
+        /* Title */
+        .joro-contact__title {
+          font-size: 64px;
+          font-weight: 700;
+          line-height: 110%;
+          letter-spacing: -0.01em;
+          color: #1C1A18;
+          margin-bottom: 48px;
+        }
+
+        .joro-contact__body {
+          flex: 1;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+          .joro-contact { flex-direction: column; }
+          .joro-contact__photo { width: 100%; height: 220px; }
+          .joro-contact__content { padding: 24px 20px 40px; }
+          .joro-contact__title { font-size: 32px; margin-bottom: 32px; }
+          .joro-contact__close { margin-bottom: 32px; }
+        }
+      `}</style>
     </>
   );
 }

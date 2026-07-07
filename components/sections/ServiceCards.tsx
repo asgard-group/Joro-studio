@@ -119,7 +119,7 @@ function ServiceCardItem({
         className="absolute bottom-0 inset-x-0 z-10 pb-[100px]"
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex justify-end">
-          <p className="max-w-[348px] text-[16px] font-normal leading-relaxed text-cream">
+          <p className="max-w-[348px] text-[14px] font-normal leading-relaxed text-cream">
             {offer.description}
           </p>
         </div>

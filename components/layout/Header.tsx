@@ -58,16 +58,8 @@ function NavContent({ dark, onHero, langOpen, setLangOpen, langTriggerId, onOpen
           type="button"
           onClick={onOpenMenu}
           aria-label={headerStrings.menu}
-          className="justify-self-start w-full inline-flex items-center gap-[8px] min-[700px]:gap-[10px] bg-transparent border-0 p-0 cursor-pointer"
+          className="justify-self-start w-full inline-flex items-center bg-transparent border-0 p-0 cursor-pointer"
         >
-          <Image
-            src="/images/icon/menu.svg"
-            alt=""
-            width={24}
-            height={9}
-            className="w-5 min-[700px]:w-6 h-auto"
-            style={{ filter: iconFilter(dark) }}
-          />
           <span
             className={`nav-label text-[13px] ${labelClasses(dark)}`}
             style={LABEL_STYLE}
@@ -113,14 +105,14 @@ function NavContent({ dark, onHero, langOpen, setLangOpen, langTriggerId, onOpen
 
         {/* Right — contact + language switcher */}
         <div className="justify-self-end w-full inline-flex items-center justify-end" style={{ gap: '20px' }}>
-          <ComingSoonLink>
+          <Link href="/contact">
             <span
               className={`nav-label text-[13px] ${labelClasses(dark)}`}
               style={LABEL_STYLE}
             >
               {headerStrings.contact}
             </span>
-          </ComingSoonLink>
+          </Link>
           <div
             ref={langRef}
             className="hidden min-[700px]:inline-flex relative items-center"

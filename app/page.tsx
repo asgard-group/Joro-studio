@@ -25,7 +25,7 @@ export default function HomePage() {
       <Hero
         eyebrow="Architecture & Design d'intérieur"
         title={<>Concevoir les espaces<br />hybrides de demain</>}
-        video="/videos/Transition 3_5.webm"
+        image="/images/hero2.png"
         scrollCta="Découvrir notre studio"
       />
 
@@ -38,7 +38,7 @@ export default function HomePage() {
       <div id="nos-offres">
         <ServicesAll />
       </div>
-      <div className="relative h-[350vh] md:h-[800vh]" style={{ marginTop: "-100vh" }}>
+      <div className="relative h-[350vh] md:h-[450vh]" style={{ marginTop: "-100vh" }}>
         {/* Ancres absolues */}
         <div id="amo" style={{ position: "absolute", top: 0 }} />
         <div id="marketing-suite" style={{ position: "absolute", top: "100vh" }} />
@@ -51,6 +51,7 @@ export default function HomePage() {
             description="Assistance à la maîtrise d'ouvrage : conseil en faisabilité, diagnostic RSE et accompagnement à la certification, nous vous guidons à chaque étape stratégique de votre projet."
             ctaLabel="Être accompagné"
             video="/videos/Composition 1.mp4"
+            noParallax
           />
         </div>
         <div className="sticky top-0 h-screen" style={{ zIndex: 50 }}>
@@ -61,6 +62,7 @@ export default function HomePage() {
             ctaLabel="Valoriser mon actif"
             image="/images/Frame 207.png"
             overlayClass="bg-charcoal/25"
+            noParallax
           />
         </div>
         <div className="sticky top-0 h-screen" style={{ zIndex: 60 }}>
@@ -73,16 +75,17 @@ export default function HomePage() {
             flipX
             wide
             overlayClass="bg-charcoal/20 mix-blend-soft-light"
+            noParallax
           />
-        </div>
-
-        {/* FeaturedWork — desktop split-screen + mobile empilé */}
-        <div id="nos-realisations">
-          <FeaturedWork items={featuredWork} total={featuredWork.length} />
         </div>
       </div>
 
-      {/* Réalisations mobile — après le container des services */}
+      {/* FeaturedWork — se superpose aux offres depuis l'arrivée de Conseil Workplace */}
+      <div id="nos-realisations" style={{ marginTop: "-250vh" }}>
+        <FeaturedWork items={featuredWork} total={featuredWork.length} />
+      </div>
+
+      {/* Réalisations mobile */}
       <MobileFeaturedWork items={featuredWork} />
 
       <div style={{ marginTop: "-1px" }}>

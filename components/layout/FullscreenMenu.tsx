@@ -2,19 +2,17 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
 
 interface MenuLink {
   label: string;
   href: string;
-  image: string;
 }
 
 const menuLinks: MenuLink[] = [
-  { label: "NOTRE STUDIO",    href: "/#notre-studio",    image: "/images/work/portfolio-1.jpg" },
-  { label: "NOS OFFRES",      href: "/#nos-offres",      image: "/images/work/portfolio-2.jpg" },
-  { label: "NOS RÉALISATIONS",href: "/#nos-realisations",image: "/images/work/portfolio-3.jpg" },
-  { label: "CONTACT",         href: "/#contact",         image: "/images/work/portfolio-4.jpg" },
+  { label: "NOTRE STUDIO",    href: "/#notre-studio" },
+  { label: "NOS OFFRES",      href: "/#nos-offres" },
+  { label: "NOS RÉALISATIONS",href: "/#nos-realisations" },
+  { label: "CONTACT",         href: "/contact" },
 ];
 
 interface Props {
@@ -23,7 +21,6 @@ interface Props {
 }
 
 export default function FullscreenMenu({ isOpen, onClose }: Props) {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
 
   return (
@@ -54,25 +51,10 @@ export default function FullscreenMenu({ isOpen, onClose }: Props) {
                 <line x1="2" y1="2" x2="14" y2="14" />
                 <line x1="14" y1="2" x2="2" y2="14" />
               </svg>
-              <span
-                className="text-[12px] min-[700px]:text-[16px] font-medium text-cream"
-                style={{ lineHeight: "100%", letterSpacing: "0.02em" }}
-              >
-                Menu
-              </span>
             </button>
 
-            {/* Center — logo */}
-            <Link href="/" className="justify-self-center" onClick={onClose} aria-label="JÖRO Studio — retour à l'accueil">
-              <Image
-                src="/images/logos/joro-studio-ẢCHITECTURE-TRAVAUX@300x 2.png"
-                alt="JÖRO Studio — Architecture & Travaux"
-                width={320}
-                height={97}
-                className="object-contain w-auto h-[34px] min-[700px]:h-[53px]"
-                style={{ maxWidth: "none" }}
-              />
-            </Link>
+            {/* Center — vide */}
+            <div className="justify-self-center" />
 
             {/* Right — Fr▼ */}
             <div className="justify-self-end w-full inline-flex items-center justify-end">
@@ -108,32 +90,30 @@ export default function FullscreenMenu({ isOpen, onClose }: Props) {
           </div>
         </div>
 
+        {/* Logo bas droite */}
+        <Link href="/" onClick={onClose} aria-label="JÖRO Studio — retour à l'accueil" className="joro-menu__logo-br">
+          <Image
+            src="/images/logos/joro-studio-ẢCHITECTURE-TRAVAUX@300x 2.png"
+            alt="JÖRO Studio — Architecture & Travaux"
+            width={320}
+            height={97}
+            style={{ maxWidth: "none", height: "70px", width: "auto" }}
+          />
+        </Link>
+
         {/* Body */}
         <div className="joro-menu__body">
           {/* Left — nav + social */}
           <div className="joro-menu__left">
             <nav aria-label="Menu principal">
               <ul className="joro-menu__nav">
-                {menuLinks.map((link, i) => {
-                  const isAnyHovered = hoveredIndex !== null;
-                  const isThisHovered = hoveredIndex === i;
-                  let liClass = "";
-                  if (isAnyHovered) {
-                    liClass = isThisHovered ? "is-active" : "is-dimmed";
-                  }
-                  return (
-                    <li key={link.href} className={liClass}>
-                      <Link
-                        href={link.href}
-                        onClick={onClose}
-                        onMouseEnter={() => setHoveredIndex(i)}
-                        onMouseLeave={() => setHoveredIndex(null)}
-                      >
-                        {link.label}
-                      </Link>
-                    </li>
-                  );
-                })}
+                {menuLinks.map((link) => (
+                  <li key={link.href}>
+                    <Link href={link.href} onClick={onClose}>
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </nav>
 
@@ -161,17 +141,6 @@ export default function FullscreenMenu({ isOpen, onClose }: Props) {
           </div>
         </div>
 
-        {/* Right — image pleine hauteur, direct child du menu */}
-        <div className="joro-menu__right">
-          {menuLinks.map((link, i) => (
-            <div
-              key={link.href}
-              className={`joro-menu__image${hoveredIndex === i || (hoveredIndex === null && i === 0) ? " is-visible" : ""}`}
-              style={{ backgroundImage: `url(${link.image})` }}
-              aria-hidden="true"
-            />
-          ))}
-        </div>
       </div>
     </>
   );
