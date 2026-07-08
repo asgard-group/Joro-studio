@@ -10,9 +10,46 @@ interface Props {
 }
 
 export function MobileFeaturedWork({ items }: { items: WorkItem[] }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<Array<HTMLDivElement | null>>(items.map(() => null));
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    function onScroll() {
+      const rect = container!.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const scrolled = Math.max(0, -rect.top);
+
+      items.forEach((_, i) => {
+        const card = cardRefs.current[i];
+        if (!card) return;
+
+        // Chaque carte se révèle en entier (photo + panneau) du bas vers le haut, pendant sa tranche de scroll [i*vh, (i+1)*vh]
+        const itemScrolled = scrolled - i * vh;
+        const p = Math.min(1, Math.max(0, itemScrolled / vh));
+        const topInset = 100 - p * 100;
+
+        card.style.clipPath = `polygon(0% ${topInset.toFixed(3)}%, 100% ${topInset.toFixed(3)}%, 100% 100%, 0% 100%)`;
+      });
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [items]);
+
+  // (N+1) * 100vh : N tranches de reveal + 1vh pour rester visible à la fin
+  const totalHeight = `${(items.length + 1) * 100}vh`;
+
   return (
-    <div className="md:hidden flex flex-col">
-      {items.map((item) => {
+    <div
+      ref={containerRef}
+      className="md:hidden -mt-[200vh]"
+      style={{ position: "relative", height: totalHeight, zIndex: 69 }}
+    >
+      {items.map((item, i) => {
         const isDark = item.accentColor && item.accentColor !== "#F3F2ED";
         const textColor = isDark ? "#F3F2ED" : "#1C1A18";
         const subColor = isDark ? "rgba(243,242,237,0.55)" : "rgba(28,26,24,0.45)";
@@ -20,9 +57,11 @@ export function MobileFeaturedWork({ items }: { items: WorkItem[] }) {
         return (
           <div
             key={item.id}
+            ref={(el) => { cardRefs.current[i] = el; }}
             className="mobile-work-card"
             style={{
-              position: "relative",
+              position: "sticky",
+              top: 0,
               width: "100%",
               overflow: "hidden",
               display: "flex",
@@ -31,6 +70,9 @@ export function MobileFeaturedWork({ items }: { items: WorkItem[] }) {
               alignItems: "flex-start",
               gap: "50px",
               padding: "0 20px 20px 20px",
+              zIndex: i + 1,
+              clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
+              willChange: "clip-path",
             }}
           >
             {/* Photo plein fond */}

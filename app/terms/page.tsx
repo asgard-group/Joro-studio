@@ -3,7 +3,7 @@ import { buildMetadata } from "@/lib/metadata";
 
 export const metadata: Metadata = buildMetadata({
   title: "Conditions Générales d'Utilisation — JÖRO Studio",
-  description: "Conditions générales d'utilisation du site jorostudio.fr.",
+  description: "Conditions générales d'utilisation du site joro-studio.fr.",
   alternates: { canonical: "/terms" },
   robots: { index: false, follow: false },
 });
@@ -23,7 +23,7 @@ export default function TermsPage() {
               <h2 className="font-serif text-2xl text-charcoal mb-4">1. Objet</h2>
               <p className="leading-relaxed text-charcoal-muted">
                 Les présentes Conditions Générales d'Utilisation (CGU) définissent les modalités
-                d'accès et d'utilisation du site <strong>jorostudio.fr</strong> édité par JÖRO
+                d'accès et d'utilisation du site <strong>joro-studio.fr</strong> édité par JÖRO
                 Studio SAS. L'utilisation du site vaut acceptation pleine et entière des présentes CGU.
               </p>
             </div>
