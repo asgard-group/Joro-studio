@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import Image from "next/image";
 import { buildMetadata } from "@/lib/metadata";
 import { services } from "@/data/services";
 import CTA from "@/components/sections/CTA";
 import FAQ from "@/components/sections/FAQ";
+import ComingSoonLink from "@/components/ui/ComingSoonLink";
 
 export const metadata: Metadata = buildMetadata({
   title: "Nos offres — JÖRO Studio",
@@ -69,11 +69,11 @@ export default function ServicesPage() {
         >
           <div className="container-site">
             <div
-              className={`grid gap-16 lg:grid-cols-2 lg:items-center ${
-                index % 2 === 1 ? "lg:grid-flow-dense" : ""
+              className={`grid gap-16 ${service.image ? "lg:grid-cols-2 lg:items-center" : "max-w-2xl"} ${
+                index % 2 === 1 && service.image ? "lg:grid-flow-dense" : ""
               }`}
             >
-              <div className={index % 2 === 1 ? "lg:col-start-2" : ""}>
+              <div className={index % 2 === 1 && service.image ? "lg:col-start-2" : ""}>
                 <p className="label-eyebrow mb-4">{service.tagline}</p>
                 <h2 className="heading-section mb-6">{service.name}</h2>
                 <p className="mb-8 text-lg leading-relaxed text-charcoal-muted">
@@ -87,23 +87,25 @@ export default function ServicesPage() {
                     </li>
                   ))}
                 </ul>
-                <Link href="/contact" className="btn-primary">
+                <ComingSoonLink className="btn-primary">
                   Parler de ce projet
-                </Link>
+                </ComingSoonLink>
               </div>
-              <div
-                className={`relative aspect-[4/3] overflow-hidden ${
-                  index % 2 === 1 ? "lg:col-start-1" : ""
-                }`}
-              >
-                <Image
-                  src={service.image ?? "/images/placeholder.jpg"}
-                  alt={service.name}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                />
-              </div>
+              {service.image && (
+                <div
+                  className={`relative aspect-[4/3] overflow-hidden ${
+                    index % 2 === 1 ? "lg:col-start-1" : ""
+                  }`}
+                >
+                  <Image
+                    src={service.image}
+                    alt={service.name}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                  />
+                </div>
+              )}
             </div>
           </div>
         </section>

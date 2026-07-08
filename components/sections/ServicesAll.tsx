@@ -1,8 +1,8 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import Link from "next/link";
 import Pill from "@/components/ui/Pill";
+import ComingSoonLink from "@/components/ui/ComingSoonLink";
 import { motion, useScroll, useTransform } from "framer-motion";
 
 const serviceNav = [
@@ -91,9 +91,9 @@ export default function ServicesAll() {
             <p className="max-w-[460px] text-[14px] leading-relaxed text-cream mb-[25px]">
               Chaque espace est pensé dans ses moindres détails pour conjuguer esthétique et performance durable. Une vision cohérente, du premier trait jusqu'à la remise des clés.
             </p>
-            <Link href="/contact" className="text-[11px] font-medium uppercase tracking-[0.18em] text-cream border-b border-cream/50 pb-1">
+            <ComingSoonLink className="text-[11px] font-medium uppercase tracking-[0.18em] text-cream border-b border-cream/50 pb-1">
               Lancer un projet
-            </Link>
+            </ComingSoonLink>
           </div>
           <div className="hidden md:flex flex-col items-end gap-[18px]">
             {serviceNav.map((item) => (

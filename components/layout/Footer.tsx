@@ -46,15 +46,9 @@ export default function Footer() {
             <ul className="flex flex-col gap-3">
               {footerLinks.studio.map((link) => (
                 <li key={link.href}>
-                  {link.href === "/contact" ? (
-                    <Link href="/contact" className="text-[11px] font-medium uppercase tracking-[0.12em] text-cream/50 hover:text-cream transition-colors">
-                      {link.label}
-                    </Link>
-                  ) : (
-                    <ComingSoonLink className="text-[11px] font-medium uppercase tracking-[0.12em] text-cream/50">
-                      {link.label}
-                    </ComingSoonLink>
-                  )}
+                  <ComingSoonLink className="text-[11px] font-medium uppercase tracking-[0.12em] text-cream/50">
+                    {link.label}
+                  </ComingSoonLink>
                 </li>
               ))}
             </ul>

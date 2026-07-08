@@ -11,8 +11,8 @@ export const workItems: WorkItem[] = [
     tags: ["PARIS 10", "BUREAUX OPÉRÉS"],
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-    coverImage: "/images/work/1.png",
-    rightImage: "/images/work/2.png",
+    coverImage: "/images/work/1.webp",
+    rightImage: "/images/work/2.webp",
     accentColor: "#96461F",
     featured: true,
     caseStudy: true,
@@ -27,8 +27,8 @@ export const workItems: WorkItem[] = [
     tags: ["PARIS 10", "BUREAUX OPÉRÉS"],
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-    coverImage: "/images/work/3.png",
-    rightImage: "/images/work/4.png",
+    coverImage: "/images/work/3.webp",
+    rightImage: "/images/work/4.webp",
     accentColor: "#A97F4F",
     featured: true,
     caseStudy: true,
@@ -43,8 +43,8 @@ export const workItems: WorkItem[] = [
     tags: ["PARIS 9", "BUREAUX OPÉRÉS"],
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-    coverImage: "/images/work/5.png",
-    rightImage: "/images/work/6.png",
+    coverImage: "/images/work/5.webp",
+    rightImage: "/images/work/6.webp",
     accentColor: "#F3F2ED",
     featured: true,
     caseStudy: true,
@@ -59,7 +59,7 @@ export const workItems: WorkItem[] = [
     tags: ["Coworking", "1 800 m²", "Mixte"],
     description:
       "Aménagement d'un hub de coworking hybride sur 1 800 m² dans une ancienne manufacture. Espaces de travail, salles de réunion et bar à café intégré.",
-    coverImage: "/images/work/portfolio-2.jpg",
+    coverImage: "/images/work/2.webp",
     featured: false,
     caseStudy: true,
   },
@@ -73,7 +73,7 @@ export const workItems: WorkItem[] = [
     tags: ["Bureaux", "Startup", "250 m²"],
     description:
       "Conception des bureaux d'une fintech en forte croissance. Identité de marque intégrée à l'espace, salle de réunion avec mur végétal et cabines acoustiques.",
-    coverImage: "/images/work/portfolio-5.jpg",
+    coverImage: "/images/work/5.webp",
     featured: false,
     caseStudy: false,
   },
@@ -87,7 +87,7 @@ export const workItems: WorkItem[] = [
     tags: ["Bureaux", "Hybride", "400 m²"],
     description:
       "Aménagement d'un plateau hybride alliant open space, salles de réunion vitrées et espaces de concentration. Colonnes apparentes et panneaux acoustiques taupe.",
-    coverImage: "/images/work/portfolio-6.jpg",
+    coverImage: "/images/work/6.webp",
     featured: false,
     caseStudy: false,
   },
@@ -101,7 +101,7 @@ export const workItems: WorkItem[] = [
     tags: ["Résidentiel", "Corporate", "6 appartements"],
     description:
       "Aménagement de six appartements corporate pour cadres en mobilité. Design sobre et chaleureux, équipements premium et services intégrés.",
-    coverImage: "/images/work/portfolio-1.jpg",
+    coverImage: "/images/work/4.webp",
     featured: false,
     caseStudy: false,
   },
@@ -115,7 +115,7 @@ export const workItems: WorkItem[] = [
     tags: ["Showroom", "Marque", "120 m²"],
     description:
       "Conception du premier showroom JÖRO dédié aux prescripteurs : architectes, décorateurs et gestionnaires d'actifs. Mise en scène des collections et matériaux.",
-    coverImage: "/images/work/portfolio-3.jpg",
+    coverImage: "/images/work/3.webp",
     featured: false,
     caseStudy: false,
   },

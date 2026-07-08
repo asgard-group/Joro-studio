@@ -15,7 +15,6 @@ export const services: Service[] = [
       "Design signature JÖRO",
     ],
     href: "/services#office",
-    image: "/images/work/portfolio-3.jpg",
   },
   {
     id: "meeting",
@@ -31,7 +30,6 @@ export const services: Service[] = [
       "Réservation en ligne",
     ],
     href: "/services#meeting",
-    image: "/images/work/portfolio-4.jpg",
   },
   {
     id: "living",
@@ -47,7 +45,6 @@ export const services: Service[] = [
       "Support 24/7",
     ],
     href: "/services#living",
-    image: "/images/work/portfolio-1.jpg",
   },
   {
     id: "studio",
@@ -63,6 +60,5 @@ export const services: Service[] = [
       "Suivi de chantier et livraison",
     ],
     href: "/services#studio",
-    image: "/images/work/portfolio-5.jpg",
   },
 ];
