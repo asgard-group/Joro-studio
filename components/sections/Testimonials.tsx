@@ -1,170 +1,92 @@
 "use client";
 
-import { useRef, useState, useCallback } from "react";
-import AnimatedImage from "@/components/ui/AnimatedImage";
+import Image from "next/image";
 import { testimonials } from "@/data/testimonials";
 import type { TestimonialCard } from "@/data/testimonials";
 import Pill from "@/components/ui/Pill";
 
+function QuoteIcon() {
+  return (
+    <svg width="44" height="34" viewBox="0 0 36 28" fill="none" className="mb-6">
+      <path
+        d="M0 28V17.2C0 13.467 0.933 10.2 2.8 7.4C4.667 4.533 7.4 2.2 11 0.399999L13.4 4C11 5.4 9.167 7 8 8.8C6.9 10.6 6.367 12.667 6.4 15H13.4V28H0ZM22.6 28V17.2C22.6 13.467 23.533 10.2 25.4 7.4C27.267 4.533 30 2.2 33.6 0.399999L36 4C33.6 5.4 31.767 7 30.6 8.8C29.5 10.6 28.967 12.667 29 15H36V28H22.6Z"
+        fill="white"
+        fillOpacity="0.25"
+      />
+    </svg>
+  );
+}
+
 export default function Testimonials() {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
-  const [progress, setProgress] = useState(0);
-  const isDragging = useRef(false);
-  const dragStartX = useRef(0);
-  const dragStartProgress = useRef(0);
-
-  const n = testimonials.length;
-  const handlePct = 100 / n;
-  const handleLeft = progress * (100 - handlePct);
-
-  const handleScroll = useCallback(() => {
-    if (!scrollRef.current || isDragging.current) return;
-    const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-    const max = scrollWidth - clientWidth;
-    setProgress(max > 0 ? scrollLeft / max : 0);
-  }, []);
-
-  const scrollToProgress = useCallback((p: number) => {
-    if (!scrollRef.current) return;
-    const { scrollWidth, clientWidth } = scrollRef.current;
-    const max = scrollWidth - clientWidth;
-    scrollRef.current.scrollLeft = p * max;
-  }, []);
-
-  const onTrackClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (!trackRef.current) return;
-    const rect = trackRef.current.getBoundingClientRect();
-    const clickX = e.clientX - rect.left;
-    const trackW = rect.width;
-    const handleW = trackW * (handlePct / 100);
-    const usable = trackW - handleW;
-    const p = Math.min(1, Math.max(0, (clickX - handleW / 2) / usable));
-    setProgress(p);
-    scrollToProgress(p);
-  }, [handlePct, scrollToProgress]);
-
-  const onHandleMouseDown = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    isDragging.current = true;
-    dragStartX.current = e.clientX;
-    dragStartProgress.current = progress;
-
-    const onMove = (ev: MouseEvent) => {
-      if (!trackRef.current) return;
-      const trackW = trackRef.current.getBoundingClientRect().width;
-      const handleW = trackW * (handlePct / 100);
-      const usable = trackW - handleW;
-      const delta = (ev.clientX - dragStartX.current) / usable;
-      const p = Math.min(1, Math.max(0, dragStartProgress.current + delta));
-      setProgress(p);
-      scrollToProgress(p);
-    };
-    const onUp = () => {
-      isDragging.current = false;
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("mouseup", onUp);
-    };
-    window.addEventListener("mousemove", onMove);
-    window.addEventListener("mouseup", onUp);
-  }, [progress, handlePct, scrollToProgress]);
-
   return (
     <section data-navbar-theme="light" className="bg-cream pt-[150px] pb-[150px]">
 
-      {/* Label pill */}
-      <div className="px-[24px] sm:px-[40px] lg:px-[60px] mb-[60px]">
+      {/* Header : titre + pill sur la même ligne */}
+      <div className="flex items-center justify-between px-[24px] sm:px-[40px] lg:px-[60px] mb-[60px]">
+        <h2 className="font-semibold uppercase text-[36px] sm:text-[52px] text-charcoal leading-none tracking-tight">
+          AVIS CLIENT
+        </h2>
         <Pill>TÉMOIGNAGES</Pill>
       </div>
 
-      {/* Corps : titre vertical + carousel */}
-      <div className="flex items-stretch">
-
-        {/* AVIS CLIENT — texte vertical aligné en haut */}
-        <div className="hidden lg:flex items-start justify-center shrink-0 pl-[60px] pr-[60px]">
-          <span
-            className="font-semibold uppercase text-[52px] text-charcoal select-none"
-            style={{
-              writingMode: "vertical-rl",
-              transform: "rotate(180deg)",
-              lineHeight: 1,
-              letterSpacing: "0.04em",
-            }}
-          >
-            AVIS CLIENT
-          </span>
-        </div>
-
-        {/* Carousel */}
-        <div
-          ref={scrollRef}
-          onScroll={handleScroll}
-          className="flex gap-[20px] overflow-x-auto pr-[24px] sm:pr-[40px] lg:pr-[60px]"
-          style={{
-            scrollbarWidth: "none",
-            msOverflowStyle: "none",
-            scrollSnapType: "x mandatory",
-          }}
-        >
-          {(testimonials as TestimonialCard[]).map((t) => (
-            <div
-              key={t.id}
-              className="flex-shrink-0 flex flex-col"
-              style={{
-                width: "clamp(280px, 527px, 527px)",
-                scrollSnapAlign: "start",
-              }}
-            >
-              {/* Image galerie hover */}
-              <div className="relative w-full overflow-hidden" style={{ height: "clamp(360px, 660px, 660px)" }}>
-                {t.images?.length ? (
-                  <AnimatedImage
-                    images={t.images}
-                    alt={t.author}
-                  />
-                ) : (
-                  <div className="w-full h-full bg-[#BAB6AA]/30" />
-                )}
-              </div>
-
-              {/* Caption : nom + localisation */}
-              <div className="flex justify-between items-baseline pt-[14px] pb-[10px]">
-                <span className="text-[15px] font-medium text-charcoal uppercase tracking-wide">
-                  {t.author}
-                </span>
-                <span className="text-[13px] text-[#BAB6AA] shrink-0 ml-3" style={{ letterSpacing: "0.02em" }}>
-                  {t.location ?? t.company}
-                </span>
-              </div>
-
-              {/* Citation visible en permanence */}
-              <p className="text-[13px] text-charcoal/60 leading-relaxed">
-                &ldquo;{t.quote}&rdquo;
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Pagination */}
-      <div className="flex justify-center mt-[48px]">
-        <div
-          ref={trackRef}
-          onClick={onTrackClick}
-          className="relative bg-[#BAB6AA]/30 cursor-pointer"
-          style={{ width: "180px", height: "2px" }}
-        >
+      {/* 4 cartes témoignage : photo fixe, citation révélée au survol — scroll horizontal si ça ne rentre pas */}
+      <div
+        className="flex gap-[20px] overflow-x-auto px-[24px] sm:px-[40px] lg:px-[60px]"
+        style={{ scrollbarWidth: "none", msOverflowStyle: "none", scrollSnapType: "x mandatory" }}
+      >
+        {(testimonials as TestimonialCard[]).map((t) => (
           <div
-            onMouseDown={onHandleMouseDown}
-            className="absolute top-1/2 -translate-y-1/2 bg-charcoal cursor-grab active:cursor-grabbing transition-[left] duration-150 ease-out"
-            style={{
-              width: `${handlePct}%`,
-              height: "2px",
-              left: `${handleLeft}%`,
-            }}
-          />
-        </div>
+            key={t.id}
+            className="group flex flex-col flex-shrink-0"
+            style={{ width: "clamp(280px, 21.5625vw, 414px)", scrollSnapAlign: "start" }}
+          >
+            <div
+              className="relative w-full overflow-hidden"
+              style={{ height: "clamp(360px, 33.854vw, 650px)" }}
+            >
+              {t.photo ? (
+                <Image
+                  src={t.photo}
+                  alt={t.author}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                />
+              ) : (
+                <div className="w-full h-full bg-[#BAB6AA]/30" />
+              )}
+
+              {/* Témoignage — révélé au survol */}
+              <div className="absolute inset-0 bg-charcoal flex flex-col justify-between p-[28px] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div>
+                  <QuoteIcon />
+                  <p className="text-white text-[15px] leading-relaxed">{t.quote}</p>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <div className="relative w-11 h-11 rounded-full overflow-hidden shrink-0 bg-white/10" />
+                  <div>
+                    <p className="text-white text-[15px] font-semibold leading-snug">{t.author}</p>
+                    <p className="text-white/50 text-[13px] mt-0.5">
+                      {t.company}
+                      {t.location ? `, ${t.location}` : ""}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Caption : nom + localisation */}
+            <div className="flex justify-between items-baseline pt-[14px] pb-[10px]">
+              <span className="text-[15px] font-medium text-charcoal">
+                {t.company}
+              </span>
+              <span className="text-[13px] text-[#BAB6AA] shrink-0 ml-3" style={{ letterSpacing: "0.02em" }}>
+                {t.location}
+              </span>
+            </div>
+          </div>
+        ))}
       </div>
 
     </section>

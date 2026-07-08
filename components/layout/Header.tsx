@@ -5,6 +5,7 @@ import Image from "next/image";
 import { type CSSProperties, useState, useEffect, useRef, useId } from "react";
 import { headerStrings } from "@/lib/strings";
 import FullscreenMenu from "@/components/layout/FullscreenMenu";
+import ComingSoonLink from "@/components/ui/ComingSoonLink";
 
 const LABEL_STYLE: CSSProperties = {
   lineHeight: "100%",
@@ -57,7 +58,7 @@ function NavContent({ dark, onHero, langOpen, setLangOpen, langTriggerId, onOpen
           type="button"
           onClick={onOpenMenu}
           aria-label={headerStrings.menu}
-          className="justify-self-start w-full inline-flex items-center bg-transparent border-0 p-0 cursor-pointer"
+          className="justify-self-start w-full inline-flex items-center bg-transparent border-0 p-0 cursor-pointer transition-opacity duration-200 hover:opacity-60"
         >
           <span
             className={`nav-label text-[13px] ${labelClasses(dark)}`}
@@ -75,7 +76,7 @@ function NavContent({ dark, onHero, langOpen, setLangOpen, langTriggerId, onOpen
         >
           {/* Wrapper clippe la tagline "architecture & travaux" (partie basse) hors du hero */}
           <style>{`
-            @media (max-width: 1023px) {
+            @media (max-width: 539px) {
               .logo-mobile-img { width: 125px !important; height: auto !important; }
               .logo-mobile-wrap { height: ${onHero ? "38px" : "20px"} !important; }
               .nav-label { font-size: 12px !important; }
@@ -104,17 +105,15 @@ function NavContent({ dark, onHero, langOpen, setLangOpen, langTriggerId, onOpen
 
         {/* Right — contact + language switcher */}
         <div className="justify-self-end w-full inline-flex items-center justify-end" style={{ gap: '20px' }}>
-          <Link href="/contact">
-            <span
-              className={`nav-label text-[13px] ${labelClasses(dark)}`}
-              style={LABEL_STYLE}
-            >
-              {headerStrings.contact}
-            </span>
-          </Link>
+          <ComingSoonLink
+            className={`nav-label text-[13px] transition-opacity duration-200 hover:opacity-60 ${labelClasses(dark)}`}
+            style={LABEL_STYLE}
+          >
+            {headerStrings.contact}
+          </ComingSoonLink>
           <div
             ref={langRef}
-            className="hidden min-[700px]:inline-flex relative items-center"
+            className="hidden min-[540px]:inline-flex relative items-center"
           >
             <button
               type="button"
@@ -123,7 +122,7 @@ function NavContent({ dark, onHero, langOpen, setLangOpen, langTriggerId, onOpen
               aria-haspopup="listbox"
               aria-expanded={langOpen}
               aria-label={headerStrings.languageSwitcherAriaLabel}
-              className="inline-flex items-center cursor-pointer"
+              className="inline-flex items-center cursor-pointer transition-opacity duration-200 hover:opacity-60"
               style={{ gap: '0px' }}
             >
               <span className={`text-[13px] ${labelClasses(dark)}`} style={LABEL_STYLE}>

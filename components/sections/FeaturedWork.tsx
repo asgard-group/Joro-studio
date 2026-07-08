@@ -11,31 +11,66 @@ interface Props {
 
 export function MobileFeaturedWork({ items }: { items: WorkItem[] }) {
   return (
-    <div className="md:hidden flex flex-col" style={{ position: "relative", zIndex: 70 }}>
-      {items.map((item, i) => (
-        <div key={item.id} className="flex flex-col">
-          <div className="relative w-full" style={{ height: "410px" }}>
+    <div className="md:hidden flex flex-col">
+      {items.map((item) => {
+        const isDark = item.accentColor && item.accentColor !== "#F3F2ED";
+        const textColor = isDark ? "#F3F2ED" : "#1C1A18";
+        const subColor = isDark ? "rgba(243,242,237,0.55)" : "rgba(28,26,24,0.45)";
+
+        return (
+          <div
+            key={item.id}
+            className="mobile-work-card"
+            style={{
+              position: "relative",
+              width: "100%",
+              overflow: "hidden",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-end",
+              alignItems: "flex-start",
+              gap: "50px",
+              padding: "0 20px 20px 20px",
+            }}
+          >
+            {/* Photo plein fond */}
             <Image src={item.coverImage} alt={item.title} fill className="object-cover" sizes="100vw" />
-            <div className="absolute top-4 left-4 right-4 flex justify-between items-center">
-              <Pill variant="dark">NOS RÉALISATIONS</Pill>
-              <span className="text-white font-medium" style={{ fontSize: "13px", letterSpacing: "0.1em" }}>
-                {i + 1} / {items.length}
-              </span>
+
+            {/* Panneau couleur */}
+            <div
+              style={{
+                position: "relative",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                alignSelf: "stretch",
+                gap: "20px",
+                padding: "26px 20px",
+                background: item.accentColor ?? "#F3F2ED",
+              }}
+            >
+              <Pill variant={isDark ? "dark" : "light"}>RÉALISATIONS</Pill>
+
+              <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: "16px", width: "100%" }}>
+                <h2 style={{ fontWeight: 600, textTransform: "uppercase", fontSize: "clamp(26px, 8vw, 34px)", color: textColor, letterSpacing: "-0.01em", lineHeight: 1, margin: 0 }}>
+                  {item.title}
+                </h2>
+                <div style={{ flexShrink: 0, textAlign: "right" }}>
+                  {item.tags.map((tag) => (
+                    <p key={tag} style={{ fontSize: "10px", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", color: subColor, margin: 0, lineHeight: 1.7 }}>
+                      {tag}
+                    </p>
+                  ))}
+                </div>
+              </div>
+
+              <p style={{ fontSize: "13px", color: textColor, lineHeight: 1.6, margin: 0 }}>
+                {item.description}
+              </p>
             </div>
           </div>
-          <div className="bg-cream px-5 pt-[50px] pb-[80px]">
-            <h2 className="font-semibold uppercase text-charcoal leading-none mb-3" style={{ fontSize: "26px", letterSpacing: "-0.01em" }}>
-              {item.title}
-            </h2>
-            <p className="font-medium uppercase text-charcoal/50 mb-[20px]" style={{ fontSize: "12px", letterSpacing: "0.08em" }}>
-              {item.tags.join(" • ")}
-            </p>
-            <p className="text-charcoal leading-relaxed" style={{ fontSize: "14px" }}>
-              {item.description}
-            </p>
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
@@ -164,7 +199,7 @@ export default function FeaturedWork({ items }: Props) {
                 return (
                   <>
                     <div style={{ display: "flex", alignItems: "flex-end", gap: "25px", marginBottom: "16px" }}>
-                      <h2 style={{ fontWeight: 700, textTransform: "uppercase", fontSize: "clamp(28px, 3.5vw, 56px)", color: textColor, letterSpacing: "-0.02em", lineHeight: 1, margin: 0 }}>
+                      <h2 style={{ fontWeight: 600, textTransform: "uppercase", fontSize: "clamp(28px, 3.5vw, 56px)", color: textColor, letterSpacing: "-0.02em", lineHeight: 1, margin: 0 }}>
                         {item.title}
                       </h2>
                       <div style={{ flexShrink: 0, textAlign: "left" }}>

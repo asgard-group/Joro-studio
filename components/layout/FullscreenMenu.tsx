@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import ComingSoonLink from "@/components/ui/ComingSoonLink";
 
 interface MenuLink {
   label: string;
@@ -109,9 +110,15 @@ export default function FullscreenMenu({ isOpen, onClose }: Props) {
               <ul className="joro-menu__nav">
                 {menuLinks.map((link) => (
                   <li key={link.href}>
-                    <Link href={link.href} onClick={onClose}>
-                      {link.label}
-                    </Link>
+                    {link.href === "/contact" ? (
+                      <ComingSoonLink className="joro-menu__nav-link" block>
+                        {link.label}
+                      </ComingSoonLink>
+                    ) : (
+                      <Link href={link.href} onClick={onClose} className="joro-menu__nav-link">
+                        {link.label}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>

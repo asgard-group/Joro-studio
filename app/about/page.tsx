@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { buildMetadata } from "@/lib/metadata";
 import CTA from "@/components/sections/CTA";
@@ -86,7 +85,7 @@ export default function AboutPage() {
       {/* Origin story */}
       <section className="py-24">
         <div className="container-site">
-          <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
+          <div className="grid gap-16 max-w-2xl">
             <div>
               <p className="label-eyebrow mb-6">Notre histoire</p>
               <h2 className="heading-section mb-6">
@@ -112,15 +111,6 @@ export default function AboutPage() {
                   responsabilité écologique.
                 </p>
               </div>
-            </div>
-            <div className="relative aspect-square overflow-hidden">
-              <Image
-                src="/images/work/portfolio-6.jpg"
-                alt="L'équipe JÖRO Studio"
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
             </div>
           </div>
         </div>

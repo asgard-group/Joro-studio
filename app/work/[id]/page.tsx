@@ -5,6 +5,7 @@ import Link from "next/link";
 import { buildMetadata } from "@/lib/metadata";
 import { workItems } from "@/data/work";
 import CTA from "@/components/sections/CTA";
+import ComingSoonLink from "@/components/ui/ComingSoonLink";
 
 interface Props {
   params: { id: string };
@@ -109,9 +110,9 @@ export default function WorkDetailPage({ params }: Props) {
                   <p className="text-sm font-semibold uppercase tracking-wider text-charcoal-muted">
                     Étude de cas complète disponible sur demande
                   </p>
-                  <Link href="/contact" className="btn-primary mt-4">
+                  <ComingSoonLink className="btn-primary mt-4">
                     Demander le case study
-                  </Link>
+                  </ComingSoonLink>
                 </div>
               )}
             </div>

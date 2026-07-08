@@ -80,8 +80,8 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* FeaturedWork — se superpose aux offres depuis l'arrivée de Conseil Workplace */}
-      <div id="nos-realisations" style={{ marginTop: "-250vh" }}>
+      {/* FeaturedWork — se superpose aux offres depuis l'arrivée de Conseil Workplace (desktop uniquement : sur mobile ce conteneur est caché, le margin négatif tirerait sinon la suite de la page) */}
+      <div id="nos-realisations" className="md:-mt-[250vh]">
         <FeaturedWork items={featuredWork} />
       </div>
 

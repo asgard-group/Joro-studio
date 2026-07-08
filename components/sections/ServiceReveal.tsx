@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import ComingSoonLink from "@/components/ui/ComingSoonLink";
 
 import { motion, useScroll, useTransform } from "framer-motion";
 
@@ -79,9 +79,9 @@ export default function ServiceReveal({ activeId, title, description, ctaLabel =
           <p className="max-w-[460px] text-[14px] leading-relaxed text-cream mb-[25px]">
             {description}
           </p>
-          <Link href="/contact" className="text-[11px] font-medium uppercase tracking-[0.18em] text-cream border-b border-cream/50 pb-1">
+          <ComingSoonLink className="text-[11px] font-medium uppercase tracking-[0.18em] text-cream border-b border-cream/50 pb-1">
             {ctaLabel}
-          </Link>
+          </ComingSoonLink>
         </div>
 
         {/* Droite — navigation verticale */}
