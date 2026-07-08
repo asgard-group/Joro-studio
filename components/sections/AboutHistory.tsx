@@ -47,6 +47,20 @@ export default function AboutHistory() {
 
         {/* Colonne droite — contenu scrollable */}
         <div className="min-w-0 lg:flex-[0_1_779px]">
+          {/* Photo 1 — texture / chantier */}
+          <div
+            className="max-w-none min-[1020px]:max-w-[777px]"
+            style={{ position: "relative", width: "100%", height: "491px", marginBottom: "60px" }}
+          >
+            <Image
+              src="/images/2024-01-Retines-Pigalle-_23A2312-web 2.webp"
+              alt="JÖRO Studio — chantier"
+              fill
+              className="object-cover"
+              sizes="(max-width: 1024px) 100vw, 55vw"
+            />
+          </div>
+
           {/* Deux colonnes de texte */}
           <div
             style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "40px", marginBottom: "60px" }}
