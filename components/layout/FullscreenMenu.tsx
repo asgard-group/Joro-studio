@@ -2,7 +2,17 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { useEffect, useId, useRef, useState, type CSSProperties, type MouseEvent as ReactMouseEvent } from "react";
+import { headerStrings } from "@/lib/strings";
 import ComingSoonLink from "@/components/ui/ComingSoonLink";
+
+const LABEL_STYLE: CSSProperties = {
+  lineHeight: "100%",
+  letterSpacing: "0.02em",
+};
+
+const ICON_FILTER = "brightness(0) invert(1) sepia(1) saturate(0) brightness(0.953)";
 
 interface MenuLink {
   label: string;
@@ -19,10 +29,49 @@ const menuLinks: MenuLink[] = [
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  onHero: boolean;
 }
 
-export default function FullscreenMenu({ isOpen, onClose }: Props) {
+export default function FullscreenMenu({ isOpen, onClose, onHero }: Props) {
+  const pathname = usePathname();
+  const [langOpen, setLangOpen] = useState(false);
+  const langRef = useRef<HTMLDivElement>(null);
+  const langTriggerId = useId();
 
+  useEffect(() => {
+    if (!langOpen) return;
+    function handleClick(e: MouseEvent) {
+      if (langRef.current && !langRef.current.contains(e.target as Node)) {
+        setLangOpen(false);
+      }
+    }
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setLangOpen(false);
+    }
+    document.addEventListener("mousedown", handleClick);
+    document.addEventListener("keydown", handleKey);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+      document.removeEventListener("keydown", handleKey);
+    };
+  }, [langOpen]);
+
+  // Scroll direct jusqu'à la 1ère réalisation déjà révélée (au lieu de tomber au début
+  // de l'enchaînement sticky des offres, à cause du -mt-[250vh] qui décale l'ancre #nos-realisations)
+  function handleRealisationsClick(e: ReactMouseEvent) {
+    if (pathname !== "/") return; // page différente : laisser la navigation par défaut vers /#nos-realisations
+
+    e.preventDefault();
+    onClose();
+
+    const isDesktop = window.matchMedia("(min-width: 768px)").matches;
+    const target = document.getElementById(isDesktop ? "nos-realisations" : "nos-realisations-mobile");
+    if (!target) return;
+
+    const targetY = target.getBoundingClientRect().top + window.scrollY + window.innerHeight;
+    window.history.pushState(null, "", "/#nos-realisations");
+    window.scrollTo({ top: targetY, behavior: "smooth" });
+  }
 
   return (
     <>
@@ -54,22 +103,31 @@ export default function FullscreenMenu({ isOpen, onClose }: Props) {
               </svg>
             </button>
 
-            {/* Center — vide */}
-            <div className="justify-self-center" />
+            {/* Center — espaceur invisible, même hauteur que le logo de la navbar, pour aligner la croix et le Fr sur la même ligne */}
+            <div
+              className="justify-self-center overflow-hidden transition-all duration-300"
+              style={{ height: onHero ? "53px" : "42px", visibility: "hidden" }}
+              aria-hidden="true"
+            />
 
-            {/* Right — Fr▼ */}
+            {/* Right — Fr▼ — même sélecteur de langue que la navbar */}
             <div className="justify-self-end w-full inline-flex items-center justify-end">
-              <div className="hidden min-[700px]:inline-flex relative items-center">
+              <div
+                ref={langRef}
+                className="hidden min-[540px]:inline-flex relative items-center"
+              >
                 <button
                   type="button"
-                  className="inline-flex items-center cursor-pointer"
+                  id={langTriggerId}
+                  onClick={() => setLangOpen((o) => !o)}
+                  aria-haspopup="listbox"
+                  aria-expanded={langOpen}
+                  aria-label={headerStrings.languageSwitcherAriaLabel}
+                  className="inline-flex items-center cursor-pointer transition-opacity duration-200 hover:opacity-60"
                   style={{ gap: "0px" }}
                 >
-                  <span
-                    className="text-[16px] font-medium text-cream"
-                    style={{ lineHeight: "100%", letterSpacing: "0.02em" }}
-                  >
-                    Fr
+                  <span className="text-[13px] font-medium uppercase text-cream" style={LABEL_STYLE}>
+                    {headerStrings.currentLanguage}
                   </span>
                   <span className="inline-flex items-center justify-center" style={{ width: "16px", height: "24px" }}>
                     <Image
@@ -80,11 +138,33 @@ export default function FullscreenMenu({ isOpen, onClose }: Props) {
                       style={{
                         width: "16px",
                         height: "24px",
-                        filter: "brightness(0) invert(1) sepia(1) saturate(0) brightness(0.953)",
+                        transform: langOpen ? "rotate(180deg)" : "none",
+                        transition: "transform 150ms ease",
+                        filter: ICON_FILTER,
                       }}
                     />
                   </span>
                 </button>
+
+                {langOpen && (
+                  <ul
+                    role="listbox"
+                    aria-labelledby={langTriggerId}
+                    className="absolute left-0 top-full flex flex-col items-start"
+                    style={{ gap: "12px" }}
+                  >
+                    <li role="option" aria-selected="false">
+                      <button
+                        type="button"
+                        onClick={() => { setLangOpen(false); }}
+                        className="text-[13px] font-medium uppercase text-cream cursor-pointer"
+                        style={LABEL_STYLE}
+                      >
+                        {headerStrings.alternateLanguage}
+                      </button>
+                    </li>
+                  </ul>
+                )}
               </div>
             </div>
 
@@ -94,7 +174,7 @@ export default function FullscreenMenu({ isOpen, onClose }: Props) {
         {/* Logo bas droite */}
         <Link href="/" onClick={onClose} aria-label="JÖRO Studio — retour à l'accueil" className="joro-menu__logo-br">
           <Image
-            src="/images/logos/joro-studio-ẢCHITECTURE-TRAVAUX@300x 2.png"
+            src="/images/logos/joro-studio-amo-architecture-travaux-beige.png"
             alt="JÖRO Studio — Architecture & Travaux"
             width={320}
             height={97}
@@ -114,6 +194,10 @@ export default function FullscreenMenu({ isOpen, onClose }: Props) {
                       <ComingSoonLink className="joro-menu__nav-link" block>
                         {link.label}
                       </ComingSoonLink>
+                    ) : link.href === "/#nos-realisations" ? (
+                      <Link href={link.href} onClick={handleRealisationsClick} className="joro-menu__nav-link">
+                        {link.label}
+                      </Link>
                     ) : (
                       <Link href={link.href} onClick={onClose} className="joro-menu__nav-link">
                         {link.label}

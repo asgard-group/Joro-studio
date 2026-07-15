@@ -23,9 +23,9 @@ export default function HomePage() {
     <>
       {/* Hero */}
       <Hero
-        eyebrow="Architecture & Design d'intérieur"
+        eyebrow="Entre travail & hospitalité"
         title={<>Concevoir les espaces<br />hybrides de demain</>}
-        image="/images/hero2.png"
+        image="/images/header.webp"
         scrollCta="Découvrir notre studio"
       />
 

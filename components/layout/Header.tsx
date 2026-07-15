@@ -87,7 +87,7 @@ function NavContent({ dark, onHero, langOpen, setLangOpen, langTriggerId, onOpen
             style={{ height: onHero ? "53px" : "42px" }}
           >
             <Image
-              src="/images/logos/joro-studio-ẢCHITECTURE-TRAVAUX@300x 2.png"
+              src="/images/logos/joro-studio-amo-architecture-travaux-beige.png"
               alt={headerStrings.logoAlt}
               width={320}
               height={97}
@@ -235,7 +235,7 @@ export default function Header() {
       </header>
 
       {/* Full-screen split menu */}
-      <FullscreenMenu isOpen={menuOpen} onClose={() => setMenuOpen(false)} />
+      <FullscreenMenu isOpen={menuOpen} onClose={() => setMenuOpen(false)} onHero={onHero} />
     </>
   );
 }
