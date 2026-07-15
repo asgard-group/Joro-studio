@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { blogPosts } from "@/data/blog";
 import { workItems } from "@/data/work";
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.jorostudio.fr";
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://joro-studio.fr";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: MetadataRoute.Sitemap = [

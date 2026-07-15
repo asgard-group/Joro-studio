@@ -15,8 +15,10 @@ export const footerLinks = {
   ],
   studio: [
     { label: "Notre histoire", href: "/about" },
+    { label: "Nos services", href: "/services" },
     { label: "Nos réalisations", href: "/work" },
-    { label: "Contact", href: "/contact" },
+    { label: "Témoignage", href: "/#temoignages" },
+    { label: "Nous contacter", href: "/contact" },
   ],
   legal: [
     { label: "Politique de cookies", href: "/privacy#cookies" },

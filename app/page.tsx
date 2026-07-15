@@ -38,13 +38,13 @@ export default function HomePage() {
       <div id="nos-offres">
         <ServicesAll />
       </div>
-      <div className="relative h-[350vh] md:h-[450vh]" style={{ marginTop: "-100vh" }}>
-        {/* Ancres absolues */}
-        <div id="amo" style={{ position: "absolute", top: 0 }} />
-        <div id="marketing-suite" style={{ position: "absolute", top: "100vh" }} />
-        <div id="conseil-workplace" style={{ position: "absolute", top: "200vh" }} />
+      <div className="relative md:h-[450vh] md:-mt-[100vh]">
+        {/* Ancres absolues (desktop uniquement — scroll-jack au format mobile désactivé, offres empilées normalement) */}
+        <div id="amo" className="hidden md:block" style={{ position: "absolute", top: 0 }} />
+        <div id="marketing-suite" className="hidden md:block" style={{ position: "absolute", top: "100vh" }} />
+        <div id="conseil-workplace" className="hidden md:block" style={{ position: "absolute", top: "200vh" }} />
 
-        <div className="sticky top-0 h-screen" style={{ zIndex: 40 }}>
+        <div className="h-screen md:sticky md:top-0" style={{ zIndex: 40 }}>
           <ServiceReveal
             activeId="amo"
             title="AMO"
@@ -54,7 +54,7 @@ export default function HomePage() {
             noParallax
           />
         </div>
-        <div className="sticky top-0 h-screen" style={{ zIndex: 50 }}>
+        <div className="h-screen md:sticky md:top-0" style={{ zIndex: 50 }}>
           <ServiceReveal
             activeId="marketing-suite"
             title="MARKETING SUITE"
@@ -65,7 +65,8 @@ export default function HomePage() {
             noParallax
           />
         </div>
-        <div className="sticky top-0 h-screen" style={{ zIndex: 60 }}>
+        {/* Conseil Workplace — desktop : sticky partagé avec AMO/Marketing Suite */}
+        <div className="hidden md:block md:sticky md:top-0 h-screen" style={{ zIndex: 60 }}>
           <ServiceReveal
             activeId="conseil-workplace"
             title={"CONSEIL WORKPLACE &\nSTRATÉGIE IMMOBILIÈRE"}
@@ -78,9 +79,26 @@ export default function HomePage() {
             noParallax
           />
         </div>
+
+        {/* Conseil Workplace — mobile : piste de pin dédiée (200vh) pour que la réalisation 1 se révèle par-dessus */}
+        <div className="md:hidden relative" style={{ height: "200vh" }}>
+          <div className="sticky top-0 h-screen" style={{ zIndex: 60 }}>
+            <ServiceReveal
+              activeId="conseil-workplace"
+              title={"CONSEIL WORKPLACE &\nSTRATÉGIE IMMOBILIÈRE"}
+              description="Nous vous aidons à définir une stratégie immobilière alignée sur vos ambitions. Une approche conseil qui conjugue vision long terme, culture d'entreprise et exigence de qualité."
+              ctaLabel="Affiner ma stratégie"
+              video="/videos/vecteezy_4k-animation-angled-view-of-modern-building-with-clear-blue_40552327.mp4"
+              flipX
+              wide
+              overlayClass="bg-charcoal/20 mix-blend-soft-light"
+              noParallax
+            />
+          </div>
+        </div>
       </div>
 
-      {/* FeaturedWork — se superpose aux offres depuis l'arrivée de Conseil Workplace (desktop uniquement : sur mobile ce conteneur est caché, le margin négatif tirerait sinon la suite de la page) */}
+      {/* FeaturedWork — se superpose aux offres depuis l'arrivée de Conseil Workplace (desktop uniquement) */}
       <div id="nos-realisations" className="md:-mt-[250vh]">
         <FeaturedWork items={featuredWork} />
       </div>
@@ -88,7 +106,7 @@ export default function HomePage() {
       {/* Réalisations mobile */}
       <MobileFeaturedWork items={featuredWork} />
 
-      <div style={{ marginTop: "-1px" }}>
+      <div id="temoignages" style={{ marginTop: "-1px" }}>
         <Testimonials />
       </div>
 

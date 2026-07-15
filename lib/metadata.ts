@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 const siteConfig = {
   name: "JÖRO Studio",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.jorostudio.fr",
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://joro-studio.fr",
   description:
     "JÖRO Studio conçoit et réalise des espaces hybrides haut de gamme — bureaux, hôtellerie, résidentiel — avec un engagement fort pour le design contemporain et la responsabilité écologique.",
   twitter: "@jorostudio",

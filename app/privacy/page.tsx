@@ -20,14 +20,14 @@ export default function PrivacyPage() {
             <div id="mentions-legales">
               <h2 className="font-serif text-2xl text-charcoal mb-4">1. Éditeur du site</h2>
               <p className="leading-relaxed text-charcoal-muted">
-                Le site <strong>jorostudio.fr</strong> est édité par la société{" "}
+                Le site <strong>joro-studio.fr</strong> est édité par la société{" "}
                 <strong>JÖRO Studio SAS</strong>, immatriculée au Registre du Commerce
                 et des Sociétés de Paris.
               </p>
               <ul className="mt-4 flex flex-col gap-2 text-sm text-charcoal-muted">
                 <li><strong>Siège social :</strong> Paris, France</li>
                 <li><strong>Directeur de publication :</strong> Romain Ruby</li>
-                <li><strong>Email :</strong> contact@jorostudio.fr</li>
+                <li><strong>Email :</strong> contact@joro-studio.fr</li>
               </ul>
             </div>
 
@@ -56,8 +56,8 @@ export default function PrivacyPage() {
                 <p>
                   Pour exercer vos droits ou pour toute question relative à vos données
                   personnelles, contactez-nous à :{" "}
-                  <a href="mailto:contact@jorostudio.fr" className="text-taupe underline">
-                    contact@jorostudio.fr
+                  <a href="mailto:contact@joro-studio.fr" className="text-taupe underline">
+                    contact@joro-studio.fr
                   </a>
                 </p>
               </div>
