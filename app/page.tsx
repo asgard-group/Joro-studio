@@ -106,7 +106,7 @@ export default function HomePage() {
       {/* Réalisations mobile */}
       <MobileFeaturedWork items={featuredWork} />
 
-      <div style={{ marginTop: "-1px" }}>
+      <div id="temoignages" style={{ marginTop: "-1px" }}>
         <Testimonials />
       </div>
 
