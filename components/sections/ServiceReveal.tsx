@@ -73,7 +73,7 @@ export default function ServiceReveal({ activeId, title, description, ctaLabel =
       >
         {/* Gauche */}
         <div className={wide ? "max-w-[880px]" : "max-w-[580px]"}>
-          <h2 className={`text-[26px] md:text-[64px] font-semibold uppercase tracking-tight text-cream mb-[40px] ${title.includes('\n') ? 'whitespace-pre-line leading-[1.2]' : 'whitespace-nowrap leading-none'}`}>
+          <h2 className={`text-[26px] md:text-[52px] lg:text-[55px] min-[1200px]:text-[64px] font-semibold uppercase tracking-tight text-cream mb-[40px] ${title.includes('\n') ? 'whitespace-pre-line leading-[1.2]' : 'whitespace-nowrap leading-none'}`}>
             {title}
           </h2>
           <p className="max-w-[460px] text-[14px] leading-relaxed text-cream mb-[25px]">
@@ -85,7 +85,7 @@ export default function ServiceReveal({ activeId, title, description, ctaLabel =
         </div>
 
         {/* Droite — navigation verticale */}
-        <div className="hidden md:flex flex-col items-end gap-[18px]">
+        <div className="hidden min-[940px]:flex flex-col items-end gap-[18px]">
           {serviceNav.map((item) => (
             <button
               key={item.id}

@@ -5,7 +5,7 @@ import Pill from "@/components/ui/Pill";
 
 export default function AboutHistory() {
   return (
-    <section className="bg-cream py-[80px] min-[840px]:py-[180px]">
+    <section className="bg-cream py-[80px] min-[840px]:py-[130px] lg:py-[180px]">
       <div
         className="flex flex-col lg:flex-row lg:justify-between gap-[50px] lg:gap-[100px] pl-[20px] min-[840px]:pl-[60px] pr-[20px] min-[840px]:pr-[clamp(60px,12.963vw_-_48.889px,200px)]"
       >
@@ -44,10 +44,10 @@ export default function AboutHistory() {
         </div>
 
         {/* Colonne droite — contenu scrollable. Grid + order pour réordonner "Notre objectif" après la photo 2 en dessous de 1024px sans dupliquer le texte. */}
-        <div className="min-w-0 lg:flex-[0_1_779px] grid grid-cols-1 min-[840px]:grid-cols-2 gap-[50px] lg:gap-x-[40px] lg:gap-y-[60px]">
+        <div className="min-w-0 lg:flex-[0_1_779px] min-[1740px]:flex-[0_1_clamp(779px,39.1463vw_+_97.85px,1100px)] grid grid-cols-1 min-[840px]:grid-cols-2 gap-[50px] lg:gap-x-[40px] lg:gap-y-[60px]">
           {/* Photo 1 — texture / chantier */}
           <div
-            className="order-1 col-span-1 min-[840px]:col-span-2 relative w-full lg:max-w-[777px] h-[clamp(224px,41.1402vw_+_69.7242px,491px)]"
+            className="order-1 col-span-1 min-[840px]:col-span-2 relative w-full lg:max-w-[777px] min-[1740px]:max-w-[clamp(777px,39.1463vw_+_95.85px,1098px)] h-[clamp(224px,41.1402vw_+_69.7242px,491px)]"
           >
             <Image
               src="/images/2024-01-Retines-Pigalle-_23A2312-web 2.webp"
@@ -66,7 +66,7 @@ export default function AboutHistory() {
 
           {/* Photo 2 — parquet (après le 1er texte sur mobile) */}
           <div
-            className="order-3 min-[840px]:order-4 col-span-1 min-[840px]:col-span-2 relative w-full lg:max-w-[779px] h-[clamp(308px,56.7026vw_+_95.3652px,676px)]"
+            className="order-3 min-[840px]:order-4 col-span-1 min-[840px]:col-span-2 relative w-full lg:max-w-[779px] min-[1740px]:max-w-[clamp(779px,39.1463vw_+_97.85px,1100px)] h-[clamp(308px,56.7026vw_+_95.3652px,676px)]"
           >
             <Image
               src="/images/2024-10-Retines-Asgard-parquet-Pigalle-DSC04495.webp"
