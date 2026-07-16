@@ -47,7 +47,7 @@ export function MobileFeaturedWork({ items }: { items: WorkItem[] }) {
     <div
       id="nos-realisations-mobile"
       ref={containerRef}
-      className="md:hidden -mt-[200vh]"
+      className="md:hidden -mt-[200vh] pointer-events-none"
       style={{ position: "relative", height: totalHeight, zIndex: 69 }}
     >
       {items.map((item, i) => {

@@ -44,57 +44,40 @@ export default function HomePage() {
         <div id="marketing-suite" className="hidden md:block" style={{ position: "absolute", top: "100vh" }} />
         <div id="conseil-workplace" className="hidden md:block" style={{ position: "absolute", top: "200vh" }} />
 
-        <div className="h-screen md:sticky md:top-0" style={{ zIndex: 40 }}>
+        <div className="hidden md:block md:sticky md:top-0 h-screen" style={{ zIndex: 40 }}>
           <ServiceReveal
             activeId="amo"
             title="AMO"
             description="Assistance à la maîtrise d'ouvrage : conseil en faisabilité, diagnostic RSE et accompagnement à la certification, nous vous guidons à chaque étape stratégique de votre projet."
             ctaLabel="Être accompagné"
-            video="/videos/Composition 1.mp4"
+            video="/videos/Composition 1.webm"
             noParallax
           />
         </div>
-        <div className="h-screen md:sticky md:top-0" style={{ zIndex: 50 }}>
+        <div className="hidden md:block md:sticky md:top-0 h-screen" style={{ zIndex: 50 }}>
           <ServiceReveal
             activeId="marketing-suite"
             title="MARKETING SUITE"
             description="Des supports visuels et des espaces de présentation pensés pour valoriser vos actifs immobiliers pour que votre projet trouve son acquéreur avant même d'être livré."
             ctaLabel="Valoriser mon actif"
-            image="/images/Frame 207.png"
+            image="/images/test.webp"
             overlayClass="bg-charcoal/25"
             noParallax
           />
         </div>
-        {/* Conseil Workplace — desktop : sticky partagé avec AMO/Marketing Suite */}
+        {/* Conseil Workplace — desktop uniquement (mobile géré par le carrousel) */}
         <div className="hidden md:block md:sticky md:top-0 h-screen" style={{ zIndex: 60 }}>
           <ServiceReveal
             activeId="conseil-workplace"
             title={"CONSEIL WORKPLACE &\nSTRATÉGIE IMMOBILIÈRE"}
             description="Nous vous aidons à définir une stratégie immobilière alignée sur vos ambitions. Une approche conseil qui conjugue vision long terme, culture d'entreprise et exigence de qualité."
             ctaLabel="Affiner ma stratégie"
-            video="/videos/vecteezy_4k-animation-angled-view-of-modern-building-with-clear-blue_40552327.mp4"
+            video="/videos/vecteezy_4k-animation-angled-view-of-modern-building-with-clear-blue_40552327.webm"
             flipX
             wide
             overlayClass="bg-charcoal/20 mix-blend-soft-light"
             noParallax
           />
-        </div>
-
-        {/* Conseil Workplace — mobile : piste de pin dédiée (200vh) pour que la réalisation 1 se révèle par-dessus */}
-        <div className="md:hidden relative" style={{ height: "200vh" }}>
-          <div className="sticky top-0 h-screen" style={{ zIndex: 60 }}>
-            <ServiceReveal
-              activeId="conseil-workplace"
-              title={"CONSEIL WORKPLACE &\nSTRATÉGIE IMMOBILIÈRE"}
-              description="Nous vous aidons à définir une stratégie immobilière alignée sur vos ambitions. Une approche conseil qui conjugue vision long terme, culture d'entreprise et exigence de qualité."
-              ctaLabel="Affiner ma stratégie"
-              video="/videos/vecteezy_4k-animation-angled-view-of-modern-building-with-clear-blue_40552327.mp4"
-              flipX
-              wide
-              overlayClass="bg-charcoal/20 mix-blend-soft-light"
-              noParallax
-            />
-          </div>
         </div>
       </div>
 

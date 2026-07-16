@@ -14,6 +14,10 @@
     overscroll-behavior-y: none;
   }
 
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
   body {
     @apply bg-cream text-charcoal antialiased text-[14px] md:text-base;
     font-feature-settings: "kern" 1, "liga" 1;

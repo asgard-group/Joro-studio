@@ -4,6 +4,7 @@ import { useRef, useState, useEffect } from "react";
 import Pill from "@/components/ui/Pill";
 import ComingSoonLink from "@/components/ui/ComingSoonLink";
 import { motion, useScroll, useTransform } from "framer-motion";
+import ServicesMobileCarousel from "@/components/sections/ServicesMobileCarousel";
 
 const serviceNav = [
   { label: "DESIGN & BUILD", id: "design-build" },
@@ -67,55 +68,60 @@ export default function ServicesAll() {
       <div id="design-build" style={{ position: "absolute", top: "calc(2.2 * 100vh)" }} />
       <div
         data-navbar-theme="dark"
-        className="sticky top-0 h-screen overflow-hidden"
+        className="sticky top-0 h-screen overflow-hidden bg-charcoal"
         style={{ zIndex: 35 }}
       >
-        {/* Vidéo de fond (révélée par le split) */}
-        <video
-          ref={videoRef}
-          className="absolute inset-0 w-full h-full object-cover z-0 scale-x-[-1]"
-          src="/videos/vecteezy_unrecognizable-female-carpenter-or-furniture-designer_71265347.mp4"
-          autoPlay
-          muted
-          loop
-          playsInline
-        />
-        <div className="absolute inset-0 z-0 bg-charcoal/20 mix-blend-color-dodge" />
+        {/* Carrousel mobile — révélé par le split, commence par Design & Build */}
+        <ServicesMobileCarousel />
 
-        {/* Contenu DESIGN & BUILD — révélé par le split (z-5) */}
-        <div className="absolute inset-0 z-[5] flex items-center justify-between px-4 sm:px-6 lg:px-[60px]">
-          <div className="max-w-[480px]">
-            <h2 className="text-[26px] md:text-[64px] font-semibold uppercase leading-none tracking-tight text-cream mb-[40px] whitespace-nowrap">
-              DESIGN & BUILD
-            </h2>
-            <p className="max-w-[460px] text-[14px] leading-relaxed text-cream mb-[25px]">
-              Chaque espace est pensé dans ses moindres détails pour conjuguer esthétique et performance durable. Une vision cohérente, du premier trait jusqu'à la remise des clés.
-            </p>
-            <ComingSoonLink className="text-[11px] font-medium uppercase tracking-[0.18em] text-cream border-b border-cream/50 pb-1">
-              Lancer un projet
-            </ComingSoonLink>
-          </div>
-          <div className="hidden md:flex flex-col items-end gap-[18px]">
-            {serviceNav.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => {
-                  const el = document.getElementById(item.id);
-                  if (!el) return;
-                  const top = el.getBoundingClientRect().top + window.scrollY;
-                  window.scrollTo({ top, behavior: "smooth" });
-                }}
-                className={`text-[14px] font-medium uppercase tracking-[0.18em] transition-colors hover:text-cream ${
-                  item.id === "design-build" ? "text-cream" : "text-cream/30"
-                }`}
-              >
-                {item.label}
-              </button>
-            ))}
+        {/* Vidéo + split Design & Build (desktop) */}
+        <div className="hidden md:contents">
+          <video
+            ref={videoRef}
+            className="absolute inset-0 w-full h-full object-cover z-0 scale-x-[-1]"
+            src="/videos/vecteezy_unrecognizable-female-carpenter-or-furniture-designer_71265347.webm"
+            autoPlay
+            muted
+            loop
+            playsInline
+          />
+          <div className="absolute inset-0 z-0 bg-charcoal/20 mix-blend-color-dodge" />
+
+          {/* Contenu DESIGN & BUILD — révélé par le split (z-5) */}
+          <div className="absolute inset-0 z-[5] flex items-center justify-between px-4 sm:px-6 lg:px-[60px]">
+            <div className="max-w-[480px]">
+              <h2 className="text-[26px] md:text-[52px] lg:text-[55px] min-[1200px]:text-[64px] font-semibold uppercase leading-none tracking-tight text-cream mb-[40px] whitespace-nowrap">
+                DESIGN & BUILD
+              </h2>
+              <p className="max-w-[460px] text-[14px] leading-relaxed text-cream mb-[25px]">
+                Chaque espace est pensé dans ses moindres détails pour conjuguer esthétique et performance durable. Une vision cohérente, du premier trait jusqu'à la remise des clés.
+              </p>
+              <ComingSoonLink className="text-[11px] font-medium uppercase tracking-[0.18em] text-cream border-b border-cream/50 pb-1">
+                Lancer un projet
+              </ComingSoonLink>
+            </div>
+            <div className="hidden min-[940px]:flex flex-col items-end gap-[18px]">
+              {serviceNav.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    const el = document.getElementById(item.id);
+                    if (!el) return;
+                    const top = el.getBoundingClientRect().top + window.scrollY;
+                    window.scrollTo({ top, behavior: "smooth" });
+                  }}
+                  className={`text-[14px] font-medium uppercase tracking-[0.18em] transition-colors hover:text-cream ${
+                    item.id === "design-build" ? "text-cream" : "text-cream/30"
+                  }`}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Panneaux charcoal (toujours opaques) — glissent au split (z-20) */}
+        {/* Panneaux charcoal (toujours opaques) — glissent au split (z-20), sur toutes tailles d'écran */}
         <motion.div
           className="absolute top-0 left-0 h-full bg-charcoal z-20"
           style={{ width: "50%", x: leftX }}
