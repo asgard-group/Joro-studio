@@ -101,11 +101,11 @@ export default function Hero({
           >
             {eyebrow && (
               <p
-                className="uppercase text-[12px] min-[840px]:text-[18px] min-[1200px]:text-[20px] text-cream"
+                className="uppercase text-[14px] min-[840px]:text-[18px] min-[1200px]:text-[20px] text-cream"
                 style={{
                   fontWeight: 500,
                   lineHeight: '100%',
-                  letterSpacing: '0.05em',
+                  letterSpacing: '0.15em',
                   wordWrap: 'break-word',
                 }}
               >

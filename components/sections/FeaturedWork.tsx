@@ -45,6 +45,7 @@ export function MobileFeaturedWork({ items }: { items: WorkItem[] }) {
 
   return (
     <div
+      id="nos-realisations-mobile"
       ref={containerRef}
       className="md:hidden -mt-[200vh]"
       style={{ position: "relative", height: totalHeight, zIndex: 69 }}
