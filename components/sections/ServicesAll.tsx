@@ -5,6 +5,7 @@ import Pill from "@/components/ui/Pill";
 import ComingSoonLink from "@/components/ui/ComingSoonLink";
 import { motion, useScroll, useTransform } from "framer-motion";
 import ServicesMobileCarousel from "@/components/sections/ServicesMobileCarousel";
+import { useIsDesktop } from "@/hooks/useIsDesktop";
 
 const serviceNav = [
   { label: "DESIGN & BUILD", id: "design-build" },
@@ -18,6 +19,9 @@ export default function ServicesAll() {
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const { scrollY } = useScroll();
+  // Ce bloc vidéo n'est jamais visible sur mobile (masqué par `hidden md:contents`),
+  // on évite donc de le monter/décoder tant qu'on n'est pas sur desktop.
+  const isDesktop = useIsDesktop();
 
   const [ranges, setRanges] = useState({
     dissolveStart: 99999, dissolveEnd: 109999,
@@ -48,10 +52,10 @@ export default function ServicesAll() {
   }, []);
 
   useEffect(() => {
-    if (videoRef.current) {
+    if (isDesktop && videoRef.current) {
       videoRef.current.play().catch(() => {});
     }
-  }, []);
+  }, [isDesktop]);
 
   // Dissolve : slide 1 (cream) fade out → slide 2 (charcoal) visible derrière
   // const slide1Opacity = useTransform(scrollY, [ranges.dissolveStart, ranges.dissolveEnd], [1, 0]);
@@ -76,15 +80,17 @@ export default function ServicesAll() {
 
         {/* Vidéo + split Design & Build (desktop) */}
         <div className="hidden md:contents">
-          <video
-            ref={videoRef}
-            className="absolute inset-0 w-full h-full object-cover z-0 scale-x-[-1]"
-            src="/videos/vecteezy_unrecognizable-female-carpenter-or-furniture-designer_71265347.webm"
-            autoPlay
-            muted
-            loop
-            playsInline
-          />
+          {isDesktop && (
+            <video
+              ref={videoRef}
+              className="absolute inset-0 w-full h-full object-cover z-0 scale-x-[-1]"
+              src="/videos/vecteezy_unrecognizable-female-carpenter-or-furniture-designer_71265347.webm"
+              autoPlay
+              muted
+              loop
+              playsInline
+            />
+          )}
           <div className="absolute inset-0 z-0 bg-charcoal/20 mix-blend-color-dodge" />
 
           {/* Contenu DESIGN & BUILD — révélé par le split (z-5) */}
