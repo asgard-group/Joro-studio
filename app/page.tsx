@@ -25,8 +25,8 @@ export default function HomePage() {
       <Hero
         eyebrow="Entre travail & hospitalité"
         title={<>Concevoir les espaces<br />hybrides de demain</>}
-        image="/images/header.webp"
-        scrollCta="Découvrir notre studio"
+        image="/images/new-header.png"
+        overlay={false}
       />
 
       {/* À propos — Notre histoire (avec animation clip-path révélation au scroll) */}

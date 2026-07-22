@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useIsDesktop } from "@/hooks/useIsDesktop";
@@ -11,7 +11,6 @@ interface HeroProps {
   image?: string;
   video?: string;
   overlay?: boolean;
-  scrollCta?: string;
 }
 
 export default function Hero({
@@ -20,7 +19,6 @@ export default function Hero({
   image,
   video,
   overlay = true,
-  scrollCta = "Découvrir notre studio",
 }: HeroProps) {
   const sectionRef = useRef<HTMLElement>(null);
   // Parallax réservé au desktop (≥1024px) — désactivé sur mobile/tablette
@@ -33,21 +31,6 @@ export default function Hero({
 
   // Image remonte plus lentement → effet parallax
   const imageY = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]);
-
-  // "Découvrir" — opacité basée sur scrollY global (pixels absolus) pour rester à 0 sur tout le site
-  const { scrollY } = useScroll();
-  const [vh, setVh] = useState(800);
-  useEffect(() => {
-    const update = () => setVh(window.innerHeight);
-    update();
-    window.addEventListener("resize", update);
-    window.addEventListener("orientationchange", update);
-    return () => {
-      window.removeEventListener("resize", update);
-      window.removeEventListener("orientationchange", update);
-    };
-  }, []);
-  const ctaOpacity = useTransform(scrollY, [vh * 0.15, vh * 0.30], [1, 0]);
 
   return (
     <section ref={sectionRef} data-navbar-theme="dark" className="relative min-h-[100svh] overflow-hidden">
@@ -82,33 +65,28 @@ export default function Hero({
             />
           )}
           {overlay && (
-            <div
-              className={`absolute inset-0 mix-blend-hard-light ${
-                video ? "bg-charcoal/30" : "bg-charcoal/25"
-              }`}
-            />
+            <div className="absolute inset-0" style={{ backgroundColor: "rgba(38, 28, 28, 0.30)" }} />
           )}
         </motion.div>
       ) : (
         <div className="absolute inset-0 bg-cream" />
       )}
 
-      {/* Label + Title — ancré à 30vh du bas */}
-      <div className="absolute inset-x-0 z-10 bottom-[30svh]">
+      {/* Label + Title — centrés sur la section */}
+      <div className="absolute inset-0 z-10 flex items-center justify-center">
         <div
-          className="w-full px-[16px] min-[390px]:px-[20px] min-[840px]:px-[40px] min-[1200px]:px-[60px] inline-flex flex-col items-start justify-start"
+          className="w-full px-[16px] min-[390px]:px-[20px] min-[840px]:px-[40px] min-[1200px]:px-[60px] inline-flex flex-col items-center justify-center text-center"
         >
           <div
-            className="self-stretch flex flex-col items-start justify-start"
-            style={{ paddingBottom: 0.63 }}
+            className="self-stretch flex flex-col items-center justify-center text-center gap-[9px]"
           >
             {eyebrow && (
               <p
-                className="uppercase text-[14px] min-[840px]:text-[18px] min-[1200px]:text-[20px] text-cream"
+                className="uppercase text-[14px] min-[840px]:text-[18px] min-[1200px]:text-[26px] text-cream"
                 style={{
                   fontWeight: 500,
                   lineHeight: '100%',
-                  letterSpacing: '0.15em',
+                  letterSpacing: '0.05em',
                   wordWrap: 'break-word',
                 }}
               >
@@ -116,10 +94,10 @@ export default function Hero({
               </p>
             )}
             <h1
-              className="uppercase text-[clamp(20px,calc(20px+28*(100vw-320px)/448),48px)] min-[840px]:text-[56px] min-[1200px]:text-[80px] text-cream"
+              className="uppercase text-[clamp(20px,calc(20px+28*(100vw-320px)/448),48px)] min-[840px]:text-[56px] min-[1200px]:text-[77px] min-[1600px]:text-[92px] text-cream"
               style={{
                 fontWeight: 600,
-                lineHeight: '115%',
+                lineHeight: '126.7%',
                 letterSpacing: '0.02em',
                 wordWrap: 'break-word',
               }}
@@ -130,19 +108,17 @@ export default function Hero({
         </div>
       </div>
 
-      {/* DÉCOUVRIR NOTRE STUDIO — ancré au bas, centré */}
-      {scrollCta && (
-        <motion.div
-          className="absolute bottom-0 inset-x-0 z-10 flex flex-col items-center"
-          style={{ opacity: ctaOpacity }}
-        >
-          <span className="text-[11px] font-medium uppercase tracking-[0.2em] text-cream">
-            {scrollCta}
-          </span>
-          <div className="h-5" />
-          <div className="h-10 w-px bg-cream/70" />
-        </motion.div>
-      )}
+      {/* Monogramme — ancré en bas de la section, centré */}
+      <div className="absolute inset-x-0 bottom-[5svh] min-[1600px]:bottom-[8svh] z-10 flex justify-center">
+        <Image
+          src="/images/logos/monograme.svg"
+          alt=""
+          width={177}
+          height={113}
+          className="w-[48px] min-[768px]:w-[68px] min-[1200px]:w-[95px] min-[1600px]:w-[114px] h-auto"
+          style={{ filter: "brightness(0) invert(1) sepia(1) saturate(0) brightness(0.953)" }}
+        />
+      </div>
 
     </section>
   );
