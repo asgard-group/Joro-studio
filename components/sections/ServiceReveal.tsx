@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import Image from "next/image";
 import ComingSoonLink from "@/components/ui/ComingSoonLink";
+import { useIsDesktop } from "@/hooks/useIsDesktop";
 
 import { motion, useScroll, useTransform } from "framer-motion";
 
@@ -29,6 +30,9 @@ interface Props {
 
 export default function ServiceReveal({ activeId, title, description, ctaLabel = "Découvrir l'offre", image, video, flipX, noFadeIn, wide, overlayClass, noParallax }: Props) {
   const sectionRef = useRef<HTMLDivElement>(null);
+  // Ce composant n'est jamais visible sur mobile (masqué par le parent en `hidden md:block`),
+  // on évite donc de monter/décoder la vidéo tant qu'on n'est pas sur desktop.
+  const isDesktop = useIsDesktop();
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -48,7 +52,7 @@ export default function ServiceReveal({ activeId, title, description, ctaLabel =
         className="absolute inset-x-0 w-full"
         style={{ y: bgY, top: "-12%", height: "124%" }}
       >
-        {video ? (
+        {video && isDesktop ? (
           <video
             className={`w-full h-full object-cover${flipX ? " scale-x-[-1]" : ""}`}
             src={video}

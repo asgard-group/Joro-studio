@@ -3,6 +3,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { useIsDesktop } from "@/hooks/useIsDesktop";
 
 interface HeroProps {
   eyebrow?: string;
@@ -22,6 +23,8 @@ export default function Hero({
   scrollCta = "Découvrir notre studio",
 }: HeroProps) {
   const sectionRef = useRef<HTMLElement>(null);
+  // Parallax réservé au desktop (≥1024px) — désactivé sur mobile/tablette
+  const isLargeScreen = useIsDesktop(1024);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -53,7 +56,7 @@ export default function Hero({
       {(video || image) ? (
         <motion.div
           className="absolute inset-0 scale-110"
-          style={{ y: imageY }}
+          style={{ y: isLargeScreen ? imageY : 0 }}
         >
           {video ? (
             <video
@@ -81,7 +84,7 @@ export default function Hero({
           {overlay && (
             <div
               className={`absolute inset-0 mix-blend-hard-light ${
-                video ? "bg-charcoal/30" : "bg-charcoal/50"
+                video ? "bg-charcoal/30" : "bg-charcoal/25"
               }`}
             />
           )}

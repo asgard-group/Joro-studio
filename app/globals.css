@@ -14,6 +14,28 @@
     overscroll-behavior-y: none;
   }
 
+  /* Lenis prend le relais du smooth scroll — le scroll-behavior natif du navigateur
+     doit être désactivé pendant qu'il tourne, sinon les deux lissages se battent. */
+  html.lenis {
+    height: auto;
+  }
+
+  html.lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  html.lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+
+  html.lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  html.lenis.lenis-scrolling iframe {
+    pointer-events: none;
+  }
+
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }

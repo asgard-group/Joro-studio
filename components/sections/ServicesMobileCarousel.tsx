@@ -70,21 +70,25 @@ export default function ServicesMobileCarousel() {
         className="no-scrollbar flex overflow-x-auto snap-x snap-mandatory scroll-smooth h-full"
         style={{ scrollbarWidth: "none" }}
       >
-        {slides.map((slide) => (
+        {slides.map((slide, index) => (
           <div
             key={slide.id}
             className="relative w-full flex-shrink-0 snap-start h-full overflow-hidden"
           >
-            {/* Fond — vidéo ou image */}
+            {/* Fond — vidéo ou image (une seule vidéo décodée à la fois, celle de la slide active) */}
             {slide.video ? (
-              <video
-                className={`absolute inset-0 w-full h-full object-cover${slide.flipX ? " scale-x-[-1]" : ""}`}
-                src={slide.video}
-                autoPlay
-                muted
-                loop
-                playsInline
-              />
+              index === activeIndex ? (
+                <video
+                  className={`absolute inset-0 w-full h-full object-cover${slide.flipX ? " scale-x-[-1]" : ""}`}
+                  src={slide.video}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                />
+              ) : (
+                <div className="absolute inset-0 w-full h-full bg-charcoal" />
+              )
             ) : slide.image ? (
               <Image src={slide.image} alt={slide.title} fill className="object-cover" sizes="100vw" />
             ) : null}
