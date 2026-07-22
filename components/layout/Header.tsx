@@ -5,6 +5,7 @@ import Image from "next/image";
 import { type CSSProperties, useState, useEffect, useRef, useId } from "react";
 import { headerStrings } from "@/lib/strings";
 import FullscreenMenu from "@/components/layout/FullscreenMenu";
+import MiniNavbar from "@/components/layout/MiniNavbar";
 import ComingSoonLink from "@/components/ui/ComingSoonLink";
 
 const LABEL_STYLE: CSSProperties = {
@@ -22,14 +23,13 @@ const iconFilter = (dark: boolean) =>
 
 interface NavContentProps {
   dark: boolean;
-  onHero: boolean;
   langOpen: boolean;
   setLangOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
   langTriggerId: string;
   onOpenMenu: () => void;
 }
 
-function NavContent({ dark, onHero, langOpen, setLangOpen, langTriggerId, onOpenMenu }: NavContentProps) {
+function NavContent({ dark, langOpen, setLangOpen, langTriggerId, onOpenMenu }: NavContentProps) {
   const langRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -74,33 +74,26 @@ function NavContent({ dark, onHero, langOpen, setLangOpen, langTriggerId, onOpen
           className="justify-self-center"
           aria-label={headerStrings.logoAriaLabel}
         >
-          {/* Wrapper clippe la tagline "architecture & travaux" (partie basse) hors du hero */}
           <style>{`
             @media (max-width: 539px) {
               .logo-mobile-img { width: 125px !important; height: auto !important; }
-              .logo-mobile-wrap { height: ${onHero ? "38px" : "20px"} !important; }
               .nav-label { font-size: 12px !important; }
             }
           `}</style>
-          <div
-            className="logo-mobile-wrap overflow-hidden transition-all duration-300"
-            style={{ height: onHero ? "53px" : "42px" }}
-          >
-            <Image
-              src="/images/logos/joro-studio-amo-architecture-travaux-beige.png"
-              alt={headerStrings.logoAlt}
-              width={320}
-              height={97}
-              priority
-              className="logo-mobile-img"
-              style={{
-                width: "auto",
-                height: "53px",
-                maxWidth: "none",
-                filter: dark ? "none" : iconFilter(false),
-              }}
-            />
-          </div>
+          <Image
+            src="/images/logos/joro-studio-amo-architecture-travaux.png"
+            alt={headerStrings.logoAlt}
+            width={1390}
+            height={330}
+            priority
+            className="logo-mobile-img"
+            style={{
+              width: "auto",
+              height: "53px",
+              maxWidth: "none",
+              filter: iconFilter(dark),
+            }}
+          />
         </Link>
 
         {/* Right — contact + language switcher */}
@@ -175,8 +168,10 @@ export default function Header() {
   const [isDark, setIsDark] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
   const [onHero, setOnHero] = useState(true);
+  const [scrolledPastHeader, setScrolledPastHeader] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const langTriggerId = useId();
+  const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     let ticking = false;
@@ -184,6 +179,9 @@ export default function Header() {
     const update = () => {
       const currentY = window.scrollY;
       setOnHero(currentY < 10);
+      // Révélée bien après la navbar principale (pas dès qu'elle disparaît) pour éviter un enchaînement trop rapide.
+      const revealThreshold = (headerRef.current?.offsetHeight ?? 0) + window.innerHeight * 0.6;
+      setScrolledPastHeader(currentY >= revealThreshold);
 
       const midNavbar = 40;
       const sections = document.querySelectorAll("[data-navbar-theme]");
@@ -222,17 +220,19 @@ export default function Header() {
 
   return (
     <>
-      {/* Navbar unique — fixe, toujours visible, backdrop-blur actif hors hero */}
-      <header className={`fixed inset-x-0 top-0 z-navbar transition-[backdrop-filter] duration-300 ${onHero ? "" : "backdrop-blur-md"}`}>
+      {/* Navbar principale — ancrée en haut de la section du header, défile normalement avec la page */}
+      <header ref={headerRef} className="absolute inset-x-0 top-0 z-navbar">
         <NavContent
           dark={isDark}
-          onHero={onHero}
           langOpen={langOpen}
           setLangOpen={setLangOpen}
           langTriggerId={langTriggerId}
           onOpenMenu={() => setMenuOpen(true)}
         />
       </header>
+
+      {/* Navbar compacte — prend le relais une fois la navbar principale sortie de l'écran */}
+      <MiniNavbar visible={scrolledPastHeader} dark={isDark} onOpenMenu={() => setMenuOpen(true)} />
 
       {/* Full-screen split menu */}
       <FullscreenMenu isOpen={menuOpen} onClose={() => setMenuOpen(false)} onHero={onHero} />

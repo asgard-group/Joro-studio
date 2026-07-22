@@ -174,11 +174,11 @@ export default function FullscreenMenu({ isOpen, onClose, onHero }: Props) {
         {/* Logo bas droite */}
         <Link href="/" onClick={onClose} aria-label="JÖRO Studio — retour à l'accueil" className="joro-menu__logo-br">
           <Image
-            src="/images/logos/joro-studio-amo-architecture-travaux-beige.png"
+            src="/images/logos/joro-studio-amo-architecture-travaux.png"
             alt="JÖRO Studio — Architecture & Travaux"
-            width={320}
-            height={97}
-            style={{ maxWidth: "none", height: "70px", width: "auto" }}
+            width={1390}
+            height={330}
+            style={{ maxWidth: "none", height: "70px", width: "auto", filter: ICON_FILTER }}
           />
         </Link>
 
