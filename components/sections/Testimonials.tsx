@@ -1,92 +1,132 @@
 "use client";
 
 import Image from "next/image";
-import { testimonials } from "@/data/testimonials";
-import type { TestimonialCard } from "@/data/testimonials";
-import Pill from "@/components/ui/Pill";
+import { useState, useEffect, useRef } from "react";
+import { motion, useInView } from "framer-motion";
+import { testimonials, type TestimonialCard } from "@/data/testimonials";
 
-function QuoteIcon() {
-  return (
-    <svg width="44" height="34" viewBox="0 0 36 28" fill="none" className="mb-6">
-      <path
-        d="M0 28V17.2C0 13.467 0.933 10.2 2.8 7.4C4.667 4.533 7.4 2.2 11 0.399999L13.4 4C11 5.4 9.167 7 8 8.8C6.9 10.6 6.367 12.667 6.4 15H13.4V28H0ZM22.6 28V17.2C22.6 13.467 23.533 10.2 25.4 7.4C27.267 4.533 30 2.2 33.6 0.399999L36 4C33.6 5.4 31.767 7 30.6 8.8C29.5 10.6 28.967 12.667 29 15H36V28H22.6Z"
-        fill="white"
-        fillOpacity="0.25"
-      />
-    </svg>
-  );
+const items = testimonials as TestimonialCard[];
+const N = items.length;
+
+// Disposition « coverflow » selon l'écart à la carte active (valeurs de la maquette,
+// exprimées en fraction de la largeur de carte pour rester responsive).
+const FACTOR_X = [0, 1.03, 1.911, 2.691, 3.371, 3.952, 4.532, 5.112];
+const SCALE = [1, 0.85, 0.75, 0.65, 0.55, 0.55, 0.55, 0.55];
+const Z = [10, 5, 3, 2, 1, 1, 1, 1];
+
+const BASE_W = 330;
+const RATIO = 460 / 330;
+const EASE = [0.16, 1, 0.3, 1] as const;
+
+// Écart signé le plus court autour de l'anneau (carrousel bouclé)
+function offsetOf(i: number, active: number) {
+  let off = i - active;
+  if (off > N / 2) off -= N;
+  else if (off < -N / 2) off += N;
+  return off;
 }
 
+const HEADING = ["AVIS", "CLIENT"];
+
 export default function Testimonials() {
+  const [active, setActive] = useState(0);
+  const [cardW, setCardW] = useState(BASE_W);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const headingInView = useInView(headingRef, { once: true, amount: 0.3 });
+
+  useEffect(() => {
+    const calc = () => setCardW(Math.min(BASE_W, Math.round(window.innerWidth * 0.62)));
+    calc();
+    window.addEventListener("resize", calc);
+    return () => window.removeEventListener("resize", calc);
+  }, []);
+
+  const cardH = Math.round(cardW * RATIO);
+  const prev = () => setActive((a) => (a - 1 + N) % N);
+  const next = () => setActive((a) => (a + 1) % N);
+  const activeItem = items[active];
+
   return (
-    <section data-navbar-theme="light" className="bg-cream pt-[150px] pb-[150px]">
+    <section data-navbar-theme="light" className="bg-cream pt-[100px] lg:pt-[160px] pb-[100px] lg:pb-[160px]">
 
-      {/* Header : titre + pill sur la même ligne */}
-      <div className="flex items-center justify-between px-[24px] sm:px-[40px] lg:px-[60px] mb-[60px]">
-        <h2 className="font-semibold uppercase text-[36px] sm:text-[52px] text-charcoal leading-none tracking-tight">
-          AVIS CLIENT
-        </h2>
-        <Pill>TÉMOIGNAGES</Pill>
-      </div>
-
-      {/* 4 cartes témoignage : photo fixe, citation révélée au survol — scroll horizontal si ça ne rentre pas */}
-      <div
-        className="flex gap-[20px] overflow-x-auto px-[24px] sm:px-[40px] lg:px-[60px]"
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none", scrollSnapType: "x mandatory" }}
-      >
-        {(testimonials as TestimonialCard[]).map((t) => (
-          <div
-            key={t.id}
-            className="group flex flex-col flex-shrink-0"
-            style={{ width: "clamp(280px, 21.5625vw, 414px)", scrollSnapAlign: "start" }}
-          >
-            <div
-              className="relative w-full overflow-hidden"
-              style={{ height: "clamp(360px, 33.854vw, 650px)" }}
+      {/* Titre — révélé mot par mot (montée depuis le bas) */}
+      <h2 ref={headingRef} className="text-center mb-[40px] lg:mb-[60px] px-[20px] font-semibold uppercase text-charcoal text-[36px] sm:text-[52px] lg:text-[64px] leading-none tracking-tight">
+        {HEADING.map((word, i) => (
+          <span key={word} className="inline-block overflow-hidden align-bottom">
+            <motion.span
+              className="inline-block whitespace-nowrap"
+              initial={{ y: "100%" }}
+              animate={headingInView ? { y: "0%" } : { y: "100%" }}
+              transition={{ duration: 0.8, ease: EASE, delay: i * 0.08 }}
             >
-              {t.photo ? (
-                <Image
-                  src={t.photo}
-                  alt={t.author}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                />
-              ) : (
-                <div className="w-full h-full bg-[#BAB6AA]/30" />
-              )}
+              {word}&nbsp;
+            </motion.span>
+          </span>
+        ))}
+      </h2>
 
-              {/* Témoignage — révélé au survol */}
-              <div className="absolute inset-0 bg-charcoal flex flex-col justify-between p-[28px] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <div>
-                  <QuoteIcon />
-                  <p className="text-white text-[15px] leading-relaxed">{t.quote}</p>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <div className="relative w-11 h-11 rounded-full overflow-hidden shrink-0 bg-white/10" />
-                  <div>
-                    <p className="text-white text-[15px] font-semibold leading-snug">{t.author}</p>
-                    <p className="text-white/50 text-[13px] mt-0.5">
-                      {t.company}
-                      {t.location ? `, ${t.location}` : ""}
-                    </p>
-                  </div>
+      <div className="relative flex flex-col items-center w-full">
+        {/* Coverflow */}
+        <div
+          className="relative w-full flex items-center justify-center overflow-hidden"
+          style={{ height: cardH }}
+        >
+          {items.map((t, i) => {
+            const off = offsetOf(i, active);
+            const d = Math.min(Math.abs(off), FACTOR_X.length - 1);
+            const x = Math.sign(off) * cardW * FACTOR_X[d];
+            return (
+              <div
+                key={t.id}
+                className="absolute transition-all duration-500 origin-center ease-[cubic-bezier(0.77,0,0.175,1)]"
+                style={{ transform: `translateX(${x}px) scale(${SCALE[d]})`, zIndex: Z[d], width: cardW, height: cardH }}
+              >
+                <div className="relative w-full h-full overflow-hidden bg-charcoal/10">
+                  <Image
+                    src={t.photo}
+                    alt={t.author}
+                    fill
+                    className="object-cover"
+                    sizes="330px"
+                  />
                 </div>
               </div>
-            </div>
+            );
+          })}
 
-            {/* Caption : nom + localisation */}
-            <div className="flex justify-between items-baseline pt-[14px] pb-[10px]">
-              <span className="text-[15px] font-medium text-charcoal">
-                {t.company}
-              </span>
-              <span className="text-[13px] text-[#BAB6AA] shrink-0 ml-3" style={{ letterSpacing: "0.02em" }}>
-                {t.location}
-              </span>
-            </div>
-          </div>
-        ))}
+          {/* Zones cliquables gauche/droite pour naviguer */}
+          <button
+            type="button"
+            aria-label="Témoignage précédent"
+            onClick={prev}
+            className="absolute left-0 top-0 w-1/2 h-full z-20 cursor-pointer"
+          />
+          <button
+            type="button"
+            aria-label="Témoignage suivant"
+            onClick={next}
+            className="absolute right-0 top-0 w-1/2 h-full z-20 cursor-pointer"
+          />
+        </div>
+
+        {/* Légende — change avec l'image active */}
+        <div className="relative mt-[40px] w-full" style={{ minHeight: 149 }}>
+          <motion.div
+            key={active}
+            className="max-w-[464px] flex flex-col gap-y-[16px] px-[20px] mx-auto absolute left-0 right-0 top-0 text-center"
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: EASE }}
+          >
+            <h3 className="uppercase tracking-wider text-charcoal text-[14px] font-medium">
+              {activeItem.company}
+              {activeItem.location ? ` — ${activeItem.location}` : ""}
+            </h3>
+            <p className="text-charcoal/80 text-[14px] leading-[1.4] whitespace-pre-line">
+              {activeItem.quote}
+            </p>
+          </motion.div>
+        </div>
       </div>
 
     </section>
