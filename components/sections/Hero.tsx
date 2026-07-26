@@ -115,7 +115,7 @@ export default function Hero({
           alt=""
           width={177}
           height={113}
-          className="w-[48px] min-[768px]:w-[68px] min-[1200px]:w-[95px] min-[1600px]:w-[114px] h-auto"
+          className="w-[48px] min-[768px]:w-[68px] min-[1920px]:w-[95px] h-auto"
           style={{ filter: "brightness(0) invert(1) sepia(1) saturate(0) brightness(0.953)" }}
         />
       </div>
