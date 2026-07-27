@@ -11,6 +11,8 @@ export const workItems: WorkItem[] = [
     tags: ["PARIS 11", "BUREAUX"],
     description:
       "Situé dans une impasse historique du quartier de la Folie-Méricourt, ce plateau de bureaux a été entièrement imaginé par Jöro Studio et rénové dans un esprit industriel chic. 150 m² de bureaux indépendants, lumineux et conviviaux, pouvant accueillir jusqu'à 19 postes, dans un cadre pensé pour stimuler la créativité.",
+    shortDescription:
+      "Dans une impasse historique de la Folie-Méricourt, un plateau de 150 m² rénové dans un esprit industriel chic : bureaux indépendants et lumineux, jusqu'à 19 postes.",
     coverImage: "/images/work/1.webp",
     rightImage: "/images/work/2.webp",
     accentColor: "#96461F",
@@ -27,6 +29,8 @@ export const workItems: WorkItem[] = [
     tags: ["PARIS 10", "BUREAUX"],
     description:
       "Un immeuble entier réinventé par Jöro Studio, avec 4 plateaux indépendants situé entre République et le canal Saint-Martin. Le travail architectural privilégie la justesse des volumes et la fluidité de circulation, articulant open space, salles de réunion et espaces informels au sein d'une même trame cohérente.",
+    shortDescription:
+      "Un immeuble entier réinventé entre République et le canal Saint-Martin : quatre plateaux indépendants, pensés pour la justesse des volumes et la fluidité des circulations.",
     coverImage: "/images/work/3.webp",
     rightImage: "/images/work/4.webp",
     accentColor: "#A97F4F",
@@ -43,6 +47,8 @@ export const workItems: WorkItem[] = [
     tags: ["PARIS 9", "BUREAUX"],
     description:
       "À deux pas de Notre-Dame-de-Lorette, Jöro Studio a entièrement repensé ce plateau de 250 m² situé au 2ᵉ étage, au cœur du Quartier Central des Affaires. Le parti pris architectural privilégie la lisibilité des circulations et la clarté des volumes, offrant un cadre à la fois flexible et immédiatement opérationnel.",
+    shortDescription:
+      "À deux pas de Notre-Dame-de-Lorette, un plateau de 250 m² au cœur du Quartier Central des Affaires : des volumes clairs et des circulations lisibles, immédiatement opérationnels.",
     coverImage: "/images/work/5.webp",
     rightImage: "/images/work/6.webp",
     accentColor: "#F3F2ED",

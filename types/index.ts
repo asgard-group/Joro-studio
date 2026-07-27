@@ -23,6 +23,8 @@ export interface WorkItem {
   category: string;
   tags: string[];
   description: string;
+  /** Version courte (~3 lignes) affichée dans la vignette de la home. À défaut, `description` est utilisée. */
+  shortDescription?: string;
   coverImage: string;
   rightImage?: string;
   accentColor?: string;

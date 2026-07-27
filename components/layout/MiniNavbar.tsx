@@ -16,7 +16,7 @@ const ICON_FILTER = "brightness(0) invert(1) sepia(1) saturate(0) brightness(0.9
 
 // Bouton Contact — même style que l'ancienne pilule mais sans radius (angles droits).
 const contactClasses =
-  "inline-flex items-center gap-0 bg-[#9C938C] px-[16px] py-[10px] text-[13px] font-medium uppercase text-cream transition-colors duration-200 hover:bg-[#8C837C]";
+  "inline-flex items-center gap-0 bg-taupe px-[16px] py-[10px] text-[13px] font-medium uppercase text-cream transition-colors duration-200 hover:bg-taupe-600";
 
 interface Props {
   visible: boolean;

@@ -28,11 +28,24 @@ function offsetOf(i: number, active: number) {
 
 const HEADING = ["AVIS", "CLIENT"];
 
+// Chevron du curseur personnalisé (survol gauche/droite du coverflow)
+function CursorArrow({ side }: { side: "left" | "right" }) {
+  const points = side === "left" ? "16,4 6,20 16,36" : "8,4 18,20 8,36";
+  return (
+    <svg width="32" height="54" viewBox="0 0 24 40" fill="none">
+      <polyline points={points} stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 export default function Testimonials() {
   const [active, setActive] = useState(0);
   const [cardW, setCardW] = useState(BASE_W);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const headingInView = useInView(headingRef, { once: true, amount: 0.3 });
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [cursorInfo, setCursorInfo] = useState<{ x: number; y: number; side: "left" | "right" } | null>(null);
+  const [hasHover, setHasHover] = useState(false);
 
   useEffect(() => {
     const calc = () => setCardW(Math.min(BASE_W, Math.round(window.innerWidth * 0.62)));
@@ -41,10 +54,22 @@ export default function Testimonials() {
     return () => window.removeEventListener("resize", calc);
   }, []);
 
+  useEffect(() => {
+    setHasHover(window.matchMedia("(hover: hover) and (pointer: fine)").matches);
+  }, []);
+
   const cardH = Math.round(cardW * RATIO);
   const prev = () => setActive((a) => (a - 1 + N) % N);
   const next = () => setActive((a) => (a + 1) % N);
   const activeItem = items[active];
+
+  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+    if (!hasHover || !wrapRef.current) return;
+    const rect = wrapRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    setCursorInfo({ x, y, side: x < rect.width / 2 ? "left" : "right" });
+  }
 
   return (
     <section data-navbar-theme="light" className="bg-cream pt-[100px] lg:pt-[160px] pb-[100px] lg:pb-[160px]">
@@ -68,64 +93,98 @@ export default function Testimonials() {
       <div className="relative flex flex-col items-center w-full">
         {/* Coverflow */}
         <div
+          ref={wrapRef}
           className="relative w-full flex items-center justify-center overflow-hidden"
           style={{ height: cardH }}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={() => setCursorInfo(null)}
         >
           {items.map((t, i) => {
             const off = offsetOf(i, active);
             const d = Math.min(Math.abs(off), FACTOR_X.length - 1);
             const x = Math.sign(off) * cardW * FACTOR_X[d];
+            const isActive = off === 0;
             return (
               <div
                 key={t.id}
-                className="absolute transition-all duration-500 origin-center ease-[cubic-bezier(0.77,0,0.175,1)]"
+                className="absolute transition-transform duration-500 origin-center ease-[cubic-bezier(0.77,0,0.175,1)]"
                 style={{ transform: `translateX(${x}px) scale(${SCALE[d]})`, zIndex: Z[d], width: cardW, height: cardH }}
               >
-                <div className="relative w-full h-full overflow-hidden bg-charcoal/10">
-                  <Image
-                    src={t.photo}
-                    alt={t.author}
-                    fill
-                    className="object-cover"
-                    sizes="330px"
-                  />
+                {/* Cadre — sa couleur (taupe) n'apparaît que sur la carte active,
+                    révélée par le léger retrait de l'image (scale 0.9) ci-dessous */}
+                <div className="relative w-full h-full overflow-hidden bg-taupe">
+                  <div
+                    className="relative w-full h-full transition-transform duration-500 ease-[cubic-bezier(0.77,0,0.175,1)]"
+                    style={{ transform: isActive ? "scale(0.9)" : "scale(1)" }}
+                  >
+                    <Image
+                      src={t.photo}
+                      alt={t.author}
+                      fill
+                      className="object-cover"
+                      sizes="330px"
+                    />
+                  </div>
                 </div>
               </div>
             );
           })}
 
-          {/* Zones cliquables gauche/droite pour naviguer */}
+          {/* Zones cliquables gauche/droite pour naviguer — curseur personnalisé (chevron) sur pointeur fin */}
           <button
             type="button"
             aria-label="Témoignage précédent"
             onClick={prev}
-            className="absolute left-0 top-0 w-1/2 h-full z-20 cursor-pointer"
+            className={`absolute left-0 top-0 w-1/2 h-full z-20 ${hasHover ? "" : "cursor-pointer"}`}
+            style={hasHover ? { cursor: "none" } : undefined}
           />
           <button
             type="button"
             aria-label="Témoignage suivant"
             onClick={next}
-            className="absolute right-0 top-0 w-1/2 h-full z-20 cursor-pointer"
+            className={`absolute right-0 top-0 w-1/2 h-full z-20 ${hasHover ? "" : "cursor-pointer"}`}
+            style={hasHover ? { cursor: "none" } : undefined}
           />
+
+          {/* Curseur personnalisé — chevron qui suit la souris, mix-blend-mode pour rester visible sur toute image */}
+          {hasHover && cursorInfo && (
+            <div
+              className="absolute z-30 pointer-events-none"
+              style={{ left: cursorInfo.x, top: cursorInfo.y, transform: "translate(-50%, -50%)", mixBlendMode: "difference" }}
+            >
+              <CursorArrow side={cursorInfo.side} />
+            </div>
+          )}
         </div>
 
-        {/* Légende — change avec l'image active */}
+        {/* Légende — titre et texte révélés en fondu/masque (montée depuis le bas),
+            rejoués à chaque changement de témoignage actif */}
         <div className="relative mt-[40px] w-full" style={{ minHeight: 149 }}>
-          <motion.div
-            key={active}
-            className="max-w-[464px] flex flex-col gap-y-[16px] px-[20px] mx-auto absolute left-0 right-0 top-0 text-center"
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: EASE }}
-          >
-            <h3 className="uppercase tracking-wider text-charcoal text-[14px] font-medium">
-              {activeItem.company}
-              {activeItem.location ? ` — ${activeItem.location}` : ""}
+          <div className="max-w-[464px] flex flex-col gap-y-[16px] px-[20px] mx-auto absolute left-0 right-0 top-0 text-center">
+            <h3 className="overflow-hidden uppercase tracking-wider text-charcoal text-[14px] font-medium">
+              <motion.span
+                key={`title-${active}`}
+                className="block"
+                initial={{ opacity: 0, y: "100%" }}
+                animate={{ opacity: 1, y: "0%" }}
+                transition={{ duration: 0.6, ease: EASE }}
+              >
+                {activeItem.company}
+                {activeItem.location ? ` — ${activeItem.location}` : ""}
+              </motion.span>
             </h3>
-            <p className="text-charcoal/80 text-[14px] leading-[1.4] whitespace-pre-line">
-              {activeItem.quote}
-            </p>
-          </motion.div>
+            <div className="overflow-hidden">
+              <motion.p
+                key={`quote-${active}`}
+                className="text-charcoal/80 text-[14px] leading-[1.4] whitespace-pre-line"
+                initial={{ opacity: 0, y: "100%" }}
+                animate={{ opacity: 1, y: "0%" }}
+                transition={{ duration: 0.6, ease: EASE, delay: 0.08 }}
+              >
+                {activeItem.quote}
+              </motion.p>
+            </div>
+          </div>
         </div>
       </div>
 
