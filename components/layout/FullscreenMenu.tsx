@@ -49,8 +49,7 @@ export default function FullscreenMenu({ isOpen, onClose }: Props) {
     e.preventDefault();
     onClose();
 
-    const isDesktop = window.matchMedia("(min-width: 768px)").matches;
-    const target = document.getElementById(isDesktop ? "nos-realisations" : "nos-realisations-mobile");
+    const target = document.getElementById("nos-realisations");
     if (!target) return;
 
     const targetY = target.getBoundingClientRect().top + window.scrollY + window.innerHeight;
