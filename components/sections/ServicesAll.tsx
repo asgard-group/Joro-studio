@@ -3,7 +3,7 @@
 import { useRef, useState, useEffect } from "react";
 import Pill from "@/components/ui/Pill";
 import ComingSoonLink from "@/components/ui/ComingSoonLink";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import ServicesMobileCarousel from "@/components/sections/ServicesMobileCarousel";
 import { useIsDesktop } from "@/hooks/useIsDesktop";
 
@@ -169,6 +169,38 @@ export default function ServicesAll() {
   );
 }
 
+// ─── AnimatedLetters ─────────────────────────────────────────────
+// Révélation lettre par lettre (flou + fondu + légère remontée), mots groupés en
+// nowrap pour ne jamais se couper au milieu — reproduit l'effet Framer de référence
+// ("Full stories are.") appliqué ici sur plusieurs lignes avec un décalage continu.
+function AnimatedLetters({ text, startIndex, inView }: { text: string; startIndex: number; inView: boolean }) {
+  let idx = startIndex;
+  return (
+    <>
+      {text.split(" ").map((word, wi, words) => (
+        <span key={wi} style={{ display: "inline-block", whiteSpace: "nowrap" }}>
+          {word.split("").map((ch, li) => {
+            const delay = idx * 0.025;
+            idx += 1;
+            return (
+              <motion.span
+                key={li}
+                style={{ display: "inline-block", willChange: "transform, filter, opacity" }}
+                initial={{ opacity: 0, filter: "blur(10px)", y: 10 }}
+                animate={inView ? { opacity: 1, filter: "blur(0px)", y: 0 } : { opacity: 0, filter: "blur(10px)", y: 10 }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay }}
+              >
+                {ch}
+              </motion.span>
+            );
+          })}
+          {wi < words.length - 1 ? " " : ""}
+        </span>
+      ))}
+    </>
+  );
+}
+
 // ─── IntroSlide ──────────────────────────────────────────────────
 function IntroSlide({ dark }: { dark: boolean }) {
   // Toutes les couleurs passent par des classes Tailwind tokenisées (cream / charcoal).
@@ -177,18 +209,29 @@ function IntroSlide({ dark }: { dark: boolean }) {
   const subTextClass = dark ? "text-cream/70" : "text-charcoal/70";
   const lineBgClass = dark ? "bg-cream/40" : "bg-charcoal/40";
 
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  // Révélation à l'entrée dans le viewport : fondu + légère remontée
+  // (même principe que l'effet Framer de référence : opacity 0 → 1, translateY → 0)
+  const titleInView = useInView(titleRef, { once: true, amount: 0.5 });
+
   return (
     <div className={`absolute inset-0 flex flex-col ${bgClass}`}>
       <div className="flex-1 flex flex-col items-center justify-center text-center px-6">
         <Pill variant={dark ? "dark" : "light"} className="mb-6 md:mb-8">
           NOS OFFRES
         </Pill>
-        {/* Titre */}
+        {/* Titre — révélation lettre par lettre (flou + fondu), à l'entrée dans le viewport */}
         <h2
+          ref={titleRef}
           className={`font-semibold tracking-tight text-[26px] md:text-[36px] lg:text-[46px] max-w-[900px] ${textClass}`}
           style={{ lineHeight: "130%" }}
         >
-          QUATRE EXPERTISES,<br />UN SEUL INTERLOCUTEUR
+          <span className="block">
+            <AnimatedLetters text="QUATRE EXPERTISES," startIndex={0} inView={titleInView} />
+          </span>
+          <span className="block">
+            <AnimatedLetters text="UN SEUL INTERLOCUTEUR" startIndex={17} inView={titleInView} />
+          </span>
         </h2>
       </div>
       {/* CTA bas — collé au bas du viewport */}
