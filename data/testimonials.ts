@@ -46,4 +46,14 @@ export const testimonials: TestimonialCard[] = [
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod",
     photo: "/images/2024-01-Retines-Pigalle-_23A2312-web 2.webp",
   },
+  {
+    id: "confidentiel-2",
+    author: "Confidentiel",
+    role: "Client",
+    company: "Confidentiel",
+    location: "Paris 16e",
+    quote:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod",
+    photo: "/images/2024-10-Retines-Asgard-parquet-Pigalle-DSC04495.webp",
+  },
 ];
