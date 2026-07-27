@@ -1,174 +1,176 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { footerLinks } from "@/data/navigation";
 import ComingSoonLink from "@/components/ui/ComingSoonLink";
 
+// Style commun à tous les libellés du footer (cf. maquette Figma)
+const LABEL = "text-[14px] font-normal uppercase tracking-[1.4px] text-[#FAF6ED]";
+
+type FooterItem = { label: string; href: string; external?: boolean };
+
+const offresLinks: FooterItem[] = footerLinks.offres;
+
+const studioLinks: FooterItem[] = [
+  { label: "Notre histoire", href: "/about" },
+  { label: "Nos réalisations", href: "/work" },
+  { label: "Témoignages", href: "/#temoignages" },
+];
+
+const socialLinks: FooterItem[] = [
+  { label: "Instagram", href: "https://www.instagram.com/joro_studio/", external: true },
+  { label: "LinkedIn", href: "https://www.linkedin.com/company/joro-studio", external: true },
+  { label: "Pinterest", href: "https://fr.pinterest.com/joro_studio/", external: true },
+];
+
+const legalLinks: FooterItem[] = [
+  { label: "Mentions légales", href: "/privacy" },
+  { label: "Cookies", href: "/privacy#cookies" },
+  { label: "Politique de confidentialité", href: "/privacy" },
+];
+
+// Rendu d'un libellé (lien externe réel, sinon libellé « à venir »)
+function ItemLabel({ item }: { item: FooterItem }) {
+  if (item.external) {
+    return (
+      <a
+        href={item.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`${LABEL} transition-opacity hover:opacity-60`}
+      >
+        {item.label}
+      </a>
+    );
+  }
+  return (
+    <ComingSoonLink className={LABEL} block>
+      {item.label}
+    </ComingSoonLink>
+  );
+}
+
 export default function Footer() {
   return (
-    <footer className="bg-charcoal text-cream -mt-px">
-      <div className="px-4 sm:px-6 lg:px-[60px] py-16 lg:py-20">
+    <footer className="bg-[#1C2626] text-[#FAF6ED] -mt-px">
 
-        {/* ── Mobile / tablette ─────────────────────────────────────── */}
-        <div className="flex flex-col gap-16 lg:hidden">
-          {/* Logo + Nous suivre */}
-          <div className="flex items-start justify-between">
-            <Link href="/" className="inline-block" aria-label="JÖRO Studio — retour à l'accueil">
-              <Image
-                src="/images/logos/joro-studio-vertical-blanc-RVB 1.png"
-                alt="JÖRO Studio"
-                width={160}
-                height={160}
-                className="w-[120px] h-auto"
-              />
-            </Link>
-            <div>
-              <h3 className="mb-5 text-[13px] font-medium text-cream/50">
-                Nous suivre
-              </h3>
-              <SocialIcons />
-            </div>
+      {/* ── Desktop ─────────────────────────────────────────────── */}
+      <div className="hidden flex-col gap-32 p-6 md:flex">
+        <div className="flex flex-row items-start justify-between gap-8">
+          <FooterColumn title="Nos offres" items={offresLinks} />
+          <FooterColumn title="Notre studio" items={studioLinks} />
+          <FooterColumn title="Suivez-nous" items={socialLinks} />
+
+          {/* Sélecteur de langue */}
+          <div className="flex items-center gap-1">
+            <span className={`${LABEL} font-bold`}>FR</span>
+            <span className={`${LABEL} font-medium`}>/</span>
+            <span className={`${LABEL} font-medium`}>EN</span>
           </div>
-
-          {/* Jöro Studio + Nos offres */}
-          <div className="grid grid-cols-2 gap-10">
-            <div>
-              <h3 className="mb-5 text-[13px] font-medium text-cream/50">
-                Jöro Studio
-              </h3>
-              <FooterLinkList links={footerLinks.studio} />
-            </div>
-            <div>
-              <h3 className="mb-5 text-[13px] font-medium text-cream/50">
-                Nos offres
-              </h3>
-              <FooterLinkList links={footerLinks.offres} />
-            </div>
-          </div>
-
-          {/* Légal — centré */}
-          <ul className="flex flex-col items-center gap-2 text-center">
-            {footerLinks.legal.map((link) => (
-              <li key={link.href}>
-                <ComingSoonLink className="text-[12px] text-cream/25">
-                  {link.label}
-                </ComingSoonLink>
-              </li>
-            ))}
-          </ul>
         </div>
 
-        {/* ── Desktop ───────────────────────────────────────────────── */}
-        <div className="hidden lg:grid grid-cols-4 gap-12">
-
-          {/* Col 1 — Logo */}
-          <div>
-            <Link href="/" className="inline-block" aria-label="JÖRO Studio — retour à l'accueil">
-              <Image
-                src="/images/logos/joro-studio-vertical-blanc-RVB 1.png"
-                alt="JÖRO Studio"
-                width={160}
-                height={160}
-                className="w-[160px] h-auto"
-              />
-            </Link>
+        <div className="flex flex-row items-end justify-between">
+          <FooterLogo className="w-[416px]" />
+          <div className="flex flex-row items-center gap-8">
+            {legalLinks.map((link) => (
+              <ItemLabel key={link.label} item={link} />
+            ))}
+            <span className={`${LABEL} text-right`}>JÖRO Studio © 2026</span>
           </div>
-
-          {/* Col 2 — Nos offres */}
-          <div>
-            <h3 className="mb-5 text-[13px] font-medium text-cream/50">
-              Nos offres
-            </h3>
-            <FooterLinkList links={footerLinks.offres} />
-          </div>
-
-          {/* Col 3 — Notre studio */}
-          <div>
-            <h3 className="mb-5 text-[13px] font-medium text-cream/50">
-              Notre studio
-            </h3>
-            <FooterLinkList links={footerLinks.studio} />
-          </div>
-
-          {/* Col 4 — Nous suivre */}
-          <div>
-            <h3 className="mb-5 text-[13px] font-medium text-cream/50">
-              Nous suivre
-            </h3>
-            <div className="mb-8">
-              <SocialIcons />
-            </div>
-
-            {/* Legal links */}
-            <ul className="flex flex-col gap-2">
-              {footerLinks.legal.map((link) => (
-                <li key={link.href}>
-                  <ComingSoonLink className="text-[12px] text-cream/25">
-                    {link.label}
-                  </ComingSoonLink>
-                </li>
-              ))}
-            </ul>
-          </div>
-
         </div>
       </div>
+
+      {/* ── Mobile (accordéon) ──────────────────────────────────── */}
+      <div className="flex flex-col gap-32 p-6 md:hidden">
+        <div className="flex flex-col self-stretch">
+          <FooterAccordion title="Nos offres" items={offresLinks} />
+          <FooterAccordion title="Notre studio" items={studioLinks} />
+          <FooterAccordion title="Suivez-nous" items={socialLinks} />
+          <FooterAccordion title="Infos légales" items={legalLinks} extra="JÖRO Studio © 2026" />
+        </div>
+        <FooterLogo className="w-full" />
+      </div>
+
     </footer>
   );
 }
 
-function FooterLinkList({ links }: { links: { label: string; href: string }[] }) {
+// ── Colonne desktop ──────────────────────────────────────────
+function FooterColumn({ title, items }: { title: string; items: FooterItem[] }) {
   return (
-    <ul className="flex flex-col gap-3">
-      {links.map((link) => (
-        <li key={link.href}>
-          <ComingSoonLink className="text-[11px] font-medium uppercase tracking-[0.12em] text-cream/50">
-            {link.label}
-          </ComingSoonLink>
-        </li>
-      ))}
-    </ul>
+    <div className="flex flex-1 flex-col gap-[18px]">
+      <h3 className={LABEL}>{title}</h3>
+      <div className="flex flex-col gap-2">
+        {items.map((item) => (
+          <ItemLabel key={item.label} item={item} />
+        ))}
+      </div>
+    </div>
   );
 }
 
-function SocialIcons() {
+// ── Ligne repliable mobile ───────────────────────────────────
+function FooterAccordion({
+  title,
+  items,
+  extra,
+}: {
+  title: string;
+  items: FooterItem[];
+  extra?: string;
+}) {
+  const [open, setOpen] = useState(false);
   return (
-    <div className="flex items-center gap-4">
-      <a
-        href="https://www.instagram.com/joro_studio/"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="JÖRO Studio sur Instagram"
-        className="text-cream transition-colors hover:text-cream/60"
+    <div className="self-stretch" style={{ borderBottom: "0.4px solid #999999" }}>
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="flex w-full items-center justify-between py-4"
       >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-          <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-          <circle cx="12" cy="12" r="4" />
-          <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" strokeWidth="0" />
-        </svg>
-      </a>
-      <a
-        href="https://www.linkedin.com/company/joro-studio"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="JÖRO Studio sur LinkedIn"
-        className="text-cream transition-colors hover:text-cream/60"
-      >
-        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z" />
-          <circle cx="4" cy="4" r="2" />
-        </svg>
-      </a>
-      <a
-        href="https://fr.pinterest.com/joro_studio/"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="JÖRO Studio sur Pinterest"
-        className="text-cream transition-colors hover:text-cream/60"
-      >
-        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 01.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z" />
-        </svg>
-      </a>
+        <span className={LABEL}>{title}</span>
+        {/* Chevron arrow-drop-down — pivote à l'ouverture */}
+        <Image
+          src="/images/icon/arrow-drop-down-line.svg"
+          alt=""
+          aria-hidden="true"
+          width={16}
+          height={24}
+          className="shrink-0"
+          style={{
+            width: 16,
+            height: 24,
+            transform: open ? "rotate(180deg)" : "none",
+            transition: "transform 200ms ease",
+          }}
+        />
+      </button>
+      {open && (
+        <div className="flex flex-col gap-3 pb-5">
+          {items.map((item) => (
+            <ItemLabel key={item.label} item={item} />
+          ))}
+          {extra && <span className={LABEL}>{extra}</span>}
+        </div>
+      )}
     </div>
+  );
+}
+
+// ── Logo (crème sur fond sombre via filtre d'inversion) ──────
+function FooterLogo({ className = "" }: { className?: string }) {
+  return (
+    <Link href="/" className={`inline-block ${className}`} aria-label="JÖRO Studio — retour à l'accueil">
+      <Image
+        src="/images/logos/joro-studio-amo-architecture-travaux.png"
+        alt="JÖRO Studio — amo · architecture · travaux"
+        width={1390}
+        height={330}
+        className="h-auto w-full"
+        style={{ filter: "brightness(0) invert(1) sepia(1) saturate(0) brightness(0.98)" }}
+      />
+    </Link>
   );
 }
