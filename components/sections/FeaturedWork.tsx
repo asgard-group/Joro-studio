@@ -1,122 +1,20 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import Pill from "@/components/ui/Pill";
 import type { WorkItem } from "@/types";
 
 interface Props {
   items: WorkItem[];
 }
 
-export function MobileFeaturedWork({ items }: { items: WorkItem[] }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const cardRefs = useRef<Array<HTMLDivElement | null>>(items.map(() => null));
-
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    function onScroll() {
-      const rect = container!.getBoundingClientRect();
-      const vh = window.innerHeight;
-      const scrolled = Math.max(0, -rect.top);
-
-      items.forEach((_, i) => {
-        const card = cardRefs.current[i];
-        if (!card) return;
-
-        // Chaque carte se révèle en entier (photo + panneau) du bas vers le haut, pendant sa tranche de scroll [i*vh, (i+1)*vh]
-        const itemScrolled = scrolled - i * vh;
-        const p = Math.min(1, Math.max(0, itemScrolled / vh));
-        const topInset = 100 - p * 100;
-
-        card.style.clipPath = `polygon(0% ${topInset.toFixed(3)}%, 100% ${topInset.toFixed(3)}%, 100% 100%, 0% 100%)`;
-      });
-    }
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [items]);
-
-  // (N+1) * 100vh : N tranches de reveal + 1vh pour rester visible à la fin
-  const totalHeight = `${(items.length + 1) * 100}vh`;
-
-  return (
-    <div
-      id="nos-realisations-mobile"
-      ref={containerRef}
-      className="md:hidden -mt-[200vh] pointer-events-none"
-      style={{ position: "relative", height: totalHeight, zIndex: 69 }}
-    >
-      {items.map((item, i) => {
-        const isDark = item.accentColor && item.accentColor !== "#F3F2ED";
-        const textColor = isDark ? "#F3F2ED" : "#1C1A18";
-        const subColor = isDark ? "rgba(243,242,237,0.55)" : "rgba(28,26,24,0.45)";
-
-        return (
-          <div
-            key={item.id}
-            ref={(el) => { cardRefs.current[i] = el; }}
-            className="mobile-work-card"
-            style={{
-              position: "sticky",
-              top: 0,
-              width: "100%",
-              overflow: "hidden",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "flex-end",
-              alignItems: "flex-start",
-              gap: "50px",
-              padding: "0 20px 20px 20px",
-              zIndex: i + 1,
-              clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
-              willChange: "clip-path",
-            }}
-          >
-            {/* Photo plein fond */}
-            <Image src={item.coverImage} alt={item.title} fill className="object-cover" sizes="100vw" />
-
-            {/* Panneau couleur */}
-            <div
-              style={{
-                position: "relative",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                alignSelf: "stretch",
-                gap: "20px",
-                padding: "26px 20px",
-                background: item.accentColor ?? "#F3F2ED",
-              }}
-            >
-              <Pill variant={isDark ? "dark" : "light"}>RÉALISATIONS</Pill>
-
-              <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: "16px", width: "100%" }}>
-                <h2 style={{ fontWeight: 600, textTransform: "uppercase", fontSize: "clamp(26px, 8vw, 34px)", color: textColor, letterSpacing: "-0.01em", lineHeight: 1, margin: 0 }}>
-                  {item.title}
-                </h2>
-                <div style={{ flexShrink: 0, textAlign: "right" }}>
-                  {item.tags.map((tag) => (
-                    <p key={tag} style={{ fontSize: "10px", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", color: subColor, margin: 0, lineHeight: 1.7 }}>
-                      {tag}
-                    </p>
-                  ))}
-                </div>
-              </div>
-
-              <p style={{ fontSize: "13px", color: textColor, lineHeight: 1.6, margin: 0 }}>
-                {item.description}
-              </p>
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
+// Taille de référence (Figma) de la carte projet blanche — fixe, jamais redimensionnée
+// texte-par-texte. Pour rentrer sur mobile, c'est toute la carte qui rétrécit d'un bloc
+// via un transform scale() (cf. cardScale), donc les tailles de police (30px / 22px)
+// restent inchangées en valeur absolue et rétrécissent proportionnellement avec le reste.
+const CARD_W = 328;
+const CARD_H = 418;
+const CARD_MARGIN = 24; // marge de sécurité de chaque côté avant de devoir réduire
 
 export default function FeaturedWork({ items }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -124,6 +22,19 @@ export default function FeaturedWork({ items }: Props) {
   const itemRefs = useRef<Array<{ left: HTMLDivElement | null; right: HTMLDivElement | null }>>(
     items.map(() => ({ left: null, right: null }))
   );
+  const [cardScale, setCardScale] = useState(1);
+
+  useEffect(() => {
+    function calcScale() {
+      const isDesktop = window.matchMedia("(min-width: 768px)").matches;
+      const columnWidth = isDesktop ? window.innerWidth / 2 : window.innerWidth;
+      const available = columnWidth - CARD_MARGIN * 2;
+      setCardScale(Math.min(1, available / CARD_W));
+    }
+    calcScale();
+    window.addEventListener("resize", calcScale);
+    return () => window.removeEventListener("resize", calcScale);
+  }, []);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -161,19 +72,17 @@ export default function FeaturedWork({ items }: Props) {
   return (
     <div
       ref={containerRef}
-      className="hidden md:block"
       style={{ position: "relative", height: totalHeight, zIndex: 69 }}
     >
       {items.map((item, i) => (
         <div
           key={item.id}
+          className="grid grid-cols-1 md:grid-cols-2"
           style={{
             position: "sticky",
             top: 0,
             height: "100vh",
             width: "100%",
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
             overflow: "hidden",
             zIndex: i + 1,
           }}
@@ -188,6 +97,7 @@ export default function FeaturedWork({ items }: Props) {
               overflow: "hidden",
             }}
           >
+            {/* Photo plein fond */}
             <Image
               src={item.coverImage}
               alt={item.title}
@@ -195,11 +105,30 @@ export default function FeaturedWork({ items }: Props) {
               className="object-cover"
               sizes="50vw"
             />
+
+            {/* Carte projet blanche — taille fixe (Figma), rétrécit en bloc via scale() sur mobile
+                (jamais via un redimensionnement du texte) */}
+            <div style={{ position: "absolute", top: "50%", left: "50%", transform: `translate(-50%, -50%) scale(${cardScale})`, transformOrigin: "center", width: CARD_W, height: CARD_H, background: "#fff", overflow: "hidden" }}>
+              {/* divs (pas des <p>) : la règle globale mobile "p, li { font-size: 14px !important }"
+                  ne doit pas s'appliquer ici — ces tailles (30px/22px) sont figées, quel que soit l'écran */}
+              <div style={{ position: "absolute", left: "21.07%", top: "6.69%", width: "57.61%", textAlign: "center", color: "#1B2424", fontSize: "30px", fontWeight: 500, textTransform: "uppercase", lineHeight: 1.1 }}>
+                {item.tags[0]}
+                <br />
+                {item.tags[1]}
+              </div>
+              <div style={{ position: "absolute", left: "5.84%", top: "33.45%", width: "88.15%", height: "51.3%" }}>
+                <Image src={item.coverImage} alt="" fill className="object-cover" sizes="290px" />
+              </div>
+              <div style={{ position: "absolute", left: "50%", top: "87.04%", transform: "translateX(-50%)", whiteSpace: "nowrap", textAlign: "center", color: "#1B2424", fontSize: "22px", fontWeight: 500, textTransform: "capitalize" }}>
+                {item.title.toLowerCase()}
+              </div>
+            </div>
           </div>
 
-          {/* Colonne droite — photo plein fond + texte en bas */}
+          {/* Colonne droite — fond couleur + image détail + description (masquée sur mobile) */}
           <div
             ref={(el) => { itemRefs.current[i].right = el; }}
+            className="hidden md:block"
             style={{
               position: "relative",
               clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
@@ -207,59 +136,26 @@ export default function FeaturedWork({ items }: Props) {
               overflow: "hidden",
             }}
           >
-            {/* Photo de fond */}
-            {item.rightImage && (
-              <Image
-                src={item.rightImage}
-                alt=""
-                fill
-                className="object-cover"
-                sizes="50vw"
-              />
-            )}
-            {!item.rightImage && (
-              <div style={{ position: "absolute", inset: 0, background: item.accentColor ?? "#1C1A18" }} />
-            )}
+            {/* Fond couleur */}
+            <div style={{ position: "absolute", inset: 0, background: item.accentColor ?? "#96461F" }} />
 
-            {/* Container texte — bloc solide ancré en bas */}
-            <div style={{
-              position: "absolute",
-              bottom: 0,
-              left: 0,
-              right: 0,
-              background: item.accentColor ?? "#F3F2ED",
-              margin: "0 30px 30px",
-              padding: "32px 40px 40px",
-            }}>
-              <div style={{ marginBottom: "20px" }}>
-                <Pill variant={item.accentColor && item.accentColor !== "#F3F2ED" ? "dark" : "light"}>RÉALISATIONS</Pill>
-              </div>
-
-              {(() => {
-                const isDark = item.accentColor && item.accentColor !== "#F3F2ED";
-                const textColor = isDark ? "#F3F2ED" : "#1C1A18";
-                const subColor = isDark ? "rgba(243,242,237,0.55)" : "rgba(28,26,24,0.45)";
-                return (
-                  <>
-                    <div style={{ display: "flex", alignItems: "flex-end", gap: "25px", marginBottom: "16px" }}>
-                      <h2 style={{ fontWeight: 600, textTransform: "uppercase", fontSize: "clamp(28px, 3.5vw, 56px)", color: textColor, letterSpacing: "-0.02em", lineHeight: 1, margin: 0 }}>
-                        {item.title}
-                      </h2>
-                      <div style={{ flexShrink: 0, textAlign: "left" }}>
-                        {item.tags.map((tag) => (
-                          <p key={tag} style={{ fontSize: "11px", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", color: subColor, margin: 0, lineHeight: 1.8 }}>
-                            {tag}
-                          </p>
-                        ))}
-                      </div>
-                    </div>
-                    <p style={{ fontSize: "14px", color: textColor, maxWidth: "100%", lineHeight: 1.6, margin: 0 }}>
-                      {item.description}
-                    </p>
-                  </>
-                );
-              })()}
-            </div>
+            {/* Bloc image détail + description — centré */}
+            {(() => {
+              const isDark = !item.accentColor || item.accentColor !== "#F3F2ED";
+              const textColor = isDark ? "#FFFFFF" : "#1B2424";
+              return (
+                <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: "min(353px, 78%)", display: "flex", flexDirection: "column", gap: "14px" }}>
+                  <div style={{ position: "relative", width: "100%", aspectRatio: "353 / 350" }}>
+                    {item.rightImage && (
+                      <Image src={item.rightImage} alt="" fill className="object-cover" sizes="360px" />
+                    )}
+                  </div>
+                  <p style={{ margin: 0, color: textColor, fontSize: "12px", fontWeight: 400, lineHeight: "18px" }}>
+                    {item.description}
+                  </p>
+                </div>
+              );
+            })()}
           </div>
         </div>
       ))}

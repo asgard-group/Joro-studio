@@ -5,7 +5,7 @@ import Testimonials from "@/components/sections/Testimonials";
 import CTA from "@/components/sections/CTA";
 import ServicesAll from "@/components/sections/ServicesAll";
 import ServiceReveal from "@/components/sections/ServiceReveal";
-import FeaturedWork, { MobileFeaturedWork } from "@/components/sections/FeaturedWork";
+import FeaturedWork from "@/components/sections/FeaturedWork";
 import AboutHistory from "@/components/sections/AboutHistory";
 import { workItems } from "@/data/work";
 
@@ -81,13 +81,10 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* FeaturedWork — se superpose aux offres depuis l'arrivée de Conseil Workplace (desktop uniquement) */}
+      {/* FeaturedWork — se superpose aux offres depuis l'arrivée de Conseil Workplace (desktop), colonne unique sur mobile */}
       <div id="nos-realisations" className="md:-mt-[250vh]">
         <FeaturedWork items={featuredWork} />
       </div>
-
-      {/* Réalisations mobile */}
-      <MobileFeaturedWork items={featuredWork} />
 
       <div id="temoignages" style={{ marginTop: "-1px" }}>
         <Testimonials />
