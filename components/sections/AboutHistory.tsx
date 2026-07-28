@@ -18,7 +18,7 @@ export default function AboutHistory() {
             flexShrink: 0,
           }}
         >
-          <Pill className="self-start mb-6">NOTRE STUDIO</Pill>
+          <Pill className="self-start mb-4">NOTRE STUDIO</Pill>
           <h2
             className="hidden lg:block font-semibold tracking-tight uppercase text-charcoal text-[55px] min-[1200px]:text-[64px]"
             style={{ lineHeight: "1.05", marginBottom: "40px", whiteSpace: "nowrap" }}
