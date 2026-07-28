@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { testimonials, type TestimonialCard } from "@/data/testimonials";
+import Pill from "@/components/ui/Pill";
 
 const items = testimonials as TestimonialCard[];
 const N = items.length;
@@ -28,6 +29,26 @@ function offsetOf(i: number, active: number) {
 
 const HEADING = ["AVIS", "CLIENT"];
 
+// Couleur moyenne d'une image chargée, via un canvas hors-écran (échantillonnage réduit
+// à 20×20 pour rester rapide) — sert à teinter le cadre derrière la photo centrale.
+function getAverageColor(img: HTMLImageElement): string | null {
+  const canvas = document.createElement("canvas");
+  const w = (canvas.width = 20);
+  const h = (canvas.height = 20);
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return null;
+  ctx.drawImage(img, 0, 0, w, h);
+  const { data } = ctx.getImageData(0, 0, w, h);
+  let r = 0, g = 0, b = 0;
+  const count = data.length / 4;
+  for (let i = 0; i < data.length; i += 4) {
+    r += data[i];
+    g += data[i + 1];
+    b += data[i + 2];
+  }
+  return `rgb(${Math.round(r / count)}, ${Math.round(g / count)}, ${Math.round(b / count)})`;
+}
+
 // Chevron du curseur personnalisé (survol gauche/droite du coverflow)
 function CursorArrow({ side }: { side: "left" | "right" }) {
   const points = side === "left" ? "16,4 6,20 16,36" : "8,4 18,20 8,36";
@@ -46,6 +67,22 @@ export default function Testimonials() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const [cursorInfo, setCursorInfo] = useState<{ x: number; y: number; side: "left" | "right" } | null>(null);
   const [hasHover, setHasHover] = useState(false);
+  // Couleur de cadre par témoignage, dérivée de sa photo (voir getAverageColor)
+  const [frameColors, setFrameColors] = useState<Record<string, string>>({});
+  const imgRefs = useRef<Record<string, HTMLImageElement | null>>({});
+
+  useEffect(() => {
+    // Rattrape les photos déjà en cache navigateur — leur `onLoad` ne se déclenche pas
+    // car l'image est `complete` avant même que React n'attache le listener.
+    const initial: Record<string, string> = {};
+    for (const [id, el] of Object.entries(imgRefs.current)) {
+      if (el && el.complete) {
+        const color = getAverageColor(el);
+        if (color) initial[id] = color;
+      }
+    }
+    if (Object.keys(initial).length) setFrameColors((prev) => ({ ...initial, ...prev }));
+  }, []);
 
   useEffect(() => {
     // La rangée complète (532 + 50 + 626 + 50 + 532 = 1790) doit tenir à l'écran ;
@@ -86,6 +123,11 @@ export default function Testimonials() {
 
   return (
     <section data-navbar-theme="light" className="bg-cream pt-[100px] lg:pt-[160px] pb-[100px] lg:pb-[160px]">
+
+      {/* Eyebrow — puce des deux côtés du label */}
+      <div className="flex justify-center mb-4">
+        <Pill dotSide="both">TÉMOIGNAGES</Pill>
+      </div>
 
       {/* Titre — révélé mot par mot (montée depuis le bas) */}
       <h2 ref={headingRef} className="text-center mb-[40px] lg:mb-[60px] px-[20px] font-semibold uppercase text-charcoal text-[36px] sm:text-[52px] lg:text-[64px] leading-none tracking-tight">
@@ -134,19 +176,29 @@ export default function Testimonials() {
                   zIndex: isActive ? 10 : 5 - abs,
                 }}
               >
-                {/* Cadre — sa couleur (taupe) n'apparaît que sur la photo centrale,
-                    révélée par le léger retrait de l'image (scale 0.9) ci-dessous */}
-                <div className="relative w-full h-full overflow-hidden bg-taupe">
+                {/* Cadre — sa couleur (dérivée de la photo, cf. getAverageColor) n'apparaît que
+                    sur la photo centrale, révélée par le léger retrait de l'image (scale 0.9) */}
+                <div
+                  className="relative w-full h-full overflow-hidden transition-colors duration-500"
+                  style={{ backgroundColor: frameColors[t.id] ?? "#917C73" }}
+                >
                   <div
                     className="relative w-full h-full transition-transform duration-500 ease-[cubic-bezier(0.77,0,0.175,1)]"
                     style={{ transform: isActive ? "scale(0.9)" : "scale(1)" }}
                   >
                     <Image
+                      ref={(el) => {
+                        imgRefs.current[t.id] = el;
+                      }}
                       src={t.photo}
                       alt={t.author}
                       fill
                       className="object-cover"
                       sizes="480px"
+                      onLoad={(e) => {
+                        const color = getAverageColor(e.currentTarget);
+                        if (color) setFrameColors((prev) => ({ ...prev, [t.id]: color }));
+                      }}
                     />
                   </div>
                 </div>

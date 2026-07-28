@@ -7,30 +7,31 @@ interface PillProps {
    * - `"dark"` : outline + texte `cream`, pour fond charcoal/sombre.
    */
   variant?: "light" | "dark";
+  /**
+   * - `"left"` (default) : puce à gauche du label uniquement.
+   * - `"both"` : puce à gauche et à droite du label.
+   */
+  dotSide?: "left" | "both";
   /** Classes additionnelles pour le positionnement (`mb-*`, `self-start`, etc.). */
   className?: string;
 }
 
 /**
- * Eyebrow pill — petit label en capitales dans un cadre arrondi avec outline 1px.
- * Utilisé pour les eyebrows comme « NOTRE HISTOIRE », « NOS OFFRES », etc.
+ * Eyebrow pill — puce ronde accentuée + label, utilisé pour les eyebrows
+ * comme « NOTRE STUDIO », « NOS OFFRES », etc.
  *
  * Le composant est volontairement 100 % Tailwind (aucun inline-style) afin de
- * rester aligné avec le design system (tokens `cream` / `charcoal`).
+ * rester aligné avec le design system (tokens `cream` / `charcoal` / `taupe`).
  */
-export default function Pill({ children, variant = "light", className = "" }: PillProps) {
-  const colorClasses =
-    variant === "dark"
-      ? "border-cream/30 text-cream"
-      : "border-charcoal/30 text-charcoal";
+export default function Pill({ children, variant = "light", dotSide = "left", className = "" }: PillProps) {
+  const textClass = variant === "dark" ? "text-cream" : "text-charcoal";
+  const dot = <span className="w-2 h-2 rounded-full bg-taupe shrink-0" />;
 
   return (
-    <div
-      className={`inline-flex items-center justify-center rounded-full px-[14px] py-[4px] border ${colorClasses} ${className}`}
-    >
-      <span className="text-[12px] font-medium tracking-[0.18em] uppercase">
-        {children}
-      </span>
+    <div className={`inline-flex items-center gap-[6px] ${className}`}>
+      {dot}
+      <span className={`text-[12px] font-medium ${textClass}`}>{children}</span>
+      {dotSide === "both" && dot}
     </div>
   );
 }

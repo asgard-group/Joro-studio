@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
+import Image from "next/image";
 import Pill from "@/components/ui/Pill";
 import ComingSoonLink from "@/components/ui/ComingSoonLink";
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
@@ -116,10 +117,13 @@ export default function ServicesAll() {
                     const top = el.getBoundingClientRect().top + window.scrollY;
                     window.scrollTo({ top, behavior: "smooth" });
                   }}
-                  className={`text-[14px] font-medium uppercase tracking-[0.18em] transition-colors hover:text-cream ${
+                  className={`flex items-center gap-2 text-[14px] font-medium uppercase tracking-[0.18em] transition-colors hover:text-cream ${
                     item.id === "design-build" ? "text-cream" : "text-cream/30"
                   }`}
                 >
+                  {item.id === "design-build" && (
+                    <span className="w-2 h-2 rounded-full bg-taupe shrink-0" />
+                  )}
                   {item.label}
                 </button>
               ))}
@@ -127,15 +131,26 @@ export default function ServicesAll() {
           </div>
         </div>
 
-        {/* Panneaux charcoal (toujours opaques) — glissent au split (z-20), sur toutes tailles d'écran */}
+        {/* Panneaux photo (toujours opaques) — glissent au split (z-20), sur toutes tailles d'écran.
+            Chaque panneau clippe (overflow-hidden) une div interne à 200% de sa largeur
+            (= 100% du conteneur), avec exactement le même <Image object-cover> que l'intro :
+            crop/zoom identiques, sans distorsion, quel que soit le viewport. */}
         <motion.div
-          className="absolute top-0 left-0 h-full bg-charcoal z-20"
+          className="absolute top-0 left-0 h-full z-20 overflow-hidden"
           style={{ width: "50%", x: leftX }}
-        />
+        >
+          <div className="absolute top-0 left-0 h-full" style={{ width: "200%" }}>
+            <Image src="/images/bg.png" alt="" fill className="object-cover" priority />
+          </div>
+        </motion.div>
         <motion.div
-          className="absolute top-0 right-0 h-full bg-charcoal z-20"
+          className="absolute top-0 right-0 h-full z-20 overflow-hidden"
           style={{ width: "50%", x: rightX }}
-        />
+        >
+          <div className="absolute top-0 right-0 h-full" style={{ width: "200%" }}>
+            <Image src="/images/bg.png" alt="" fill className="object-cover" priority />
+          </div>
+        </motion.div>
 
         {/* Slide 2 (charcoal + texte cream) — derrière slide 1, fade out global (z-30) */}
         <motion.div
@@ -216,7 +231,16 @@ function IntroSlide({ dark }: { dark: boolean }) {
 
   return (
     <div className={`absolute inset-0 flex flex-col ${bgClass}`}>
-      <div className="flex-1 flex flex-col items-center justify-center text-center px-6">
+      {dark && (
+        <Image
+          src="/images/bg.png"
+          alt=""
+          fill
+          className="object-cover"
+          priority
+        />
+      )}
+      <div className="relative flex-1 flex flex-col items-center justify-center text-center px-6">
         <Pill variant={dark ? "dark" : "light"} className="mb-6 md:mb-8">
           NOS OFFRES
         </Pill>

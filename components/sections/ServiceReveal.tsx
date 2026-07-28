@@ -103,10 +103,13 @@ export default function ServiceReveal({ activeId, title, description, ctaLabel =
                 const top = el.getBoundingClientRect().top + window.scrollY;
                 window.scrollTo({ top, behavior: "smooth" });
               }}
-              className={`text-[14px] font-medium uppercase tracking-[0.18em] transition-colors hover:text-cream ${
+              className={`flex items-center gap-2 text-[14px] font-medium uppercase tracking-[0.18em] transition-colors hover:text-cream ${
                 item.id === activeId ? "text-cream" : "text-cream/30"
               }`}
             >
+              {item.id === activeId && (
+                <span className="w-2 h-2 rounded-full bg-taupe shrink-0" />
+              )}
               {item.label}
             </button>
           ))}

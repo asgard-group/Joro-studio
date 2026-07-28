@@ -7,7 +7,7 @@ export default function AboutHistory() {
   return (
     <section className="bg-cream py-[80px] min-[840px]:py-[130px] lg:py-[180px]">
       <div
-        className="flex flex-col lg:flex-row lg:justify-between gap-[50px] lg:gap-[100px] pl-[20px] min-[840px]:pl-[60px] pr-[20px] min-[840px]:pr-[clamp(60px,12.963vw_-_48.889px,200px)]"
+        className="flex flex-col lg:flex-row lg:justify-between gap-[50px] lg:gap-[100px] pl-[20px] min-[840px]:pl-[60px] pr-[20px] min-[840px]:pr-[60px] min-[1700px]:pr-[clamp(60px,12.963vw_-_48.889px,200px)]"
       >
         {/* Colonne gauche — sticky */}
         <div
