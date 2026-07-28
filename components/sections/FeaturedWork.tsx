@@ -8,18 +8,18 @@ interface Props {
   items: WorkItem[];
 }
 
-// Dimensions exactes de la maquette Figma : vignette 350 × 450, bordures blanches
-// 150 (haut) / 70 (bas) / 20 (côtés) → photo de 310 × 230.
-// Taille fixe, jamais redimensionnée texte-par-texte : pour rentrer sur mobile, c'est toute
-// la carte qui rétrécit d'un bloc via un transform scale() (cf. cardScale), donc les tailles
-// de police restent inchangées et rétrécissent proportionnellement avec le reste.
-const CARD_W = 350;
-const CARD_H = 450;
+// Dimensions exactes de la maquette Figma. Les bordures (150/70/20) sont identiques aux
+// deux formats ; seules la taille de la carte et les tailles de texte changent au point de
+// bascule 1200px (à partir duquel le panneau droit apparaît aussi).
+const BREAKPOINT = 1200;
 const BORDER_TOP = 150;
 const BORDER_BOTTOM = 70;
 const BORDER_SIDE = 20;
 const ZONE_PADDING = 20;
 const CARD_MARGIN = 24; // marge de sécurité de chaque côté avant de devoir réduire
+
+const CARD_DESKTOP = { w: 350, h: 450, titleSize: 32, titleLineHeight: 44.8, nameSize: 24, nameLineHeight: 45.6 };
+const CARD_MOBILE = { w: 280, h: 400, titleSize: 24, titleLineHeight: 33.6, nameSize: 16, nameLineHeight: 30.4 };
 
 export default function FeaturedWork({ items }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -27,18 +27,24 @@ export default function FeaturedWork({ items }: Props) {
   const itemRefs = useRef<Array<{ left: HTMLDivElement | null; right: HTMLDivElement | null }>>(
     items.map(() => ({ left: null, right: null }))
   );
+  const [isWideLayout, setIsWideLayout] = useState(false);
   const [cardScale, setCardScale] = useState(1);
+  const card = isWideLayout ? CARD_DESKTOP : CARD_MOBILE;
 
   useEffect(() => {
-    function calcScale() {
-      const isDesktop = window.matchMedia("(min-width: 768px)").matches;
-      const columnWidth = isDesktop ? window.innerWidth / 2 : window.innerWidth;
+    // ≥1200px : carte "desktop" + panneau droit visible, colonne gauche = 50vw.
+    // <1200px : carte "mobile" (plus petite, textes réduits), panneau droit masqué, colonne pleine largeur.
+    function calc() {
+      const wide = window.matchMedia(`(min-width: ${BREAKPOINT}px)`).matches;
+      setIsWideLayout(wide);
+      const columnWidth = wide ? window.innerWidth / 2 : window.innerWidth;
       const available = columnWidth - CARD_MARGIN * 2;
-      setCardScale(Math.min(1, available / CARD_W));
+      const w = wide ? CARD_DESKTOP.w : CARD_MOBILE.w;
+      setCardScale(Math.min(1, available / w));
     }
-    calcScale();
-    window.addEventListener("resize", calcScale);
-    return () => window.removeEventListener("resize", calcScale);
+    calc();
+    window.addEventListener("resize", calc);
+    return () => window.removeEventListener("resize", calc);
   }, []);
 
   useEffect(() => {
@@ -82,7 +88,7 @@ export default function FeaturedWork({ items }: Props) {
       {items.map((item, i) => (
         <div
           key={item.id}
-          className="grid grid-cols-1 md:grid-cols-2"
+          className="grid grid-cols-1 min-[1200px]:grid-cols-2"
           style={{
             position: "sticky",
             top: 0,
@@ -111,8 +117,8 @@ export default function FeaturedWork({ items }: Props) {
               sizes="50vw"
             />
 
-            {/* Carte projet blanche — 350 × 450 (Figma), rétrécit en bloc via scale() sur mobile
-                (jamais via un redimensionnement du texte) */}
+            {/* Carte projet blanche — Figma : 350 × 450 (≥1200px) / 280 × 400 (<1200px),
+                rétrécit en bloc via scale() en cas de manque de place (jamais le texte) */}
             <div
               style={{
                 position: "absolute",
@@ -120,8 +126,8 @@ export default function FeaturedWork({ items }: Props) {
                 left: "50%",
                 transform: `translate(-50%, -50%) scale(${cardScale})`,
                 transformOrigin: "center",
-                width: CARD_W,
-                height: CARD_H,
+                width: card.w,
+                height: card.h,
                 background: "#fff",
                 overflow: "hidden",
                 display: "flex",
@@ -134,31 +140,31 @@ export default function FeaturedWork({ items }: Props) {
                   (divs, pas des <p> : la règle globale mobile "p, li { font-size: 14px !important }"
                   ne doit pas s'appliquer ici — ces tailles Figma sont figées, quel que soit l'écran) */}
               <div style={{ alignSelf: "stretch", height: BORDER_TOP, padding: ZONE_PADDING, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <div style={{ textAlign: "center", whiteSpace: "nowrap", color: "black", fontSize: "32px", fontWeight: 400, textTransform: "uppercase", lineHeight: "44.8px" }}>
+                <div style={{ textAlign: "center", whiteSpace: "nowrap", color: "black", fontSize: card.titleSize, fontWeight: 400, textTransform: "uppercase", lineHeight: `${card.titleLineHeight}px` }}>
                   {item.tags[0]}
                   <br />
                   {item.tags[1]}
                 </div>
               </div>
 
-              {/* Photo — 310 × 230 (bordures 20px sur les côtés, 150 en haut / 70 en bas) */}
-              <div style={{ position: "relative", width: CARD_W - BORDER_SIDE * 2, height: CARD_H - BORDER_TOP - BORDER_BOTTOM, margin: "0 auto", flexShrink: 0 }}>
-                <Image src={item.coverImage} alt="" fill className="object-cover" sizes="310px" />
+              {/* Photo — bordures 20px sur les côtés, 150 en haut / 70 en bas */}
+              <div style={{ position: "relative", width: card.w - BORDER_SIDE * 2, height: card.h - BORDER_TOP - BORDER_BOTTOM, margin: "0 auto", flexShrink: 0 }}>
+                <Image src={item.coverImage} alt="" fill className="object-cover" sizes={`${card.w - BORDER_SIDE * 2}px`} />
               </div>
 
               {/* Zone basse — nom du projet centré dans la bordure basse (70px, padding 20) */}
               <div style={{ alignSelf: "stretch", height: BORDER_BOTTOM, paddingLeft: ZONE_PADDING, paddingRight: ZONE_PADDING, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <div style={{ whiteSpace: "nowrap", textAlign: "center", color: "black", fontSize: "24px", fontWeight: 400, lineHeight: "45.6px", textTransform: "capitalize" }}>
+                <div style={{ whiteSpace: "nowrap", textAlign: "center", color: "black", fontSize: card.nameSize, fontWeight: 400, lineHeight: `${card.nameLineHeight}px`, textTransform: "capitalize" }}>
                   {item.title.toLowerCase()}
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Colonne droite — fond couleur + image détail + description (masquée sur mobile) */}
+          {/* Colonne droite — fond couleur + image détail + description (masquée en dessous de 1200px) */}
           <div
             ref={(el) => { itemRefs.current[i].right = el; }}
-            className="hidden md:block"
+            className="hidden min-[1200px]:block"
             style={{
               position: "relative",
               clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",

@@ -91,7 +91,7 @@ export default function ServicesAll() {
               playsInline
             />
           )}
-          <div className="absolute inset-0 z-0 bg-charcoal/20 mix-blend-color-dodge" />
+          <div className="absolute inset-0 z-0" style={{ backgroundColor: "rgba(35, 6, 6, 0.2)", mixBlendMode: "soft-light" }} />
 
           {/* Contenu DESIGN & BUILD — révélé par le split (z-5) */}
           <div className="absolute inset-0 z-[5] flex items-center justify-between px-4 sm:px-6 lg:px-[60px]">
