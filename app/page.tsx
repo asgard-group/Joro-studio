@@ -51,6 +51,7 @@ export default function HomePage() {
             description="Assistance à la maîtrise d'ouvrage : conseil en faisabilité, diagnostic RSE et accompagnement à la certification, nous vous guidons à chaque étape stratégique de votre projet."
             ctaLabel="Être accompagné"
             video="/videos/Composition 1.webm"
+            flipX
             noParallax
           />
         </div>
@@ -60,8 +61,8 @@ export default function HomePage() {
             title="MARKETING SUITE"
             description="Des supports visuels et des espaces de présentation pensés pour valoriser vos actifs immobiliers pour que votre projet trouve son acquéreur avant même d'être livré."
             ctaLabel="Valoriser mon actif"
-            image="/images/test.webp"
-            overlayClass="bg-charcoal/25"
+            video="/videos/vecteezy_elegant-wooden-lamp-casting-warm-light-in-cozy-room_73284090.mp4"
+            overlayClass="bg-[rgba(96,96,96,0.2)] mix-blend-lighten"
             noParallax
           />
         </div>
@@ -75,6 +76,7 @@ export default function HomePage() {
             video="/videos/vecteezy_4k-animation-angled-view-of-modern-building-with-clear-blue_40552327.webm"
             flipX
             wide
+            zoomed
             overlayClass="bg-charcoal/20 mix-blend-soft-light"
             noParallax
           />

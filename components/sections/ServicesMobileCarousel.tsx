@@ -35,7 +35,7 @@ const slides: Slide[] = [
     title: "MARKETING SUITE",
     description: "Des supports visuels et des espaces de présentation pensés pour valoriser vos actifs immobiliers pour que votre projet trouve son acquéreur avant même d'être livré.",
     ctaLabel: "Valoriser mon actif",
-    image: "/images/test.webp",
+    video: "/videos/vecteezy_elegant-wooden-lamp-casting-warm-light-in-cozy-room_73284090.mp4",
   },
   {
     id: "conseil-workplace",

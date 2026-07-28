@@ -23,7 +23,7 @@ export default function AboutHistory() {
             className="hidden lg:block font-semibold tracking-tight uppercase text-charcoal text-[55px] min-[1200px]:text-[64px]"
             style={{ lineHeight: "1.05", marginBottom: "40px", whiteSpace: "nowrap" }}
           >
-            Repenser<br />les espaces de<br />vie autrement
+            Des espaces de<br />vie repenser
           </h2>
           <h2
             className="lg:hidden font-semibold tracking-tight uppercase text-charcoal"
@@ -35,7 +35,7 @@ export default function AboutHistory() {
               whiteSpace: "nowrap",
             }}
           >
-            Repenser les espaces<br />de vie autrement
+            Des espaces de<br />vie repenser
           </h2>
           <p className="text-charcoal max-w-full lg:max-w-[385px]" style={{ fontSize: "14px", lineHeight: "1.75" }}>
             JÖRO Studio est né d&rsquo;un constat simple&nbsp;: pourquoi l&rsquo;élégance,

@@ -26,9 +26,11 @@ interface Props {
   wide?: boolean;
   overlayClass?: string;
   noParallax?: boolean;
+  /** Agrandit le fond (même principe que le scale-110 du Hero) pour un cadrage plus serré */
+  zoomed?: boolean;
 }
 
-export default function ServiceReveal({ activeId, title, description, ctaLabel = "Découvrir l'offre", image, video, flipX, noFadeIn, wide, overlayClass, noParallax }: Props) {
+export default function ServiceReveal({ activeId, title, description, ctaLabel = "Découvrir l'offre", image, video, flipX, noFadeIn, wide, overlayClass, noParallax, zoomed }: Props) {
   const sectionRef = useRef<HTMLDivElement>(null);
   // Ce composant n'est jamais visible sur mobile (masqué par le parent en `hidden md:block`),
   // on évite donc de monter/décoder la vidéo tant qu'on n'est pas sur desktop.
@@ -47,10 +49,12 @@ export default function ServiceReveal({ activeId, title, description, ctaLabel =
       data-navbar-theme="dark"
       className="relative h-full overflow-hidden"
     >
-      {/* Fond parallaxe — vidéo ou image */}
+      {/* Fond parallaxe — vidéo ou image
+          scale passé en prop motion (pas en classe CSS) : Framer Motion pilote `transform`
+          via le style `y` et écraserait sinon toute classe scale-* posée à côté */}
       <motion.div
         className="absolute inset-x-0 w-full"
-        style={{ y: bgY, top: "-12%", height: "124%" }}
+        style={{ y: bgY, top: "-12%", height: "124%", scale: zoomed ? 1.1 : 1 }}
       >
         {video && isDesktop ? (
           <video

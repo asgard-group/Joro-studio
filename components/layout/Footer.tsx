@@ -4,7 +4,6 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { footerLinks } from "@/data/navigation";
-import ComingSoonLink from "@/components/ui/ComingSoonLink";
 
 // Style commun à tous les libellés du footer (cf. maquette Figma)
 const LABEL = "text-[14px] font-normal uppercase tracking-[1.4px] text-[#FAF6ED]";
@@ -31,7 +30,8 @@ const legalLinks: FooterItem[] = [
   { label: "Politique de confidentialité", href: "/privacy" },
 ];
 
-// Rendu d'un libellé (lien externe réel, sinon libellé « à venir »)
+// Rendu d'un libellé — toutes les pages ciblées existent, donc navigation réelle
+// (externe = nouvel onglet, interne = Link Next.js)
 function ItemLabel({ item }: { item: FooterItem }) {
   if (item.external) {
     return (
@@ -46,9 +46,9 @@ function ItemLabel({ item }: { item: FooterItem }) {
     );
   }
   return (
-    <ComingSoonLink className={LABEL} block>
+    <Link href={item.href} className={`${LABEL} block transition-opacity hover:opacity-60`}>
       {item.label}
-    </ComingSoonLink>
+    </Link>
   );
 }
 
@@ -77,7 +77,6 @@ export default function Footer() {
             {legalLinks.map((link) => (
               <ItemLabel key={link.label} item={link} />
             ))}
-            <span className={`${LABEL} text-right`}>JÖRO Studio © 2026</span>
           </div>
         </div>
       </div>
@@ -88,7 +87,7 @@ export default function Footer() {
           <FooterAccordion title="Nos offres" items={offresLinks} />
           <FooterAccordion title="Notre studio" items={studioLinks} />
           <FooterAccordion title="Suivez-nous" items={socialLinks} />
-          <FooterAccordion title="Infos légales" items={legalLinks} extra="JÖRO Studio © 2026" />
+          <FooterAccordion title="Infos légales" items={legalLinks} />
         </div>
         <FooterLogo className="w-full" />
       </div>
@@ -115,11 +114,9 @@ function FooterColumn({ title, items }: { title: string; items: FooterItem[] }) 
 function FooterAccordion({
   title,
   items,
-  extra,
 }: {
   title: string;
   items: FooterItem[];
-  extra?: string;
 }) {
   const [open, setOpen] = useState(false);
   return (
@@ -152,7 +149,6 @@ function FooterAccordion({
           {items.map((item) => (
             <ItemLabel key={item.label} item={item} />
           ))}
-          {extra && <span className={LABEL}>{extra}</span>}
         </div>
       )}
     </div>

@@ -8,14 +8,14 @@ import { testimonials, type TestimonialCard } from "@/data/testimonials";
 const items = testimonials as TestimonialCard[];
 const N = items.length;
 
-// Disposition « coverflow » selon l'écart à la carte active (valeurs de la maquette,
-// exprimées en fraction de la largeur de carte pour rester responsive).
-const FACTOR_X = [0, 1.03, 1.911, 2.691, 3.371, 3.952, 4.532, 5.112];
-const SCALE = [1, 0.85, 0.75, 0.65, 0.55, 0.55, 0.55, 0.55];
-const Z = [10, 5, 3, 2, 1, 1, 1, 1];
-
-const BASE_W = 330;
-const RATIO = 460 / 330;
+// Rangée de 3 photos centrées sur un même axe horizontal : la centrale (point focal) est
+// nettement plus grande, les deux latérales l'encadrent à dimensions égales, avec 50px
+// entre chacune. Les latérales sont obtenues par un scale() depuis le centre, ce qui
+// conserve l'alignement vertical tout en donnant des hauteurs différentes.
+const CENTER_W = 626;
+const CENTER_H = 500;
+const SIDE_SCALE = 532 / 626; // = 425/500 = 0,85 → photos latérales de 532 × 425
+const GAP = 50;
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 // Écart signé le plus court autour de l'anneau (carrousel bouclé)
@@ -40,7 +40,7 @@ function CursorArrow({ side }: { side: "left" | "right" }) {
 
 export default function Testimonials() {
   const [active, setActive] = useState(0);
-  const [cardW, setCardW] = useState(BASE_W);
+  const [centerW, setCenterW] = useState(CENTER_W);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const headingInView = useInView(headingRef, { once: true, amount: 0.3 });
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -48,7 +48,13 @@ export default function Testimonials() {
   const [hasHover, setHasHover] = useState(false);
 
   useEffect(() => {
-    const calc = () => setCardW(Math.min(BASE_W, Math.round(window.innerWidth * 0.62)));
+    // La rangée complète (532 + 50 + 626 + 50 + 532 = 1790) doit tenir à l'écran ;
+    // en dessous, tout rétrécit proportionnellement (les dimensions données sont des maximums).
+    const ROW_W = CENTER_W * (1 + 2 * SIDE_SCALE) + GAP * 2;
+    const calc = () => {
+      const available = window.innerWidth - 48;
+      setCenterW(Math.round(CENTER_W * Math.min(1, available / ROW_W)));
+    };
     calc();
     window.addEventListener("resize", calc);
     return () => window.removeEventListener("resize", calc);
@@ -58,7 +64,14 @@ export default function Testimonials() {
     setHasHover(window.matchMedia("(hover: hover) and (pointer: fine)").matches);
   }, []);
 
-  const cardH = Math.round(cardW * RATIO);
+  // Échelle globale déduite de la largeur de la photo centrale
+  const s = centerW / CENTER_W;
+  const centerH = Math.round(CENTER_H * s);
+  const gap = GAP * s;
+  const sideW = centerW * SIDE_SCALE;
+  // Distance entre le centre de la photo centrale et celui d'une photo latérale
+  const STEP = centerW / 2 + gap + sideW / 2;
+
   const prev = () => setActive((a) => (a - 1 + N) % N);
   const next = () => setActive((a) => (a + 1) % N);
   const activeItem = items[active];
@@ -91,26 +104,37 @@ export default function Testimonials() {
       </h2>
 
       <div className="relative flex flex-col items-center w-full">
-        {/* Coverflow */}
+        {/* Rangée de 3 photos — centrale plus grande, latérales alignées par le haut */}
         <div
           ref={wrapRef}
-          className="relative w-full flex items-center justify-center overflow-hidden"
-          style={{ height: cardH }}
+          className="relative w-full flex justify-center overflow-hidden"
+          style={{ height: centerH }}
           onMouseMove={handleMouseMove}
           onMouseLeave={() => setCursorInfo(null)}
         >
           {items.map((t, i) => {
             const off = offsetOf(i, active);
-            const d = Math.min(Math.abs(off), FACTOR_X.length - 1);
-            const x = Math.sign(off) * cardW * FACTOR_X[d];
-            const isActive = off === 0;
+            const abs = Math.abs(off);
+            const isActive = abs === 0;
+            // Centrale au milieu, latérales à ±STEP ; les suivantes attendent hors champ
+            const x =
+              abs === 0
+                ? 0
+                : Math.sign(off) * (STEP + (abs - 1) * (sideW + gap));
             return (
               <div
                 key={t.id}
-                className="absolute transition-transform duration-500 origin-center ease-[cubic-bezier(0.77,0,0.175,1)]"
-                style={{ transform: `translateX(${x}px) scale(${SCALE[d]})`, zIndex: Z[d], width: cardW, height: cardH }}
+                className="absolute top-0 left-1/2 transition-[transform,opacity] duration-500 ease-[cubic-bezier(0.77,0,0.175,1)]"
+                style={{
+                  width: centerW,
+                  height: centerH,
+                  transform: `translateX(-50%) translateX(${x}px) scale(${isActive ? 1 : SIDE_SCALE})`,
+                  transformOrigin: "center", // scale depuis le centre → les 3 photos partagent le même axe horizontal
+                  opacity: abs <= 1 ? 1 : 0,
+                  zIndex: isActive ? 10 : 5 - abs,
+                }}
               >
-                {/* Cadre — sa couleur (taupe) n'apparaît que sur la carte active,
+                {/* Cadre — sa couleur (taupe) n'apparaît que sur la photo centrale,
                     révélée par le léger retrait de l'image (scale 0.9) ci-dessous */}
                 <div className="relative w-full h-full overflow-hidden bg-taupe">
                   <div
@@ -122,7 +146,7 @@ export default function Testimonials() {
                       alt={t.author}
                       fill
                       className="object-cover"
-                      sizes="330px"
+                      sizes="480px"
                     />
                   </div>
                 </div>
