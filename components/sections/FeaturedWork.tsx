@@ -140,7 +140,7 @@ export default function FeaturedWork({ items }: Props) {
                   (divs, pas des <p> : la règle globale mobile "p, li { font-size: 14px !important }"
                   ne doit pas s'appliquer ici — ces tailles Figma sont figées, quel que soit l'écran) */}
               <div style={{ alignSelf: "stretch", height: BORDER_TOP, padding: ZONE_PADDING, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <div style={{ textAlign: "center", whiteSpace: "nowrap", color: "black", fontSize: card.titleSize, fontWeight: 400, textTransform: "uppercase", lineHeight: `${card.titleLineHeight}px` }}>
+                <div style={{ textAlign: "center", whiteSpace: "nowrap", color: "black", fontSize: card.titleSize, fontWeight: 500, textTransform: "uppercase", lineHeight: `${card.titleLineHeight}px` }}>
                   {item.tags[0]}
                   <br />
                   {item.tags[1]}
@@ -154,7 +154,7 @@ export default function FeaturedWork({ items }: Props) {
 
               {/* Zone basse — nom du projet centré dans la bordure basse (70px, padding 20) */}
               <div style={{ alignSelf: "stretch", height: BORDER_BOTTOM, paddingLeft: ZONE_PADDING, paddingRight: ZONE_PADDING, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <div style={{ whiteSpace: "nowrap", textAlign: "center", color: "black", fontSize: card.nameSize, fontWeight: 400, lineHeight: `${card.nameLineHeight}px`, textTransform: "capitalize" }}>
+                <div style={{ whiteSpace: "nowrap", textAlign: "center", color: "black", fontSize: card.nameSize, fontWeight: 500, lineHeight: `${card.nameLineHeight}px`, textTransform: "capitalize" }}>
                   {item.title.toLowerCase()}
                 </div>
               </div>

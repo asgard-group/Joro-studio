@@ -22,7 +22,6 @@ interface Props {
   image?: string;
   video?: string;
   flipX?: boolean;
-  noFadeIn?: boolean;
   wide?: boolean;
   overlayClass?: string;
   noParallax?: boolean;
@@ -30,7 +29,7 @@ interface Props {
   zoomed?: boolean;
 }
 
-export default function ServiceReveal({ activeId, title, description, ctaLabel = "Découvrir l'offre", image, video, flipX, noFadeIn, wide, overlayClass, noParallax, zoomed }: Props) {
+export default function ServiceReveal({ activeId, title, description, ctaLabel = "Découvrir l'offre", image, video, flipX, wide, overlayClass, noParallax, zoomed }: Props) {
   const sectionRef = useRef<HTMLDivElement>(null);
   // Ce composant n'est jamais visible sur mobile (masqué par le parent en `hidden md:block`),
   // on évite donc de monter/décoder la vidéo tant qu'on n'est pas sur desktop.
@@ -71,14 +70,8 @@ export default function ServiceReveal({ activeId, title, description, ctaLabel =
       </motion.div>
       {overlayClass && <div className={`absolute inset-0 ${overlayClass}`} />}
 
-      {/* Contenu */}
-      <motion.div
-        className="absolute inset-0 z-10 flex items-center justify-between px-4 sm:px-6 lg:px-[60px]"
-        initial={{ opacity: noFadeIn ? 1 : 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        viewport={{ once: true, margin: "-10%" }}
-      >
+      {/* Contenu — affiché d'emblée (pas de fondu à l'entrée dans le viewport) */}
+      <div className="absolute inset-0 z-10 flex items-center justify-between px-4 sm:px-6 lg:px-[60px]">
         {/* Gauche */}
         <div className={wide ? "max-w-[880px]" : "max-w-[580px]"}>
           <h2 className={`text-[26px] md:text-[52px] lg:text-[55px] min-[1200px]:text-[64px] font-semibold uppercase tracking-tight text-cream mb-[40px] ${title.includes('\n') ? 'whitespace-pre-line leading-[1.2]' : 'whitespace-nowrap leading-none'}`}>
@@ -114,7 +107,7 @@ export default function ServiceReveal({ activeId, title, description, ctaLabel =
             </button>
           ))}
         </div>
-      </motion.div>
+      </div>
 
     </div>
   );

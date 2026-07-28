@@ -18,7 +18,7 @@ export default function CTA() {
       {/* Parallax — le fond déborde de 130% (15% de chaque côté) pour que le déplacement
           vertical au scroll ne révèle jamais de bord vide */}
       <motion.div className="absolute inset-x-0" style={{ top: "-15%", height: "130%", y }}>
-        <Image src="/images/bg.png" alt="" fill className="object-cover" priority />
+        <Image src="/images/1440w default.png" alt="" fill className="object-cover" priority />
       </motion.div>
 
       <div className="absolute inset-0 flex items-center justify-center px-4">

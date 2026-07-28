@@ -27,7 +27,7 @@ function offsetOf(i: number, active: number) {
   return off;
 }
 
-const HEADING = ["AVIS", "CLIENT"];
+const HEADING = ["LEUR", "EXPÉRIENCE"];
 
 // Couleur moyenne d'une image chargée, via un canvas hors-écran (échantillonnage réduit
 // à 20×20 pour rester rapide) — sert à teinter le cadre derrière la photo centrale.
