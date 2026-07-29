@@ -1,9 +1,8 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import Pill from "@/components/ui/Pill";
 import ComingSoonLink from "@/components/ui/ComingSoonLink";
-import { motion, useScroll, useTransform, useInView } from "framer-motion";
+import { motion, useScroll, useTransform, useInView, useMotionValueEvent, type MotionValue } from "framer-motion";
 import ServicesMobileCarousel from "@/components/sections/ServicesMobileCarousel";
 import { useIsDesktop } from "@/hooks/useIsDesktop";
 
@@ -25,8 +24,10 @@ export default function ServicesAll() {
 
   const [ranges, setRanges] = useState({
     dissolveStart: 99999, dissolveEnd: 109999,
-    fadeOutStart: 109999, fadeOutEnd: 119999,
-    splitStart: 119999, splitEnd: 129999,
+    phase1ExitStart: 99999, phase1ExitEnd: 109999,
+    phase2Start: 109999,
+    fadeOutStart: 119999, fadeOutEnd: 129999,
+    splitStart: 129999, splitEnd: 139999,
   });
 
   useEffect(() => {
@@ -38,11 +39,16 @@ export default function ServicesAll() {
         // Slide 1 (cream) → Slide 2 (charcoal) : crossfade court
         dissolveStart: top + vh * 0.3,
         dissolveEnd: top + vh * 0.45,
-        // Fade out du contenu intro avant le split
-        fadeOutStart: top + vh * 0.65,
-        fadeOutEnd: top + vh * 0.9,
+        // Temps 1 — "QUATRE EXPERTISES" sort par le haut
+        phase1ExitStart: top + vh * 0.3,
+        phase1ExitEnd: top + vh * 0.5,
+        // Temps 2 — "UN SEUL INTERLOCUTEUR" se révèle lettre par lettre
+        phase2Start: top + vh * 0.48,
+        // Fade out du contenu intro avant le split (laisse au temps 2 le temps de se jouer)
+        fadeOutStart: top + vh * 0.95,
+        fadeOutEnd: top + vh * 1.15,
         // Split des panneaux pour révéler DESIGN & BUILD
-        splitStart: top + vh * 0.9,
+        splitStart: top + vh * 1.15,
         splitEnd: top + vh * 2.2,
       });
     };
@@ -62,6 +68,19 @@ export default function ServicesAll() {
 
   // Fade out global de l'intro (pour révéler DESIGN & BUILD via split)
   const contentOpacity = useTransform(scrollY, [ranges.fadeOutStart, ranges.fadeOutEnd], [1, 0]);
+
+  // Temps 1 — sortie de "QUATRE EXPERTISES" vers le haut (fondu + translation)
+  const phase1Opacity = useTransform(scrollY, [ranges.phase1ExitStart, ranges.phase1ExitEnd], [1, 0]);
+  const phase1Y = useTransform(scrollY, [ranges.phase1ExitStart, ranges.phase1ExitEnd], ["0px", "-40px"]);
+
+  // Temps 2 — déclencheur de la révélation lettre par lettre. Réversible : en
+  // remontant, les lettres se re-masquent et le temps 1 réapparaît.
+  const rangesRef = useRef(ranges);
+  rangesRef.current = ranges;
+  const [phase2Visible, setPhase2Visible] = useState(false);
+  useMotionValueEvent(scrollY, "change", (v) => {
+    setPhase2Visible(v >= rangesRef.current.phase2Start);
+  });
 
   // Split des panneaux
   const leftX = useTransform(scrollY, [ranges.splitStart, ranges.splitEnd], ["0%", "-100%"]);
@@ -116,10 +135,13 @@ export default function ServicesAll() {
                     const top = el.getBoundingClientRect().top + window.scrollY;
                     window.scrollTo({ top, behavior: "smooth" });
                   }}
-                  className={`text-[14px] font-medium uppercase tracking-[0.18em] transition-colors hover:text-cream ${
+                  className={`flex items-center gap-2 text-[14px] font-medium uppercase tracking-[0.18em] transition-colors hover:text-cream ${
                     item.id === "design-build" ? "text-cream" : "text-cream/30"
                   }`}
                 >
+                  {item.id === "design-build" && (
+                    <span className="w-2 h-2 rounded-full bg-taupe shrink-0" />
+                  )}
                   {item.label}
                 </button>
               ))}
@@ -142,7 +164,12 @@ export default function ServicesAll() {
           className="absolute inset-0 z-30 pointer-events-none"
           style={{ opacity: contentOpacity }}
         >
-          <IntroSlide dark={true} />
+          <IntroSlide
+            dark={true}
+            phase1Opacity={phase1Opacity}
+            phase1Y={phase1Y}
+            phase2Visible={phase2Visible}
+          />
         </motion.div>
 
         {/* Slide 1 (cream + texte charcoal) — masquée, décommenter pour réactiver
@@ -202,7 +229,16 @@ function AnimatedLetters({ text, startIndex, inView }: { text: string; startInde
 }
 
 // ─── IntroSlide ──────────────────────────────────────────────────
-function IntroSlide({ dark }: { dark: boolean }) {
+interface IntroSlideProps {
+  dark: boolean;
+  /** Sortie du temps 1 vers le haut, pilotée par le scroll. */
+  phase1Opacity: MotionValue<number>;
+  phase1Y: MotionValue<string>;
+  /** Déclencheur du temps 2 (révélation lettre par lettre). */
+  phase2Visible: boolean;
+}
+
+function IntroSlide({ dark, phase1Opacity, phase1Y, phase2Visible }: IntroSlideProps) {
   // Toutes les couleurs passent par des classes Tailwind tokenisées (cream / charcoal).
   const bgClass = dark ? "bg-charcoal" : "bg-cream";
   const textClass = dark ? "text-cream" : "text-charcoal";
@@ -216,26 +252,36 @@ function IntroSlide({ dark }: { dark: boolean }) {
 
   return (
     <div className={`absolute inset-0 flex flex-col ${bgClass}`}>
-      <div className="flex-1 flex flex-col items-center justify-center text-center px-6">
-        <Pill variant={dark ? "dark" : "light"} className="mb-6 md:mb-8">
-          NOS OFFRES
-        </Pill>
-        {/* Titre — révélation lettre par lettre (flou + fondu), à l'entrée dans le viewport */}
-        <h2
-          ref={titleRef}
-          className={`font-semibold tracking-tight text-[26px] md:text-[36px] lg:text-[46px] max-w-[900px] ${textClass}`}
-          style={{ lineHeight: "130%" }}
-        >
-          <span className="block">
-            <AnimatedLetters text="QUATRE EXPERTISES," startIndex={0} inView={titleInView} />
-          </span>
-          <span className="block">
-            <AnimatedLetters text="UN SEUL INTERLOCUTEUR" startIndex={17} inView={titleInView} />
-          </span>
-        </h2>
+      <div className="relative flex-1 flex flex-col items-center justify-center text-center px-6">
+        {/* Titre en deux temps — les deux lignes se superposent pour occuper la même place.
+            Temps 1 : "QUATRE EXPERTISES" apparaît (fondu + remontée) puis sort par le haut au scroll.
+            Temps 2 : "UN SEUL INTERLOCUTEUR" se révèle lettre par lettre. */}
+        <div ref={titleRef} className="relative w-full max-w-[900px]">
+          {/* Temps 1 — la translation de sortie (scroll) et la remontée d'entrée (viewport)
+              sont sur deux éléments imbriqués pour ne pas se écraser l'une l'autre. */}
+          <motion.div style={{ opacity: phase1Opacity, y: phase1Y }}>
+            <motion.h2
+              className={`font-semibold tracking-tight text-[clamp(26px,6.7532vw_+_0.6753px,52px)] lg:text-[55px] min-[1200px]:text-[64px] ${textClass}`}
+              style={{ lineHeight: "130%" }}
+              initial={{ opacity: 0, y: 40 }}
+              animate={titleInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
+              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+            >
+              QUATRE EXPERTISES
+            </motion.h2>
+          </motion.div>
+
+          {/* Temps 2 — superposé, révélé une fois le temps 1 sorti */}
+          <h2
+            className={`absolute inset-0 flex items-center justify-center font-semibold tracking-tight text-[clamp(26px,6.7532vw_+_0.6753px,52px)] lg:text-[55px] min-[1200px]:text-[64px] ${textClass}`}
+            style={{ lineHeight: "130%" }}
+          >
+            <AnimatedLetters text="UN SEUL INTERLOCUTEUR" startIndex={0} inView={phase2Visible} />
+          </h2>
+        </div>
       </div>
       {/* CTA bas — collé au bas du viewport */}
-      <div className="flex flex-col items-center">
+      <div className="relative flex flex-col items-center">
         <span className={`text-[11px] font-medium tracking-[0.25em] ${subTextClass}`}>
           GLISSER POUR DÉCOUVRIR
         </span>

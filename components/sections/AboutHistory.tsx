@@ -7,7 +7,7 @@ export default function AboutHistory() {
   return (
     <section className="bg-cream py-[80px] min-[840px]:py-[130px] lg:py-[180px]">
       <div
-        className="flex flex-col lg:flex-row lg:justify-between gap-[50px] lg:gap-[100px] pl-[20px] min-[840px]:pl-[60px] pr-[20px] min-[840px]:pr-[clamp(60px,12.963vw_-_48.889px,200px)]"
+        className="flex flex-col lg:flex-row lg:justify-between gap-[50px] lg:gap-[100px] pl-[20px] min-[840px]:pl-[60px] pr-[20px] min-[840px]:pr-[60px] min-[1700px]:pr-[clamp(60px,12.963vw_-_48.889px,200px)]"
       >
         {/* Colonne gauche — sticky */}
         <div
@@ -18,12 +18,12 @@ export default function AboutHistory() {
             flexShrink: 0,
           }}
         >
-          <Pill className="self-start mb-6">NOTRE STUDIO</Pill>
+          <Pill className="self-start mb-4">NOTRE STUDIO</Pill>
           <h2
             className="hidden lg:block font-semibold tracking-tight uppercase text-charcoal text-[55px] min-[1200px]:text-[64px]"
             style={{ lineHeight: "1.05", marginBottom: "40px", whiteSpace: "nowrap" }}
           >
-            Des espaces de<br />vie repenser
+            Repenser les<br />espaces de vie
           </h2>
           <h2
             className="lg:hidden font-semibold tracking-tight uppercase text-charcoal"
@@ -35,11 +35,17 @@ export default function AboutHistory() {
               whiteSpace: "nowrap",
             }}
           >
-            Des espaces de<br />vie repenser
+            Repenser les<br />espaces de vie
           </h2>
-          <p className="text-charcoal max-w-full lg:max-w-[385px]" style={{ fontSize: "14px", lineHeight: "1.75" }}>
+          {/* 440px : au-delà de 430px le texte se répartit sur 3 lignes — « l'élégance, »
+              en fin de 1re ligne (via le <br /> ci-dessous), puis « coexister ? » seul sur
+              la 3e. En dessous, « pas » basculerait sur la dernière ligne. */}
+          <p className="text-charcoal font-medium max-w-full lg:max-w-[440px]" style={{ fontSize: "14px", lineHeight: "1.75" }}>
             JÖRO Studio est né d&rsquo;un constat simple&nbsp;: pourquoi l&rsquo;élégance,
-            l&rsquo;innovation et l&rsquo;environnement ne pourraient-ils pas coexister&nbsp;?
+            {/* Saut réservé au desktop : en dessous de lg, la colonne est trop étroite et
+                le forcer laisserait « l'élégance, » seule sur sa ligne */}
+            <br className="hidden lg:inline" />{" "}
+            l&rsquo;innovation et le respect de l&rsquo;environnement ne pourraient-ils pas coexister&nbsp;?
           </p>
         </div>
 
@@ -58,7 +64,7 @@ export default function AboutHistory() {
             />
           </div>
 
-          <p className="order-2 text-charcoal" style={{ fontSize: "14px", lineHeight: "1.75" }}>
+          <p className="order-2 text-charcoal font-medium" style={{ fontSize: "14px", lineHeight: "1.75" }}>
             Aujourd&rsquo;hui, chaque projet que nous concevons, des bureaux aux lieux de vie, est une
             réponse concrète à ce défi&nbsp;: créer des espaces hybrides, inspirants et durables, pensés
             pour les usages urbains de demain.
@@ -77,7 +83,7 @@ export default function AboutHistory() {
             />
           </div>
 
-          <p className="order-4 min-[840px]:order-3 text-charcoal" style={{ fontSize: "14px", lineHeight: "1.75" }}>
+          <p className="order-4 min-[840px]:order-3 text-charcoal font-medium" style={{ fontSize: "14px", lineHeight: "1.75" }}>
             Notre objectif est clair&nbsp;: devenir leaders de la conception d&rsquo;espaces dédiés aux
             nouveaux usages urbains, bureaux, événementiel, hôtellerie…
           </p>
