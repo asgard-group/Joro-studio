@@ -33,28 +33,35 @@ export default function ServicesAll() {
   useEffect(() => {
     const calc = () => {
       if (!containerRef.current) return;
-      const top = containerRef.current.offsetTop;
+      // getBoundingClientRect + scrollY plutôt que offsetTop : indépendant de
+      // l'offsetParent et recalculé après le chargement des médias, sinon les
+      // seuils se décalent quand la mise en page bouge encore.
+      const top = containerRef.current.getBoundingClientRect().top + window.scrollY;
       const vh = window.innerHeight;
       setRanges({
         // Slide 1 (cream) → Slide 2 (charcoal) : crossfade court
         dissolveStart: top + vh * 0.3,
         dissolveEnd: top + vh * 0.45,
-        // Temps 1 — "QUATRE EXPERTISES" sort par le haut
-        phase1ExitStart: top + vh * 0.3,
-        phase1ExitEnd: top + vh * 0.5,
+        // Temps 1 — "QUATRE EXPERTISES" tient l'écran puis sort par le haut
+        phase1ExitStart: top + vh * 0.6,
+        phase1ExitEnd: top + vh * 0.9,
         // Temps 2 — "UN SEUL INTERLOCUTEUR" se révèle lettre par lettre
-        phase2Start: top + vh * 0.48,
-        // Fade out du contenu intro avant le split (laisse au temps 2 le temps de se jouer)
-        fadeOutStart: top + vh * 0.95,
-        fadeOutEnd: top + vh * 1.15,
+        phase2Start: top + vh * 0.87,
+        // Fade out de l'intro — le temps 2 reste lisible ~1 écran avant de partir
+        fadeOutStart: top + vh * 1.9,
+        fadeOutEnd: top + vh * 2.15,
         // Split des panneaux pour révéler DESIGN & BUILD
-        splitStart: top + vh * 1.15,
-        splitEnd: top + vh * 2.2,
+        splitStart: top + vh * 2.15,
+        splitEnd: top + vh * 3.0,
       });
     };
     calc();
     window.addEventListener("resize", calc);
-    return () => window.removeEventListener("resize", calc);
+    window.addEventListener("load", calc);
+    return () => {
+      window.removeEventListener("resize", calc);
+      window.removeEventListener("load", calc);
+    };
   }, []);
 
   useEffect(() => {
@@ -87,8 +94,10 @@ export default function ServicesAll() {
   const rightX = useTransform(scrollY, [ranges.splitStart, ranges.splitEnd], ["0%", "100%"]);
 
   return (
-    <div ref={containerRef} className="relative" style={{ height: "420vh" }}>
-      <div id="design-build" style={{ position: "absolute", top: "calc(2.2 * 100vh)" }} />
+    // 520vh (et non 420) : chaque temps de l'intro dispose d'assez de scroll pour
+    // rester lisible avant de céder la place au suivant.
+    <div ref={containerRef} className="relative" style={{ height: "520vh" }}>
+      <div id="design-build" style={{ position: "absolute", top: "calc(3 * 100vh)" }} />
       <div
         data-navbar-theme="dark"
         className="sticky top-0 h-screen overflow-hidden bg-charcoal"
@@ -149,14 +158,16 @@ export default function ServicesAll() {
           </div>
         </div>
 
-        {/* Panneaux charcoal (toujours opaques) — glissent au split (z-20), sur toutes tailles d'écran */}
+        {/* Panneaux charcoal (toujours opaques) — glissent au split (z-20), sur toutes tailles
+            d'écran. `will-change: transform` force la promotion en couche composite : sans lui,
+            ces deux grands aplats sont repeints à chaque frame du scroll. */}
         <motion.div
           className="absolute top-0 left-0 h-full bg-charcoal z-20"
-          style={{ width: "50%", x: leftX }}
+          style={{ width: "50%", x: leftX, willChange: "transform" }}
         />
         <motion.div
           className="absolute top-0 right-0 h-full bg-charcoal z-20"
-          style={{ width: "50%", x: rightX }}
+          style={{ width: "50%", x: rightX, willChange: "transform" }}
         />
 
         {/* Slide 2 (charcoal + texte cream) — derrière slide 1, fade out global (z-30) */}
