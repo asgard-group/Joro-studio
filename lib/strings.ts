@@ -82,3 +82,18 @@ export const homeHeroStrings = {
     line3: "leurs espaces.",
   },
 } as const;
+
+// Section CTA (bas de la home) — 2 blocs : prise de rendez-vous et newsletter.
+export const ctaStrings = {
+  appointment: {
+    title: "Rencontrez notre équipe dès maintenant",
+    button: "Prendre rendez-vous",
+  },
+  newsletter: {
+    titleLine1: "Tenez vous aux courants",
+    titleLine2: "des derniers projets",
+    emailLabel: "E-mail",
+    emailPlaceholder: "E-mail",
+    button: "Rejoindre",
+  },
+} as const;

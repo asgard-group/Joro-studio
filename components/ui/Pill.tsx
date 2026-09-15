@@ -25,7 +25,7 @@ interface PillProps {
  */
 export default function Pill({ children, variant = "light", dotSide = "left", className = "" }: PillProps) {
   const textClass = variant === "dark" ? "text-cream" : "text-charcoal";
-  const dot = <span className="w-2 h-2 rounded-full bg-taupe shrink-0" />;
+  const dot = <span className="w-[6px] h-[6px] rounded-full bg-taupe shrink-0" />;
 
   return (
     <div className={`inline-flex items-center gap-[6px] ${className}`}>

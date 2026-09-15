@@ -101,7 +101,7 @@ export default function Footer() {
     <footer className="bg-[#1C2626] text-[#FAF6ED] -mt-px">
 
       {/* ── Desktop ─────────────────────────────────────────────── */}
-      <div className="hidden flex-col gap-[128px] p-6 md:flex">
+      <div className="hidden flex-col gap-[128px] py-6 px-[32px] md:flex">
         <div className="flex flex-row items-start justify-between">
           <FooterColumn title="Nos offres" items={offresLinks} />
           <FooterColumn title="Liens rapides" items={quickLinks} />

@@ -41,11 +41,10 @@ export default function AboutHistory() {
               en fin de 1re ligne (via le <br /> ci-dessous), puis « coexister ? » seul sur
               la 3e. En dessous, « pas » basculerait sur la dernière ligne. */}
           <p className="text-charcoal font-medium max-w-full lg:max-w-[440px]" style={{ fontSize: "14px", lineHeight: "1.75" }}>
-            JÖRO Studio est né d&rsquo;un constat simple&nbsp;: pourquoi l&rsquo;élégance,
-            {/* Saut réservé au desktop : en dessous de lg, la colonne est trop étroite et
-                le forcer laisserait « l'élégance, » seule sur sa ligne */}
-            <br className="hidden lg:inline" />{" "}
-            l&rsquo;innovation et le respect de l&rsquo;environnement ne pourraient-ils pas coexister&nbsp;?
+            JÖRO Studio est né d&rsquo;un constat&nbsp;: pourquoi l&rsquo;élégance,
+            l&rsquo;innovation et l&rsquo;environnement ne pourraient-ils pas coexister&nbsp;?
+            Ces exigences sont pensées séparément, voire opposées, comme s&rsquo;il fallait
+            choisir entre un design ambitieux et une démarche responsable.
           </p>
         </div>
 
@@ -53,10 +52,10 @@ export default function AboutHistory() {
         <div className="min-w-0 lg:flex-[0_1_779px] min-[1740px]:flex-[0_1_clamp(779px,39.1463vw_+_97.85px,1100px)] grid grid-cols-1 min-[840px]:grid-cols-2 gap-[50px] lg:gap-x-[40px] lg:gap-y-[60px]">
           {/* Photo 1 — texture / chantier */}
           <div
-            className="order-1 col-span-1 min-[840px]:col-span-2 relative w-full lg:max-w-[777px] min-[1740px]:max-w-[clamp(777px,39.1463vw_+_95.85px,1098px)] h-[clamp(224px,41.1402vw_+_69.7242px,491px)]"
+            className="order-1 col-span-1 min-[840px]:col-span-2 relative w-full lg:max-w-[777px] min-[1740px]:max-w-[clamp(777px,39.1463vw_+_95.85px,1098px)] h-[clamp(224px,41.1402vw_+_69.7242px,491px)] lg:h-[490px]"
           >
             <Image
-              src="/images/2024-01-Retines-Pigalle-_23A2312-web 2.webp"
+              src="/images/sutdio1.png"
               alt="JÖRO Studio — chantier"
               fill
               className="object-cover"
@@ -65,17 +64,17 @@ export default function AboutHistory() {
           </div>
 
           <p className="order-2 text-charcoal font-medium" style={{ fontSize: "14px", lineHeight: "1.75" }}>
-            Aujourd&rsquo;hui, chaque projet que nous concevons, des bureaux aux lieux de vie, est une
+            Chaque projet que nous concevons, des bureaux aux lieux de vie, est une
             réponse concrète à ce défi&nbsp;: créer des espaces hybrides, inspirants et durables, pensés
-            pour les usages urbains de demain.
+            pour les nouveaux usages urbains de demain.
           </p>
 
           {/* Photo 2 — parquet (après le 1er texte sur mobile) */}
           <div
-            className="order-3 min-[840px]:order-4 col-span-1 min-[840px]:col-span-2 relative w-full lg:max-w-[779px] min-[1740px]:max-w-[clamp(779px,39.1463vw_+_97.85px,1100px)] h-[clamp(308px,56.7026vw_+_95.3652px,676px)]"
+            className="order-3 min-[840px]:order-4 col-span-1 min-[840px]:col-span-2 relative w-full lg:max-w-[779px] min-[1740px]:max-w-[clamp(779px,39.1463vw_+_97.85px,1100px)] h-[clamp(308px,56.7026vw_+_95.3652px,676px)] lg:h-[692px]"
           >
             <Image
-              src="/images/2024-10-Retines-Asgard-parquet-Pigalle-DSC04495.webp"
+              src="/images/sutdio2.png"
               alt="JÖRO Studio — pose de parquet"
               fill
               className="object-cover"
@@ -84,7 +83,7 @@ export default function AboutHistory() {
           </div>
 
           <p className="order-4 min-[840px]:order-3 text-charcoal font-medium" style={{ fontSize: "14px", lineHeight: "1.75" }}>
-            Notre objectif est clair&nbsp;: devenir leaders de la conception d&rsquo;espaces dédiés aux
+            Notre objectif&nbsp;: devenir leaders de la conception d&rsquo;espaces dédiés aux
             nouveaux usages urbains, bureaux, événementiel, hôtellerie…
           </p>
         </div>

@@ -40,7 +40,7 @@ export default function MiniNavbar({ visible, dark, onOpenMenu, onOpenContact }:
       style={{ pointerEvents: visible ? "auto" : "none" }}
       aria-hidden={!visible}
     >
-      <div className="flex items-center justify-between px-[20px] min-[840px]:px-[40px] min-[1200px]:px-[60px] py-[16px]">
+      <div className="flex items-center justify-between px-[20px] min-[840px]:px-[32px] py-[16px]">
         {/* Gauche — monogramme */}
         <Image
           src="/images/logos/monograme.svg"
