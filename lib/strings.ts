@@ -40,19 +40,6 @@ export const headerStrings = {
   contactPanel: {
     closeAriaLabel: "Fermer le formulaire de contact",
     dialogAriaLabel: "Formulaire de contact",
-    title: "Parlons de votre projet",
-    intro: "Décrivez-nous votre projet, notre équipe revient vers vous rapidement.",
-    fields: {
-      projectDescription: "Courte présentation du projet",
-      projectType: "Typologie du projet",
-      budget: "Budget estimé",
-      surface: "Mètre carré",
-      firstName: "Prénom",
-      lastName: "Nom",
-      email: "Email",
-      phone: "Numéro de téléphone",
-    },
-    submit: "Envoyer la demande",
   },
 } as const;
 
