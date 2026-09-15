@@ -292,12 +292,11 @@ function IntroSlide({ dark, phase1Opacity, phase1Y, phase2Visible }: IntroSlideP
         </div>
       </div>
       {/* CTA bas — collé au bas du viewport */}
-      <div className="relative flex flex-col items-center">
-        <span className={`text-[11px] font-medium tracking-[0.25em] ${subTextClass}`}>
+      <div className="relative flex flex-col items-center gap-2">
+        <span className={`text-[11px] font-medium ${subTextClass}`}>
           GLISSER POUR DÉCOUVRIR
         </span>
-        <div className="h-5" />
-        <div className={`w-px h-10 ${lineBgClass}`} />
+        <div className={`w-px h-8 ${lineBgClass}`} />
       </div>
     </div>
   );

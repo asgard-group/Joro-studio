@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 import type { WorkItem } from "@/types";
 
@@ -8,44 +8,12 @@ interface Props {
   items: WorkItem[];
 }
 
-// Dimensions exactes de la maquette Figma. Les bordures (150/70/20) sont identiques aux
-// deux formats ; seules la taille de la carte et les tailles de texte changent au point de
-// bascule 1200px (à partir duquel le panneau droit apparaît aussi).
-const BREAKPOINT = 1200;
-const BORDER_TOP = 150;
-const BORDER_BOTTOM = 70;
-const BORDER_SIDE = 20;
-const ZONE_PADDING = 20;
-const CARD_MARGIN = 24; // marge de sécurité de chaque côté avant de devoir réduire
-
-const CARD_DESKTOP = { w: 350, h: 450, titleSize: 32, titleLineHeight: 44.8, nameSize: 24, nameLineHeight: 45.6 };
-const CARD_MOBILE = { w: 280, h: 400, titleSize: 24, titleLineHeight: 33.6, nameSize: 16, nameLineHeight: 30.4 };
-
 export default function FeaturedWork({ items }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   // Pour chaque item : { left, right }
   const itemRefs = useRef<Array<{ left: HTMLDivElement | null; right: HTMLDivElement | null }>>(
     items.map(() => ({ left: null, right: null }))
   );
-  const [isWideLayout, setIsWideLayout] = useState(false);
-  const [cardScale, setCardScale] = useState(1);
-  const card = isWideLayout ? CARD_DESKTOP : CARD_MOBILE;
-
-  useEffect(() => {
-    // ≥1200px : carte "desktop" + panneau droit visible, colonne gauche = 50vw.
-    // <1200px : carte "mobile" (plus petite, textes réduits), panneau droit masqué, colonne pleine largeur.
-    function calc() {
-      const wide = window.matchMedia(`(min-width: ${BREAKPOINT}px)`).matches;
-      setIsWideLayout(wide);
-      const columnWidth = wide ? window.innerWidth / 2 : window.innerWidth;
-      const available = columnWidth - CARD_MARGIN * 2;
-      const w = wide ? CARD_DESKTOP.w : CARD_MOBILE.w;
-      setCardScale(Math.min(1, available / w));
-    }
-    calc();
-    window.addEventListener("resize", calc);
-    return () => window.removeEventListener("resize", calc);
-  }, []);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -98,7 +66,7 @@ export default function FeaturedWork({ items }: Props) {
             zIndex: i + 1,
           }}
         >
-          {/* Colonne gauche — photo */}
+          {/* Colonne gauche — photo plein cadre */}
           <div
             ref={(el) => { itemRefs.current[i].left = el; }}
             style={{
@@ -108,7 +76,6 @@ export default function FeaturedWork({ items }: Props) {
               overflow: "hidden",
             }}
           >
-            {/* Photo plein fond */}
             <Image
               src={item.coverImage}
               alt={item.title}
@@ -117,51 +84,27 @@ export default function FeaturedWork({ items }: Props) {
               sizes="50vw"
             />
 
-            {/* Carte projet blanche — Figma : 350 × 450 (≥1200px) / 280 × 400 (<1200px),
-                rétrécit en bloc via scale() en cas de manque de place (jamais le texte) */}
-            <div
-              style={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: `translate(-50%, -50%) scale(${cardScale})`,
-                transformOrigin: "center",
-                width: card.w,
-                height: card.h,
-                background: "#fff",
-                overflow: "hidden",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-                boxShadow: "0px 2px 8px -2px rgba(38, 34, 30, 0.08), 0px 30px 70px -25px rgba(38, 34, 30, 0.28)",
-              }}
-            >
-              {/* Zone haute — tags centrés dans la bordure haute (150px, padding 20)
-                  (divs, pas des <p> : la règle globale mobile "p, li { font-size: 14px !important }"
-                  ne doit pas s'appliquer ici — ces tailles Figma sont figées, quel que soit l'écran) */}
-              <div style={{ alignSelf: "stretch", height: BORDER_TOP, padding: ZONE_PADDING, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <div style={{ textAlign: "center", whiteSpace: "nowrap", color: "black", fontSize: card.titleSize, fontWeight: 500, textTransform: "uppercase", lineHeight: `${card.titleLineHeight}px` }}>
-                  {item.tags[0]}
-                  <br />
-                  {item.tags[1]}
-                </div>
-              </div>
+            {/* Carte projet — uniquement en dessous de 1200px, où la colonne droite
+                est masquée : sans elle, le titre du projet ne serait affiché nulle part. */}
+            <div className="absolute inset-0 flex items-center justify-center min-[1200px]:hidden">
+              <ProjectCard item={item} className="w-[min(300px,80%)]" />
+            </div>
 
-              {/* Photo — bordures 20px sur les côtés, 150 en haut / 70 en bas */}
-              <div style={{ position: "relative", width: card.w - BORDER_SIDE * 2, height: card.h - BORDER_TOP - BORDER_BOTTOM, margin: "0 auto", flexShrink: 0 }}>
-                <Image src={item.coverImage} alt="" fill className="object-cover" sizes={`${card.w - BORDER_SIDE * 2}px`} />
-              </div>
-
-              {/* Zone basse — nom du projet centré dans la bordure basse (70px, padding 20) */}
-              <div style={{ alignSelf: "stretch", height: BORDER_BOTTOM, paddingLeft: ZONE_PADDING, paddingRight: ZONE_PADDING, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <div style={{ whiteSpace: "nowrap", textAlign: "center", color: "black", fontSize: card.nameSize, fontWeight: 500, lineHeight: `${card.nameLineHeight}px`, textTransform: "capitalize" }}>
-                  {item.title.toLowerCase()}
+            {/* Catégorie / typologie — en bas à gauche, posé sur la photo */}
+            <div className="absolute bottom-0 left-0 p-6 min-[1200px]:p-[30px]">
+              {item.tags.slice(0, 2).map((tag) => (
+                <div
+                  key={tag}
+                  className="text-[12px] min-[1200px]:text-[14px] font-medium uppercase leading-[1.5] text-white"
+                >
+                  {tag}
                 </div>
-              </div>
+              ))}
             </div>
           </div>
 
-          {/* Colonne droite — fond couleur + image détail + description (masquée en dessous de 1200px) */}
+          {/* Colonne droite — fond couleur + carte projet + description
+              (masquée en dessous de 1200px) */}
           <div
             ref={(el) => { itemRefs.current[i].right = el; }}
             className="hidden min-[1200px]:block"
@@ -175,41 +118,94 @@ export default function FeaturedWork({ items }: Props) {
             {/* Fond couleur */}
             <div style={{ position: "absolute", inset: 0, background: item.accentColor ?? "#96461F" }} />
 
-            {/* Bloc image détail + description — centré (Figma : image 400 × 400, gap 15) */}
             {(() => {
               const isDark = !item.accentColor || item.accentColor !== "#F3F2ED";
               const textColor = isDark ? "#FFFFFF" : "rgba(0, 0, 0, 0.6)";
               return (
-                <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: "min(400px, 78%)", display: "flex", flexDirection: "column", alignItems: "center", gap: 15 }}>
-                  {/* Image détail — carrée 400 × 400 */}
-                  <div style={{ position: "relative", width: "100%", aspectRatio: "1 / 1" }}>
-                    {item.rightImage && (
-                      <Image src={item.rightImage} alt="" fill className="object-cover" sizes="400px" />
-                    )}
-                  </div>
-                  {/* Description — 12px, limitée à 3 lignes */}
-                  <p
-                    style={{
-                      margin: 0,
-                      alignSelf: "stretch",
-                      color: textColor,
-                      fontSize: "12px",
-                      fontWeight: 400,
-                      lineHeight: "19.2px",
-                      display: "-webkit-box",
-                      WebkitBoxOrient: "vertical",
-                      WebkitLineClamp: 3,
-                      overflow: "hidden",
-                    }}
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  {/* Largeur du bloc : 200px de marge de chaque côté de la colonne (pas de
+                      px-* sur le parent, sinon ces 200px s'additionneraient à son padding),
+                      plafonnée à 457 (largeur Figma, atteinte vers 1920px) et avec un
+                      plancher à 280 pour rester lisible sur les petits écrans desktop.
+                      Gap 26 entre la carte et la description. */}
+                  <div
+                    className="flex flex-col gap-[26px]"
+                    style={{ width: "max(280px, min(457px, 100% - 400px))" }}
                   >
-                    {item.shortDescription ?? item.description}
-                  </p>
+                    <ProjectCard item={item} className="w-full" />
+                    {/* Description — sous la carte, alignée sur son bord gauche.
+                        Figma indique `white` ; on conserve la teinte sombre de repli
+                        pour « Châteaudun », dont le fond d'accent est crème (#F3F2ED)
+                        et sur lequel du blanc serait illisible. */}
+                    <div
+                      style={{
+                        color: textColor,
+                        fontSize: "16px",
+                        fontWeight: 400,
+                        lineHeight: "1.6",
+                        display: "-webkit-box",
+                        WebkitBoxOrient: "vertical",
+                        WebkitLineClamp: 3,
+                        overflow: "hidden",
+                      }}
+                    >
+                      {item.shortDescription ?? item.description}
+                    </div>
+                  </div>
                 </div>
               );
             })()}
           </div>
         </div>
       ))}
+    </div>
+  );
+}
+
+// ── Carte crème : titre du projet puis photo ──────────────────
+// Dimensions Figma (référence 457 de large) : padding 26 sur les côtés, 19 en
+// haut, 23 en bas, gap 24, titre 46/65.93 en 600, photo en 406×403 (~carrée).
+// À partir de 1200px, toutes ces valeurs sont exprimées en `cqw` (% de la
+// largeur propre de la carte) au lieu de px fixes : quand la marge de 200px
+// (cf. plus haut) réduit la carte sous 457px, chaque mesure rétrécit dans la
+// même proportion — la vignette garde exactement sa forme Figma, juste plus
+// petite, au lieu de se déformer (ce qui arrivait avant : la photo gardait une
+// hauteur fixe de 403px pendant que sa largeur, elle, rétrécissait).
+// Un conteneur ne peut pas se mesurer par rapport à lui-même : `containerType`
+// est donc posé sur la boîte extérieure (`bg-cream` + ombre), et les `cqw` sont
+// utilisés sur son contenu (l'élément suivant), qui la mesure comme ancêtre.
+// En dessous de 1200px, tailles fixes classiques (la carte y est déjà fluide
+// via w-[min(300px,80%)] côté appelant, sans le même risque de déformation).
+// Les textes sont des `div` et non des `p` : la règle globale mobile
+// `p, li { font-size: 14px !important }` écraserait les tailles fixées ici.
+function ProjectCard({ item, className = "" }: { item: WorkItem; className?: string }) {
+  return (
+    <div
+      className={`bg-cream ${className}`}
+      style={{
+        boxShadow:
+          "0px 2px 8px -2px rgba(38, 34, 30, 0.08), 0px 30px 70px -25px rgba(38, 34, 30, 0.28)",
+        containerType: "inline-size",
+      }}
+    >
+      <div className="flex flex-col gap-4 p-5 min-[1200px]:gap-[5.25cqw] min-[1200px]:px-[5.69cqw] min-[1200px]:pb-[5.03cqw] min-[1200px]:pt-[4.16cqw]">
+        {/* min-height plutôt que height fixe : un titre long peut passer sur deux
+            lignes sans être rogné par l'`overflow: hidden` de la carte. */}
+        <div className="flex flex-col justify-center text-center text-[24px] font-semibold capitalize leading-[1.2] text-charcoal min-[1200px]:min-h-[18.16cqw] min-[1200px]:text-[10.07cqw] min-[1200px]:leading-[14.43cqw]">
+          {item.title.toLowerCase()}
+        </div>
+        {/* aspect-ratio (et non une hauteur fixe) : la forme de la photo reste
+            proportionnelle à sa propre largeur à toutes les tailles. */}
+        <div className="relative w-full aspect-[406/403]">
+          <Image
+            src={item.rightImage ?? item.coverImage}
+            alt=""
+            fill
+            className="object-cover"
+            sizes="406px"
+          />
+        </div>
+      </div>
     </div>
   );
 }

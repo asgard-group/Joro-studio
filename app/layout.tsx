@@ -5,6 +5,7 @@ import { buildMetadata } from "@/lib/metadata";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import ConsentProvider from "@/components/providers/ConsentProvider";
+import ContactPanelProvider from "@/components/providers/ContactPanelProvider";
 import GoogleAnalytics from "@/components/providers/GoogleAnalytics";
 import CookieBanner from "@/components/ui/CookieBanner";
 import SmoothScroll from "@/components/providers/SmoothScroll";
@@ -34,12 +35,14 @@ export default function RootLayout({
       <body className="flex min-h-screen flex-col">
         <ConsentProvider>
           <GoogleAnalytics />
-          <SmoothScroll>
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
-            <CookieBanner />
-          </SmoothScroll>
+          <ContactPanelProvider>
+            <SmoothScroll>
+              <Header />
+              <main className="flex-1">{children}</main>
+              <Footer />
+              <CookieBanner />
+            </SmoothScroll>
+          </ContactPanelProvider>
         </ConsentProvider>
       </body>
     </html>

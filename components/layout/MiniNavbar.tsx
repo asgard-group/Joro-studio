@@ -4,7 +4,6 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { type CSSProperties } from "react";
 import { headerStrings } from "@/lib/strings";
-import ComingSoonLink from "@/components/ui/ComingSoonLink";
 
 const LABEL_STYLE: CSSProperties = {
   lineHeight: "100%",
@@ -15,16 +14,20 @@ const LABEL_STYLE: CSSProperties = {
 const ICON_FILTER = "brightness(0) invert(1) sepia(1) saturate(0) brightness(0.953)";
 
 // Bouton Contact — même style que l'ancienne pilule mais sans radius (angles droits).
+// Survol volontairement en valeur littérale et non en `taupe-600` : cette nuance est
+// pensée pour du texte cream (cf. Button.tsx), et donnerait ici un noir sur fond
+// sombre illisible. Ce ton reste une nuance du taupe, lisible avec `text-charcoal`.
 const contactClasses =
-  "inline-flex items-center gap-0 bg-taupe px-[16px] py-[10px] text-[13px] font-medium uppercase text-cream transition-colors duration-200 hover:bg-taupe-600";
+  "inline-flex items-center gap-0 bg-taupe px-[16px] py-[10px] text-[13px] font-medium uppercase text-charcoal transition-colors duration-200 hover:bg-[#A7A296]";
 
 interface Props {
   visible: boolean;
   dark: boolean;
   onOpenMenu: () => void;
+  onOpenContact: () => void;
 }
 
-export default function MiniNavbar({ visible, dark, onOpenMenu }: Props) {
+export default function MiniNavbar({ visible, dark, onOpenMenu, onOpenContact }: Props) {
   // Traits du menu : cream sur section sombre, charcoal sur section claire.
   const lineColor = dark ? "#F3F2ED" : "#1C2626";
 
@@ -50,9 +53,9 @@ export default function MiniNavbar({ visible, dark, onOpenMenu }: Props) {
 
         {/* Droite — Contact (à la place de l'ancien Menu) + icône menu (2 traits) */}
         <div className="flex items-center gap-[16px]">
-          <ComingSoonLink className={contactClasses} style={LABEL_STYLE}>
+          <button type="button" onClick={onOpenContact} className={contactClasses} style={LABEL_STYLE}>
             {headerStrings.contact}
-          </ComingSoonLink>
+          </button>
 
           <button
             type="button"

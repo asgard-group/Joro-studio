@@ -5,7 +5,7 @@
 @layer base {
   :root {
     --color-cream: #F3F2ED;
-    --color-taupe: #917C73;
+    --color-taupe: #BAB6AA;
     --color-charcoal: #1C2626;
   }
 
@@ -236,3 +236,68 @@
 @media (max-width: 768px) {
   .joro-menu__left { padding: 32px 24px 40px; }
 }
+
+/* ContactPanel — même animation que .joro-menu, en miroir horizontal : le
+   panneau s'ouvre depuis le bord DROIT et balaie vers la gauche (au lieu de
+   gauche → droite). Fermé : clip-path réduit à une ligne collée au bord droit
+   (les 4 points à x=100%, symétrique du x=0 de .joro-menu) + léger décalage
+   vers la droite (+5% au lieu de -5%). Mêmes durée/easing que .joro-menu. */
+.joro-contact {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #1C2626;
+  clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%);
+  transform: translateX(5%);
+  transition: clip-path 1s cubic-bezier(.25,.74,.22,.99), transform 1s cubic-bezier(.25,.74,.22,.99);
+  pointer-events: none;
+}
+.joro-contact.is-open {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  transform: translateX(0);
+  pointer-events: auto;
+}
+.joro-contact__body {
+  position: absolute;
+  inset: 0;
+  display: flex;
+}
+/* Panneau photo — à gauche cette fois (miroir de .joro-menu__preview qui est à
+   droite), masqué sur mobile. Une seule photo statique : pas de balayage au
+   survol, elle apparaît simplement via le clip-path du panneau parent. */
+.joro-contact__photo {
+  display: none;
+  position: relative;
+  flex: 0 0 50%;
+  overflow: hidden;
+}
+.joro-contact__photo-img {
+  object-fit: cover;
+}
+.joro-contact__form-wrap {
+  position: relative;
+  background: #1C2626;
+  display: flex;
+  flex-direction: column;
+  padding: 0 60px;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+}
+@media (min-width: 900px) {
+  .joro-contact__photo { display: block; }
+  .joro-contact__form-wrap { width: 50%; }
+}
+@media (max-width: 768px) {
+  .joro-contact__form-wrap { padding: 32px 24px 40px; }
+}
+.joro-contact__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  background: #1C2626;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+.joro-contact__backdrop.is-visible { opacity: 0.5; }
