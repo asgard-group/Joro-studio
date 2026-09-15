@@ -31,7 +31,6 @@ export default function CTA() {
       <motion.div className="absolute inset-x-0" style={{ top: "-15%", height: "130%", y }}>
         <Image src="/images/CTA.png" alt="" fill className="object-cover" priority />
       </motion.div>
-      <div className="absolute inset-0" style={{ backgroundColor: "rgba(28, 38, 38, 0.35)" }} />
 
       {/* Mobile : hauteur au contenu, blocs empilés avec un gap fixe de 80px.
           Desktop (md+) : centré dans la section pleine hauteur, mais le conteneur
