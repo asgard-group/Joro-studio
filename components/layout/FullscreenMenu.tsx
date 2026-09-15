@@ -60,7 +60,11 @@ export default function FullscreenMenu({ isOpen, onClose }: Props) {
   return (
     <>
       <div className={`joro-menu__backdrop${isOpen ? " is-visible" : ""}`} aria-hidden="true" />
-      <div className={`joro-menu${isOpen ? " is-open" : ""}`} role="dialog" aria-modal="true" aria-label="Menu principal">
+      {/* Le bouton Menu est maintenant à droite de la navbar (à côté du sélecteur de
+          langue) : le panneau s'ouvre donc depuis la droite — on réutilise la classe
+          d'animation `.joro-contact` (balayage droite → gauche), qui n'a rien à voir
+          avec le panneau de contact lui-même, seulement avec son sens d'ouverture. */}
+      <div className={`joro-contact${isOpen ? " is-open" : ""}`} role="dialog" aria-modal="true" aria-label="Menu principal">
         {/* Top bar — survole le panneau gauche et la photo, en overlay */}
         <div className="absolute inset-x-0 top-0 z-20 px-[20px] min-[840px]:px-[40px] min-[1200px]:px-[60px]">
           <div className="flex items-center pt-[40px] pb-[20px]">
@@ -87,38 +91,11 @@ export default function FullscreenMenu({ isOpen, onClose }: Props) {
           </div>
         </div>
 
-        {/* Body */}
+        {/* Body — ordre inversé par rapport à avant : le panneau s'ouvrant
+            désormais depuis la droite, la photo (côté de l'ouverture) passe à
+            gauche et les liens de navigation à droite. */}
         <div className="joro-menu__body">
-          {/* Left — nav + social */}
-          <div className="joro-menu__left">
-            <nav aria-label="Menu principal">
-              <ul className="joro-menu__nav">
-                {menuLinks.map((link, index) => (
-                  <li
-                    key={link.href}
-                    onMouseEnter={() => activate(index)}
-                    onFocus={() => activate(index)}
-                  >
-                    {link.href === "/contact" ? (
-                      <ComingSoonLink className="joro-menu__nav-link" block>
-                        {link.label}
-                      </ComingSoonLink>
-                    ) : link.href === "/#nos-realisations" ? (
-                      <Link href={link.href} onClick={handleRealisationsClick} className="joro-menu__nav-link">
-                        {link.label}
-                      </Link>
-                    ) : (
-                      <Link href={link.href} onClick={onClose} className="joro-menu__nav-link">
-                        {link.label}
-                      </Link>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </div>
-
-          {/* Droite — photo qui change selon le lien survolé à gauche, effet de balayage (clip-path) */}
+          {/* Gauche — photo qui change selon le lien survolé à droite, effet de balayage (clip-path) */}
           <div className="joro-menu__preview" aria-hidden="true">
             {menuLinks.map((link, index) => {
               const state =
@@ -145,6 +122,35 @@ export default function FullscreenMenu({ isOpen, onClose }: Props) {
                 </div>
               );
             })}
+          </div>
+
+          {/* Droite — nav + social */}
+          <div className="joro-menu__left">
+            <nav aria-label="Menu principal">
+              <ul className="joro-menu__nav">
+                {menuLinks.map((link, index) => (
+                  <li
+                    key={link.href}
+                    onMouseEnter={() => activate(index)}
+                    onFocus={() => activate(index)}
+                  >
+                    {link.href === "/contact" ? (
+                      <ComingSoonLink className="joro-menu__nav-link" block>
+                        {link.label}
+                      </ComingSoonLink>
+                    ) : link.href === "/#nos-realisations" ? (
+                      <Link href={link.href} onClick={handleRealisationsClick} className="joro-menu__nav-link">
+                        {link.label}
+                      </Link>
+                    ) : (
+                      <Link href={link.href} onClick={onClose} className="joro-menu__nav-link">
+                        {link.label}
+                      </Link>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </nav>
           </div>
         </div>
 

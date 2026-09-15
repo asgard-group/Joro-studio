@@ -180,7 +180,7 @@ export default function Testimonials() {
                     sur la photo centrale, révélée par le léger retrait de l'image (scale 0.9) */}
                 <div
                   className="relative w-full h-full overflow-hidden transition-colors duration-500"
-                  style={{ backgroundColor: frameColors[t.id] ?? "#917C73" }}
+                  style={{ backgroundColor: frameColors[t.id] ?? "#BAB6AA" }}
                 >
                   <div
                     className="relative w-full h-full transition-transform duration-500 ease-[cubic-bezier(0.77,0,0.175,1)]"

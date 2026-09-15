@@ -2,11 +2,14 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { type CSSProperties, useState, useEffect, useRef, useId } from "react";
+import { usePathname } from "next/navigation";
+import { type CSSProperties, type MouseEvent as ReactMouseEvent, useState, useEffect, useRef } from "react";
 import { headerStrings } from "@/lib/strings";
 import FullscreenMenu from "@/components/layout/FullscreenMenu";
 import MiniNavbar from "@/components/layout/MiniNavbar";
-import ComingSoonLink from "@/components/ui/ComingSoonLink";
+import ContactPanel from "@/components/layout/ContactPanel";
+import { useContactPanel } from "@/components/providers/ContactPanelProvider";
+import { useIsDesktop } from "@/hooks/useIsDesktop";
 
 const LABEL_STYLE: CSSProperties = {
   lineHeight: "100%",
@@ -21,54 +24,57 @@ const iconFilter = (dark: boolean) =>
     ? "brightness(0) invert(1) sepia(1) saturate(0) brightness(0.953)"
     : "brightness(0) invert(1) sepia(1) hue-rotate(155deg) saturate(400%) brightness(0.14)";
 
+// Sections pinnées affichées directement dans la navbar (à droite), à la
+// place de l'ancien sélecteur de langue.
+const pinnedSections = [
+  { key: "studio", label: headerStrings.pinnedNav.studio, href: "/#notre-studio" },
+  { key: "services", label: headerStrings.pinnedNav.services, href: "/#nos-offres" },
+  { key: "projets", label: headerStrings.pinnedNav.projets, href: "/#nos-realisations" },
+] as const;
+
 interface NavContentProps {
   dark: boolean;
-  langOpen: boolean;
-  setLangOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
-  langTriggerId: string;
   onOpenMenu: () => void;
+  onOpenContact: () => void;
 }
 
-function NavContent({ dark, langOpen, setLangOpen, langTriggerId, onOpenMenu }: NavContentProps) {
-  const langRef = useRef<HTMLDivElement>(null);
+function NavContent({ dark, onOpenMenu, onOpenContact }: NavContentProps) {
+  const pathname = usePathname();
 
-  useEffect(() => {
-    if (!langOpen) return;
-    function handleClick(e: MouseEvent) {
-      if (langRef.current && !langRef.current.contains(e.target as Node)) {
-        setLangOpen(false);
-      }
-    }
-    function handleKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') setLangOpen(false);
-    }
-    document.addEventListener('mousedown', handleClick);
-    document.addEventListener('keydown', handleKey);
-    return () => {
-      document.removeEventListener('mousedown', handleClick);
-      document.removeEventListener('keydown', handleKey);
-    };
-  }, [langOpen, setLangOpen]);
+  // Même compensation que FullscreenMenu/Footer : l'ancre #nos-realisations
+  // est décalée par le -mt-[250vh] appliqué à FeaturedWork.
+  function handleProjetsClick(e: ReactMouseEvent) {
+    if (pathname !== "/") return;
+    e.preventDefault();
+
+    const target = document.getElementById("nos-realisations");
+    if (!target) return;
+
+    const targetY = target.getBoundingClientRect().top + window.scrollY + window.innerHeight;
+    window.history.pushState(null, "", "/#nos-realisations");
+    window.scrollTo({ top: targetY, behavior: "smooth" });
+  }
 
   return (
-    <div className="px-[20px] min-[840px]:px-[40px] min-[1200px]:px-[60px]">
+    <div className="px-[20px] min-[840px]:px-[32px]">
       <div className="grid grid-cols-3 items-center py-[20px]">
-        {/* Left — hamburger + label */}
+        {/* Left — contact */}
         <button
           type="button"
-          onClick={onOpenMenu}
-          aria-label={headerStrings.menu}
+          onClick={onOpenContact}
+          aria-label={headerStrings.contact}
           className="justify-self-start w-full inline-flex items-center bg-transparent border-0 p-0 cursor-pointer transition-opacity duration-200 hover:opacity-60"
         >
           <span
             className={`nav-label text-[13px] ${labelClasses(dark)}`}
             style={LABEL_STYLE}
           >
-            {headerStrings.menu}
+            {headerStrings.contact}
           </span>
         </button>
 
-        {/* Center — logo */}
+        {/* Center — logo (recadré : masque le sous-titre "amo · architecture ·
+            travaux" intégré à l'image, en n'affichant que le haut du mot-logo) */}
         <Link
           href="/"
           className="justify-self-center"
@@ -80,84 +86,57 @@ function NavContent({ dark, langOpen, setLangOpen, langTriggerId, onOpenMenu }: 
               .nav-label { font-size: 12px !important; }
             }
           `}</style>
-          <Image
-            src="/images/logos/joro-studio-amo-architecture-travaux.png"
-            alt={headerStrings.logoAlt}
-            width={1390}
-            height={330}
-            priority
-            className="logo-mobile-img"
-            style={{
-              width: "auto",
-              height: "53px",
-              maxWidth: "none",
-              filter: iconFilter(dark),
-            }}
-          />
+          {/* Recadrage vertical du logo (fichier 1390×330) : le mot-logo s'arrête
+              vers y=227, la baseline (sous-titre) commence à y=280 — on coupe à
+              y=250, au milieu du blanc, via un ratio 1390/250 + object-position
+              top, plutôt que d'afficher l'image entière (1390/330). */}
+          <div
+            className="logo-mobile-img relative overflow-hidden aspect-[1390/250]"
+            style={{ height: "40.15px" }}
+          >
+            <Image
+              src="/images/logos/joro-studio-amo-architecture-travaux.png"
+              alt={headerStrings.logoAlt}
+              fill
+              priority
+              sizes="224px"
+              className="object-cover object-top"
+              style={{ filter: iconFilter(dark) }}
+            />
+          </div>
         </Link>
 
-        {/* Right — contact + language switcher */}
-        <div className="justify-self-end w-full inline-flex items-center justify-end" style={{ gap: '20px' }}>
-          <ComingSoonLink
-            className={`nav-label text-[13px] transition-opacity duration-200 hover:opacity-60 ${labelClasses(dark)}`}
-            style={LABEL_STYLE}
-          >
-            {headerStrings.contact}
-          </ComingSoonLink>
-          <div
-            ref={langRef}
-            className="hidden min-[540px]:inline-flex relative items-center"
-          >
-            <button
-              type="button"
-              id={langTriggerId}
-              onClick={() => setLangOpen((o) => !o)}
-              aria-haspopup="listbox"
-              aria-expanded={langOpen}
-              aria-label={headerStrings.languageSwitcherAriaLabel}
-              className="inline-flex items-center cursor-pointer transition-opacity duration-200 hover:opacity-60"
-              style={{ gap: '0px' }}
-            >
-              <span className={`text-[13px] ${labelClasses(dark)}`} style={LABEL_STYLE}>
-                {headerStrings.currentLanguage}
-              </span>
-              <span className="inline-flex items-center justify-center" style={{ width: '16px', height: '24px' }}>
-                <Image
-                  src="/images/icon/arrow-drop-down-line.svg"
-                  alt=""
-                  width={16}
-                  height={24}
-                  style={{
-                    width: '16px',
-                    height: '24px',
-                    transform: langOpen ? 'rotate(180deg)' : 'none',
-                    transition: 'transform 150ms ease',
-                    filter: iconFilter(dark),
-                  }}
-                />
-              </span>
-            </button>
-
-            {langOpen && (
-              <ul
-                role="listbox"
-                aria-labelledby={langTriggerId}
-                className="absolute left-0 top-full flex flex-col items-start"
-                style={{ gap: '12px' }}
-              >
-                <li role="option" aria-selected="false">
-                  <button
-                    type="button"
-                    onClick={() => { setLangOpen(false); }}
-                    className={`text-[13px] cursor-pointer ${labelClasses(dark)}`}
-                    style={LABEL_STYLE}
-                  >
-                    {headerStrings.alternateLanguage}
-                  </button>
-                </li>
-              </ul>
-            )}
+        {/* Right — sections pinnées (liens directs, à la place de l'ancien sélecteur de langue) ;
+            en dessous de 840px, plus assez de place pour les 3 libellés : on retombe sur une icône
+            burger (même dessin que MiniNavbar) qui ouvre le même menu plein écran. */}
+        <div className="justify-self-end w-full flex items-center justify-end">
+          <div className="hidden min-[840px]:inline-flex items-center gap-3">
+            {pinnedSections.map((section, index) => (
+              <div key={section.key} className="inline-flex items-center gap-3">
+                {index > 0 && (
+                  <span className="w-[6px] h-[6px] rounded-full" style={{ backgroundColor: "#BAB6AA" }} aria-hidden="true" />
+                )}
+                <Link
+                  href={section.href}
+                  onClick={section.key === "projets" ? handleProjetsClick : undefined}
+                  className={`nav-label text-[13px] transition-opacity duration-200 hover:opacity-60 ${labelClasses(dark)}`}
+                  style={LABEL_STYLE}
+                >
+                  {section.label}
+                </Link>
+              </div>
+            ))}
           </div>
+
+          <button
+            type="button"
+            onClick={onOpenMenu}
+            aria-label={headerStrings.menu}
+            className="inline-flex min-[840px]:hidden flex-col justify-center gap-[7px] cursor-pointer bg-transparent border-0 p-0"
+          >
+            <span className="block h-[1.5px] w-[28px]" style={{ backgroundColor: dark ? "#F3F2ED" : "#1C2626" }} />
+            <span className="block h-[1.5px] w-[28px]" style={{ backgroundColor: dark ? "#F3F2ED" : "#1C2626" }} />
+          </button>
         </div>
       </div>
     </div>
@@ -167,11 +146,13 @@ function NavContent({ dark, langOpen, setLangOpen, langTriggerId, onOpenMenu }: 
 export default function Header() {
   const [isDark, setIsDark] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
+  const { isOpen: contactOpen, open: openContact, close: closeContact } = useContactPanel();
   const [onHero, setOnHero] = useState(true);
   const [scrolledPastHeader, setScrolledPastHeader] = useState(false);
-  const [langOpen, setLangOpen] = useState(false);
-  const langTriggerId = useId();
   const headerRef = useRef<HTMLElement>(null);
+  // En dessous de 840px, la navbar principale (3 colonnes) est masquée : la
+  // MiniNavbar en tient lieu en permanence, plutôt que de n'apparaître qu'au scroll.
+  const isDesktopNav = useIsDesktop(840);
 
   useEffect(() => {
     let ticking = false;
@@ -214,28 +195,37 @@ export default function Header() {
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? "hidden" : "";
+    document.body.style.overflow = menuOpen || contactOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
-  }, [menuOpen]);
+  }, [menuOpen, contactOpen]);
 
   return (
     <>
-      {/* Navbar principale — ancrée en haut de la section du header, défile normalement avec la page */}
-      <header ref={headerRef} className="absolute inset-x-0 top-0 z-navbar">
+      {/* Navbar principale — ancrée en haut de la section du header, défile normalement avec la page.
+          Masquée en dessous de 840px : la MiniNavbar en tient lieu (voir ci-dessous). */}
+      <header ref={headerRef} className="hidden min-[840px]:block absolute inset-x-0 top-0 z-navbar">
         <NavContent
           dark={isDark}
-          langOpen={langOpen}
-          setLangOpen={setLangOpen}
-          langTriggerId={langTriggerId}
           onOpenMenu={() => setMenuOpen(true)}
+          onOpenContact={openContact}
         />
       </header>
 
-      {/* Navbar compacte — prend le relais une fois la navbar principale sortie de l'écran */}
-      <MiniNavbar visible={scrolledPastHeader} dark={isDark} onOpenMenu={() => setMenuOpen(true)} />
+      {/* Navbar compacte — prend le relais une fois la navbar principale sortie de l'écran
+          (desktop) ; permanente en dessous de 840px, où elle fait office de navbar principale. */}
+      <MiniNavbar
+        visible={!isDesktopNav || scrolledPastHeader}
+        dark={isDark}
+        onOpenMenu={() => setMenuOpen(true)}
+        onOpenContact={openContact}
+      />
 
       {/* Full-screen split menu */}
       <FullscreenMenu isOpen={menuOpen} onClose={() => setMenuOpen(false)} onHero={onHero} />
+
+      {/* Panneau de contact — même mécanique que le menu, ouverture en miroir (depuis la droite).
+          État partagé via ContactPanelProvider : le lien "Contact" du Footer l'ouvre aussi. */}
+      <ContactPanel isOpen={contactOpen} onClose={closeContact} />
     </>
   );
 }

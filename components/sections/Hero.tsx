@@ -1,21 +1,22 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useIsDesktop } from "@/hooks/useIsDesktop";
+import { heroStrings } from "@/lib/strings";
 
 interface HeroProps {
-  eyebrow?: string;
   title: React.ReactNode;
+  description?: React.ReactNode;
   image?: string;
   video?: string;
   overlay?: boolean;
 }
 
 export default function Hero({
-  eyebrow,
   title,
+  description,
   image,
   video,
   overlay = true,
@@ -31,6 +32,17 @@ export default function Hero({
 
   // Image remonte plus lentement → effet parallax
   const imageY = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]);
+
+  // CTA de scroll — bascule (opacité + léger décalage vers le bas) dès que
+  // l'utilisateur commence à scroller, en CSS pur (transition, pas de valeur
+  // continue liée au scroll) pour un fondu net plutôt que progressif.
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <section ref={sectionRef} data-navbar-theme="dark" className="relative min-h-[100svh] overflow-hidden">
@@ -60,7 +72,7 @@ export default function Hero({
               alt=""
               fill
               priority
-              className="object-cover"
+              className="object-cover object-right min-[840px]:object-center"
               sizes="100vw"
             />
           )}
@@ -72,52 +84,48 @@ export default function Hero({
         <div className="absolute inset-0 bg-cream" />
       )}
 
-      {/* Label + Title — centrés sur la section */}
-      <div className="absolute inset-0 z-10 flex items-center justify-center">
-        <div
-          className="w-full px-[16px] min-[390px]:px-[20px] min-[840px]:px-[40px] min-[1200px]:px-[60px] inline-flex flex-col items-center justify-center text-center"
-        >
-          <div
-            className="self-stretch flex flex-col items-center justify-center text-center gap-[9px]"
-          >
-            {eyebrow && (
-              <p
-                className="uppercase text-[14px] min-[840px]:text-[18px] min-[1200px]:text-[26px] text-cream"
-                style={{
-                  fontWeight: 500,
-                  lineHeight: '100%',
-                  letterSpacing: '0.05em',
-                  wordWrap: 'break-word',
-                }}
-              >
-                {eyebrow}
-              </p>
-            )}
+      {/* Label + Title — aligné en bas à gauche sur mobile, centré verticalement à partir de 840px */}
+      <div className="absolute inset-0 z-10 flex items-end min-[840px]:items-center">
+        <div className="w-full px-[16px] min-[390px]:px-[20px] min-[840px]:px-[40px] min-[1200px]:px-[60px] pb-[48px] min-[840px]:pb-0 flex flex-col items-start text-left">
+          <div className="flex flex-col items-start gap-[24px] min-[840px]:gap-[32px] min-[1600px]:gap-[48px]">
             <h1
-              className="uppercase text-[clamp(20px,calc(20px+28*(100vw-320px)/448),48px)] min-[840px]:text-[56px] min-[1200px]:text-[77px] min-[1600px]:text-[92px] text-cream"
+              className="uppercase text-[44px] min-[840px]:text-[56px] min-[1200px]:text-[77px] min-[1600px]:text-[92px] min-[1920px]:text-[110px] text-cream"
               style={{
                 fontWeight: 600,
-                lineHeight: '126.7%',
-                letterSpacing: '0.02em',
+                lineHeight: '100%',
+                letterSpacing: '-1px',
                 wordWrap: 'break-word',
               }}
             >
               {title}
             </h1>
+            {description && (
+              <div className="flex items-start gap-[20px] max-w-[500px]">
+                <span className="mt-[9px] h-px w-[26px] shrink-0 bg-cream/50" aria-hidden="true" />
+                <p
+                  className="!text-[12px] min-[840px]:!text-[16px] text-cream"
+                  style={{ fontWeight: 500, lineHeight: '125%', wordWrap: 'break-word' }}
+                >
+                  {description}
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Monogramme — ancré en bas de la section, centré */}
-      <div className="absolute inset-x-0 bottom-[5svh] min-[1600px]:bottom-[8svh] z-10 flex justify-center">
-        <Image
-          src="/images/logos/monograme.svg"
-          alt=""
-          width={177}
-          height={113}
-          className="w-[48px] min-[768px]:w-[68px] min-[1920px]:w-[95px] h-auto"
-          style={{ filter: "brightness(0) invert(1) sepia(1) saturate(0) brightness(0.953)" }}
-        />
+      {/* CTA de scroll — masqué sur mobile, flush avec le bord bas de la section, bascule net au scroll */}
+      <div
+        className="hidden min-[840px]:flex absolute inset-x-0 bottom-0 z-10 flex-col items-center gap-2 pointer-events-none"
+        style={{
+          opacity: scrolled ? 0 : 1,
+          transition: "opacity .6s cubic-bezier(.25,.5,0,1)",
+        }}
+      >
+        <span className="text-[11px] font-medium uppercase text-cream/90">
+          {heroStrings.scrollCta}
+        </span>
+        <div className="w-px h-8 bg-cream/60" />
       </div>
 
     </section>

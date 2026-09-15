@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/metadata";
+import { homeHeroStrings } from "@/lib/strings";
 import Hero from "@/components/sections/Hero";
 import Testimonials from "@/components/sections/Testimonials";
 import CTA from "@/components/sections/CTA";
@@ -23,9 +24,31 @@ export default function HomePage() {
     <>
       {/* Hero */}
       <Hero
-        eyebrow="Entre travail & hospitalité"
-        title={<>Concevoir les espaces<br />hybrides de demain</>}
-        image="/images/new-header.png"
+        title={
+          <>
+            <span className="block">{homeHeroStrings.title.line1}</span>
+            <span className="block">{homeHeroStrings.title.line2}</span>
+            <span className="block font-normal italic">
+              {/* 1 seule ligne à partir de 470px (tablette et desktop), 2 lignes en dessous (mobile) */}
+              <span className="block min-[470px]:inline">{homeHeroStrings.title.line3a}</span>
+              <span className="hidden min-[470px]:inline">&nbsp;</span>
+              <span className="block min-[470px]:inline">{homeHeroStrings.title.line3b}</span>
+            </span>
+          </>
+        }
+        description={
+          <>
+            <span className="hidden min-[470px]:inline">{homeHeroStrings.description}</span>
+            <span className="min-[470px]:hidden">
+              {homeHeroStrings.descriptionMobile.line1}
+              <br />
+              {homeHeroStrings.descriptionMobile.line2}
+              <br />
+              {homeHeroStrings.descriptionMobile.line3}
+            </span>
+          </>
+        }
+        image="/images/BG.png"
         overlay={false}
       />
 
