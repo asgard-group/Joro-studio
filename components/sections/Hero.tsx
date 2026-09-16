@@ -72,7 +72,7 @@ export default function Hero({
               alt=""
               fill
               priority
-              className="object-cover object-right min-[840px]:object-center"
+              className="object-cover object-right"
               sizes="100vw"
             />
           )}
@@ -84,45 +84,38 @@ export default function Hero({
         <div className="absolute inset-0 bg-cream" />
       )}
 
-      {/* Label + Title — aligné en bas à gauche sur mobile, centré verticalement à partir de 840px */}
-      <div className="absolute inset-0 z-10 flex items-end min-[840px]:items-center">
-        <div className="w-full px-[16px] min-[390px]:px-[20px] min-[840px]:px-[40px] min-[1200px]:px-[60px] pb-[48px] min-[840px]:pb-0 flex flex-col items-start text-left">
-          <div className="flex flex-col items-start gap-[24px] min-[840px]:gap-[32px] min-[1600px]:gap-[48px]">
-            <h1
-              className="uppercase text-[44px] min-[840px]:text-[56px] min-[1200px]:text-[77px] min-[1600px]:text-[92px] min-[1920px]:text-[110px] text-cream"
-              style={{
-                fontWeight: 600,
-                lineHeight: '100%',
-                letterSpacing: '-1px',
-                wordWrap: 'break-word',
-              }}
-            >
+      {/* Label + Title — collé en bas à tous les breakpoints (padding-bottom
+          sur .hero-container, jamais padding-top) : si la fenêtre est moins
+          haute, l'espace se comprime en haut, le container ne remonte pas.
+          Tailles/gaps/paddings gérés par le design system fluide (vw) dans
+          globals.css. */}
+      <div className="absolute inset-0 z-10 flex items-end">
+        <div className="hero-container w-full flex flex-col items-start text-left">
+          <div className="flex flex-col items-start hero-title-gap">
+            <h1 className="title-huge text-cream" style={{ wordWrap: "break-word" }}>
               {title}
             </h1>
             {description && (
-              <div className="flex items-start gap-[20px] max-w-[500px]">
+              <div className="flex items-start hero-divider-gap max-w-[500px]">
                 <span className="mt-[9px] h-px w-[26px] shrink-0 bg-cream/50" aria-hidden="true" />
-                <p
-                  className="!text-[12px] min-[840px]:!text-[16px] text-cream"
-                  style={{ fontWeight: 500, lineHeight: '125%', wordWrap: 'break-word' }}
-                >
+                <div className="text-intro text-cream" style={{ wordWrap: "break-word" }}>
                   {description}
-                </p>
+                </div>
               </div>
             )}
           </div>
         </div>
       </div>
 
-      {/* CTA de scroll — masqué sur mobile, flush avec le bord bas de la section, bascule net au scroll */}
+      {/* CTA de scroll — masqué sous 835px, flush avec le bord bas de la section, bascule net au scroll */}
       <div
-        className="hidden min-[840px]:flex absolute inset-x-0 bottom-0 z-10 flex-col items-center gap-2 pointer-events-none"
+        className="hidden min-[835px]:flex absolute inset-x-0 bottom-0 z-10 flex-col items-center hero-scroll-gap pointer-events-none"
         style={{
           opacity: scrolled ? 0 : 1,
           transition: "opacity .6s cubic-bezier(.25,.5,0,1)",
         }}
       >
-        <span className="text-[11px] font-medium uppercase text-cream/90">
+        <span className="label-scroll text-cream/90">
           {heroStrings.scrollCta}
         </span>
         <div className="w-px h-8 bg-cream/60" />

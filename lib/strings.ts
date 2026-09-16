@@ -59,10 +59,20 @@ export const homeHeroStrings = {
     line3a: "hybrides",
     line3b: "de demain",
   },
-  // Texte complet à partir de 470px (tablette et desktop), version raccourcie
-  // avec sauts de ligne manuels en dessous (mobile uniquement).
-  description:
-    "Jöro Studio accompagne particuliers et professionnels dans la transformation de leurs espaces, alliant assistance à maîtrise d'ouvrage, architecture et conseil pour des lieux plus durables et inspirants.",
+  // Même texte complet, mais avec des sauts de ligne manuels différents par
+  // breakpoint (maquette Figma) — desktop (≥835px) sur 4 lignes, tablette
+  // (470-834px) sur 3 lignes, mobile (<470px) version raccourcie sur 3 lignes.
+  descriptionDesktop: {
+    line1: "Jöro Studio accompagne particuliers et professionnels",
+    line2: "dans la transformation de leurs espaces, alliant assistance",
+    line3: "à maîtrise d'ouvrage, architecture et conseil pour des lieux",
+    line4: "plus durables et inspirants.",
+  },
+  descriptionTablet: {
+    line1: "Jöro Studio accompagne particuliers et professionnels dans la",
+    line2: "transformation de leurs espaces, alliant assistance à maîtrise d'ouvrage,",
+    line3: "architecture et conseil pour des lieux plus durables et inspirants.",
+  },
   descriptionMobile: {
     line1: "Jöro Studio accompagne particuliers et",
     line2: "professionnels dans la transformation de",

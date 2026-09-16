@@ -94,6 +94,95 @@
   }
 }
 
+/* ==========================================================================
+   Design system fluide (vw) — sections homepage
+   Référence : desktop 1920px (base, pas de media query) / tablette 834px /
+   mobile 470px. Chaque valeur = px_voulu / largeur_référence × 100.
+   Rôles ajoutés au fil des sections traitées (cf. Hero en premier).
+   ========================================================================== */
+
+/* Rôle "Hero" — titre H1 unique sur le site (aucune autre section n'a
+   besoin d'un titre aussi grand pour l'instant).
+   Formule à 2 points (calc, pas clamp) plutôt qu'un simple ratio vw : un
+   ratio "A×vw" seul suppose implicitement 0px à largeur 0, donc s'éloigne
+   de la valeur voulue en s'approchant du bord bas de la plage desktop
+   (jusqu'à devenir illisible juste avant le seuil tablette). La droite
+   calc(A×vw + Bpx) passe exactement par les 2 points connus (1920→110px,
+   834→68px), donc reste juste sur toute la plage, sans effondrement ni
+   saut au passage du seuil. */
+.title-huge {
+  font-size: calc(3.8674vw + 35.7459px); /* 110px @1920, 68px @834 */
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.01em; /* -1% Figma = -0.01em, scale avec la font-size */
+  text-transform: uppercase;
+}
+
+/* Texte d'intro sous un grand titre (line-height 120%, distinct du rôle
+   "texte de section" 14px/175% utilisé ailleurs sur le site). */
+.text-intro {
+  font-size: calc(0.0921vw + 12.232px); /* 14px @1920, 13px @834 */
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+/* Micro-label du CTA de scroll ("GLISSER POUR DÉCOUVRIR") — masqué sous
+   835px (tablette/mobile). Figé en px (pas de vw) : pas de valeur tablette
+   à raccorder puisqu'il n'existe pas en dessous de 835px, donc pas de sens
+   à le faire rétrécir en s'approchant du seuil. */
+.label-scroll {
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* Container Hero — collé en bas à TOUS les breakpoints (padding-bottom,
+   pas padding-top) : ainsi si la fenêtre est moins haute, c'est l'espace
+   du haut qui se comprime, le container ne remonte jamais vers le centre. */
+.hero-container {
+  padding-left: calc(8.8398vw - 49.7238px); /* 120px @1920, 24px @834 */
+  padding-right: calc(8.8398vw - 49.7238px); /* 120px @1920, 24px @834 */
+  padding-bottom: 19.7049vh; /* équivalent du "420px du haut" @1920×1080 */
+}
+
+.hero-title-gap { gap: calc(1.8416vw + 14.6404px); } /* 50px @1920, 30px @834 */
+.hero-divider-gap { gap: calc(0.7366vw + 5.8484px); } /* 20px @1920, 12px @834 */
+.hero-scroll-gap { gap: 8px; } /* figé — même raison que .label-scroll */
+
+/* Même problème, même remède qu'entre desktop et tablette : formule à 2
+   points (834→valeur tablette, 470→valeur mobile) au lieu d'un simple
+   ratio vw, pour rester juste sur toute la plage 470-834px. Le padding
+   horizontal et le padding-bottom ont la même valeur aux 2 bouts (24px et
+   48px) : la droite entre les deux est donc simplement plate, pas de vw
+   du tout — cohérent avec le plancher fixe déjà utilisé sous 470px. */
+@media (max-width: 834px) {
+  .title-huge { font-size: calc(6.3187vw + 15.3022px); } /* 68px @834, 45px @470 */
+  .text-intro { font-size: calc(0.2747vw + 10.7088px); } /* 13px @834, 12px @470 */
+  .hero-title-gap { gap: calc(1.6484vw + 16.2527px); } /* 30px @834, 24px @470 */
+  .hero-divider-gap { gap: calc(0.5495vw + 7.4176px); } /* 12px @834, 10px @470 */
+  .hero-container {
+    padding-left: 24px; /* identique @834 et @470 — pas de vw nécessaire */
+    padding-right: 24px;
+    padding-bottom: 48px; /* identique @834 et @470 */
+  }
+}
+
+/* Sous 470px : valeurs figées en px (pas de vw) — on ne veut plus que ça
+   rétrécisse sur les petits téléphones, 470px agit comme un plancher fixe. */
+@media (max-width: 470px) {
+  .title-huge { font-size: 45px; }
+  .text-intro { font-size: 12px; }
+  .hero-title-gap { gap: 24px; }
+  .hero-divider-gap { gap: 10px; }
+  .hero-container {
+    padding-left: 24px;
+    padding-right: 24px;
+    padding-bottom: 48px;
+  }
+}
+
 /* Réalisations — carte mobile plein écran */
 .mobile-work-card {
   /* Fallback pour les navigateurs sans support de dvh */
