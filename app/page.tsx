@@ -38,7 +38,22 @@ export default function HomePage() {
         }
         description={
           <>
-            <span className="hidden min-[470px]:inline">{homeHeroStrings.description}</span>
+            <span className="hidden min-[835px]:inline">
+              {homeHeroStrings.descriptionDesktop.line1}
+              <br />
+              {homeHeroStrings.descriptionDesktop.line2}
+              <br />
+              {homeHeroStrings.descriptionDesktop.line3}
+              <br />
+              {homeHeroStrings.descriptionDesktop.line4}
+            </span>
+            <span className="hidden min-[470px]:inline min-[835px]:hidden">
+              {homeHeroStrings.descriptionTablet.line1}
+              <br />
+              {homeHeroStrings.descriptionTablet.line2}
+              <br />
+              {homeHeroStrings.descriptionTablet.line3}
+            </span>
             <span className="min-[470px]:hidden">
               {homeHeroStrings.descriptionMobile.line1}
               <br />
