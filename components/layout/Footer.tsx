@@ -101,7 +101,7 @@ export default function Footer() {
     <footer className="bg-[#1C2626] text-[#FAF6ED] -mt-px">
 
       {/* ── Desktop ─────────────────────────────────────────────── */}
-      <div className="hidden flex-col gap-[128px] py-6 px-[32px] md:flex">
+      <div className="hidden flex-col gap-[60px] py-6 px-[32px] md:flex">
         <div className="flex flex-row items-start justify-between">
           <FooterColumn title="Nos offres" items={offresLinks} />
           <FooterColumn title="Liens rapides" items={quickLinks} />
@@ -188,7 +188,7 @@ function FooterAccordion({
         />
       </button>
       {open && (
-        <div className="flex flex-col gap-3 pb-5">
+        <div className="flex flex-col gap-3 pb-5 pl-[24px]">
           {items.map((item) => (
             <ItemLabel key={item.label} item={item} />
           ))}

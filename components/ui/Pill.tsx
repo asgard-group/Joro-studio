@@ -20,17 +20,17 @@ interface PillProps {
  * Eyebrow pill — puce ronde accentuée + label, utilisé pour les eyebrows
  * comme « NOTRE STUDIO », « NOS OFFRES », etc.
  *
- * Le composant est volontairement 100 % Tailwind (aucun inline-style) afin de
- * rester aligné avec le design system (tokens `cream` / `charcoal` / `taupe`).
+ * Tailles fluides par palier (design system vw de globals.css : `.pill-text`,
+ * `.pill-dot`, `.pill-gap`) plutôt que des valeurs Tailwind fixes.
  */
 export default function Pill({ children, variant = "light", dotSide = "left", className = "" }: PillProps) {
   const textClass = variant === "dark" ? "text-cream" : "text-charcoal";
-  const dot = <span className="w-[6px] h-[6px] rounded-full bg-taupe shrink-0" />;
+  const dot = <span className="pill-dot rounded-full bg-taupe shrink-0" />;
 
   return (
-    <div className={`inline-flex items-center gap-[6px] ${className}`}>
+    <div className={`inline-flex items-center pill-gap ${className}`}>
       {dot}
-      <span className={`text-[12px] font-medium ${textClass}`}>{children}</span>
+      <span className={`pill-text ${textClass}`}>{children}</span>
       {dotSide === "both" && dot}
     </div>
   );

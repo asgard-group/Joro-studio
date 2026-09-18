@@ -7,7 +7,9 @@ import CTA from "@/components/sections/CTA";
 import ServicesAll from "@/components/sections/ServicesAll";
 import ServiceReveal from "@/components/sections/ServiceReveal";
 import FeaturedWork from "@/components/sections/FeaturedWork";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- gardé pour repasser facilement à l'ancienne version pendant le test
 import AboutHistory from "@/components/sections/AboutHistory";
+import AboutHistorySticky from "@/components/sections/AboutHistorySticky";
 import { workItems } from "@/data/work";
 
 export const metadata: Metadata = buildMetadata({
@@ -69,7 +71,11 @@ export default function HomePage() {
 
       {/* À propos — Notre histoire (avec animation clip-path révélation au scroll) */}
       <div id="notre-studio">
-        <AboutHistory />
+        {/* TEST : nouvelle mise en page "sticky scroll slider" — AboutHistory
+            original conservé en dessous, juste commenté, pour repasser dessus
+            facilement si le test ne convainc pas. */}
+        <AboutHistorySticky />
+        {/* <AboutHistory /> */}
       </div>
 
       {/* Services + FeaturedWork — un seul conteneur sticky pour tout l'enchaînement */}

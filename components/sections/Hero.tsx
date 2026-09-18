@@ -98,7 +98,7 @@ export default function Hero({
             {description && (
               <div className="flex items-start hero-divider-gap max-w-[500px]">
                 <span className="mt-[9px] h-px w-[26px] shrink-0 bg-cream/50" aria-hidden="true" />
-                <div className="text-intro text-cream" style={{ wordWrap: "break-word" }}>
+                <div className="texte text-cream" style={{ wordWrap: "break-word" }}>
                   {description}
                 </div>
               </div>
