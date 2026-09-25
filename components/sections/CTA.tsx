@@ -82,7 +82,7 @@ export default function CTA() {
             </p>
             <button
               type="button"
-              onClick={openContact}
+              onClick={() => openContact()}
               className="w-full px-[17px] py-[14px] text-[14px] font-medium uppercase tracking-[1.1px] transition-opacity duration-200 hover:opacity-80"
               style={{
                 backgroundColor: "#EAE7E3",

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useIsDesktop } from "@/hooks/useIsDesktop";
@@ -33,17 +33,6 @@ export default function Hero({
   // Image remonte plus lentement → effet parallax
   const imageY = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]);
 
-  // CTA de scroll — bascule (opacité + léger décalage vers le bas) dès que
-  // l'utilisateur commence à scroller, en CSS pur (transition, pas de valeur
-  // continue liée au scroll) pour un fondu net plutôt que progressif.
-  const [scrolled, setScrolled] = useState(false);
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 10);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
   return (
     <section ref={sectionRef} data-navbar-theme="dark" className="relative min-h-[100svh] overflow-hidden">
 
@@ -72,12 +61,15 @@ export default function Hero({
               alt=""
               fill
               priority
-              className="object-cover object-right"
+              className="object-cover object-right min-[835px]:object-[100%_60%]"
               sizes="100vw"
             />
           )}
           {overlay && (
-            <div className="absolute inset-0" style={{ backgroundColor: "rgba(38, 28, 28, 0.30)" }} />
+            <div
+              className="absolute inset-0"
+              style={{ backgroundColor: "rgba(28, 38, 38, 1)", mixBlendMode: "hard-light", opacity: 0.35 }}
+            />
           )}
         </motion.div>
       ) : (
@@ -90,35 +82,33 @@ export default function Hero({
           Tailles/gaps/paddings gérés par le design system fluide (vw) dans
           globals.css. */}
       <div className="absolute inset-0 z-10 flex items-end">
-        <div className="hero-container w-full flex flex-col items-start text-left">
-          <div className="flex flex-col items-start hero-title-gap">
+        <div className="hero-container w-full flex flex-col items-start text-left hero-title-gap">
+          {/* En dessous de 835px : titre + description empilés (colonne), avec le
+              petit trait séparateur devant la description. À partir de 835px
+              (desktop) : titre et description sur une même ligne, calés sur le
+              bas (items-end) et espacés automatiquement (justify-between, pas de
+              gap fixe) — plus de trait séparateur, cf. capture de référence. */}
+          <div className="flex flex-col items-start hero-title-gap w-full min-[835px]:flex-row min-[835px]:items-end min-[835px]:justify-between min-[835px]:gap-x-[40px]">
             <h1 className="title-huge text-cream" style={{ wordWrap: "break-word" }}>
               {title}
             </h1>
             {description && (
               <div className="flex items-start hero-divider-gap max-w-[500px]">
-                <span className="mt-[9px] h-px w-[26px] shrink-0 bg-cream/50" aria-hidden="true" />
+                <span className="mt-[9px] h-px w-[26px] shrink-0 bg-cream/50 min-[835px]:hidden" aria-hidden="true" />
                 <div className="texte text-cream" style={{ wordWrap: "break-word" }}>
                   {description}
                 </div>
               </div>
             )}
           </div>
-        </div>
-      </div>
 
-      {/* CTA de scroll — masqué sous 835px, flush avec le bord bas de la section, bascule net au scroll */}
-      <div
-        className="hidden min-[835px]:flex absolute inset-x-0 bottom-0 z-10 flex-col items-center hero-scroll-gap pointer-events-none"
-        style={{
-          opacity: scrolled ? 0 : 1,
-          transition: "opacity .6s cubic-bezier(.25,.5,0,1)",
-        }}
-      >
-        <span className="label-scroll text-cream/90">
-          {heroStrings.scrollCta}
-        </span>
-        <div className="w-px h-8 bg-cream/60" />
+          {/* Divider + "Glisser pour découvrir" — desktop uniquement, en bas du
+              bloc contenu, texte aligné à droite (cf. capture de référence). */}
+          <div className="hidden min-[835px]:flex w-full flex-col items-end hero-scroll-gap">
+            <div className="h-px w-full bg-cream/50" aria-hidden="true" />
+            <span className="label-scroll text-cream/90">{heroStrings.scrollCta}</span>
+          </div>
+        </div>
       </div>
 
     </section>

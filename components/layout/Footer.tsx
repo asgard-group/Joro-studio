@@ -94,7 +94,7 @@ export default function Footer() {
     { label: "Notre studio", href: "/#notre-studio" },
     { label: "Nos réalisations", href: "/#nos-realisations", onClick: handleRealisationsClick },
     { label: "Nos offres", href: "/#nos-offres" },
-    { label: "Contact", onClick: openContact },
+    { label: "Contact", onClick: () => openContact() },
   ];
 
   return (

@@ -17,7 +17,8 @@ const ICON_FILTER = "brightness(0) invert(1) sepia(1) saturate(0) brightness(0.9
 // Survol volontairement en valeur littérale et non en `taupe-600` : cette nuance est
 // pensée pour du texte cream (cf. Button.tsx), et donnerait ici un noir sur fond
 // sombre illisible. Ce ton reste une nuance du taupe, lisible avec `text-charcoal`.
-const contactClasses =
+// Exporté : repris tel quel par le bouton Contact de la navbar principale (Header.tsx).
+export const contactButtonClasses =
   "inline-flex items-center gap-0 bg-taupe px-[16px] py-[10px] text-[13px] font-medium uppercase text-charcoal transition-colors duration-200 hover:bg-[#A7A296]";
 
 interface Props {
@@ -33,6 +34,7 @@ export default function MiniNavbar({ visible, dark, onOpenMenu, onOpenContact }:
 
   return (
     <motion.div
+      id="mini-navbar"
       className="fixed inset-x-0 top-0 z-navbar"
       initial={false}
       animate={{ y: visible ? "0%" : "-100%" }}
@@ -53,7 +55,7 @@ export default function MiniNavbar({ visible, dark, onOpenMenu, onOpenContact }:
 
         {/* Droite — Contact (à la place de l'ancien Menu) + icône menu (2 traits) */}
         <div className="flex items-center gap-[16px]">
-          <button type="button" onClick={onOpenContact} className={contactClasses} style={LABEL_STYLE}>
+          <button type="button" onClick={onOpenContact} className={contactButtonClasses} style={LABEL_STYLE}>
             {headerStrings.contact}
           </button>
 

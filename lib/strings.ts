@@ -64,9 +64,8 @@ export const homeHeroStrings = {
   // (470-834px) sur 3 lignes, mobile (<470px) version raccourcie sur 3 lignes.
   descriptionDesktop: {
     line1: "Jöro Studio accompagne particuliers et professionnels",
-    line2: "dans la transformation de leurs espaces, alliant assistance",
-    line3: "à maîtrise d'ouvrage, architecture et conseil pour des lieux",
-    line4: "plus durables et inspirants.",
+    line2: "dans la transformation de leurs espaces, alliant",
+    line3: "maîtrise d'ouvrage, architecture et travaux.",
   },
   descriptionTablet: {
     line1: "Jöro Studio accompagne particuliers et professionnels dans la",
