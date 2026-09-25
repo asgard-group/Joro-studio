@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import ComingSoonLink from "@/components/ui/ComingSoonLink";
 import { useIsDesktop } from "@/hooks/useIsDesktop";
@@ -21,6 +21,8 @@ interface Props {
   ctaLabel?: string;
   image?: string;
   video?: string;
+  /** Frame fixe affichée à la place de la vidéo tant qu'elle n'a pas fini de charger. */
+  poster?: string;
   flipX?: boolean;
   wide?: boolean;
   overlayClass?: string;
@@ -29,11 +31,13 @@ interface Props {
   zoomed?: boolean;
 }
 
-export default function ServiceReveal({ activeId, title, description, ctaLabel = "Découvrir l'offre", image, video, flipX, wide, overlayClass, noParallax, zoomed }: Props) {
+export default function ServiceReveal({ activeId, title, description, ctaLabel = "Découvrir l'offre", image, video, poster, flipX, wide, overlayClass, noParallax, zoomed }: Props) {
   const sectionRef = useRef<HTMLDivElement>(null);
   // Ce composant n'est jamais visible sur mobile (masqué par le parent en `hidden md:block`),
   // on évite donc de monter/décoder la vidéo tant qu'on n'est pas sur desktop.
   const isDesktop = useIsDesktop();
+  // Fondu de la vidéo une fois chargée : le poster reste visible (et net) jusque-là.
+  const [videoLoaded, setVideoLoaded] = useState(false);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -56,14 +60,21 @@ export default function ServiceReveal({ activeId, title, description, ctaLabel =
         style={{ y: bgY, top: "-12%", height: "124%", scale: zoomed ? 1.1 : 1 }}
       >
         {video && isDesktop ? (
-          <video
-            className={`w-full h-full object-cover${flipX ? " scale-x-[-1]" : ""}`}
-            src={video}
-            autoPlay
-            muted
-            loop
-            playsInline
-          />
+          <>
+            {/* Poster affiché instantanément, puis fondu vers la vidéo une fois chargée */}
+            {poster && <Image src={poster} alt="" fill className="object-cover" sizes="100vw" />}
+            <video
+              className={`absolute inset-0 w-full h-full object-cover${flipX ? " scale-x-[-1]" : ""}`}
+              style={{ opacity: videoLoaded ? 1 : 0, transition: "opacity 0.5s ease" }}
+              src={video}
+              poster={poster}
+              autoPlay
+              muted
+              loop
+              playsInline
+              onCanPlay={() => setVideoLoaded(true)}
+            />
+          </>
         ) : image ? (
           <Image src={image} alt={title} fill className="object-cover" sizes="100vw" />
         ) : null}
@@ -71,7 +82,7 @@ export default function ServiceReveal({ activeId, title, description, ctaLabel =
       {overlayClass && <div className={`absolute inset-0 ${overlayClass}`} />}
 
       {/* Contenu — affiché d'emblée (pas de fondu à l'entrée dans le viewport) */}
-      <div className="absolute inset-0 z-10 flex items-center justify-between px-4 sm:px-6 lg:px-[60px]">
+      <div className="absolute inset-0 z-10 flex items-center justify-between pr-4 sm:pr-6 lg:pr-[32px] section-title-pl">
         {/* Gauche */}
         <div className={wide ? "max-w-[880px]" : "max-w-[580px]"}>
           <h2 className={`text-[26px] md:text-[52px] lg:text-[55px] min-[1200px]:text-[64px] font-semibold uppercase tracking-tight text-cream mb-[40px] ${title.includes('\n') ? 'whitespace-pre-line leading-[1.2]' : 'whitespace-nowrap leading-none'}`}>

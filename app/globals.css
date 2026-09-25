@@ -108,15 +108,11 @@
 
 /* Rôle "Hero" — titre H1 unique sur le site (aucune autre section n'a
    besoin d'un titre aussi grand pour l'instant).
-   Formule à 2 points (calc, pas clamp) plutôt qu'un simple ratio vw : un
-   ratio "A×vw" seul suppose implicitement 0px à largeur 0, donc s'éloigne
-   de la valeur voulue en s'approchant du bord bas de la plage desktop
-   (jusqu'à devenir illisible juste avant le seuil tablette). La droite
-   calc(A×vw + Bpx) passe exactement par les 2 points connus (1920→110px,
-   834→68px), donc reste juste sur toute la plage, sans effondrement ni
-   saut au passage du seuil. */
+   Desktop plafonné à la même valeur que l'ancre tablette (68px @834) : plus
+   besoin de formule vw, le titre est simplement figé sur toute la plage
+   ≥834px (cohérent avec .hero-container qui plafonne aussi à 1560px). */
 .title-huge {
-  font-size: calc(3.8674vw + 35.7459px); /* 110px @1920, 68px @834 */
+  font-size: 68px;
   font-weight: 600;
   line-height: 1;
   letter-spacing: -0.01em; /* -1% Figma = -0.01em, scale avec la font-size */
@@ -139,38 +135,59 @@
   font-size: 11px;
   font-weight: 500;
   line-height: 1;
-  letter-spacing: 1px;
+  letter-spacing: normal;
   text-transform: uppercase;
 }
 
 /* Container Hero — collé en bas à TOUS les breakpoints (padding-bottom,
    pas padding-top) : ainsi si la fenêtre est moins haute, c'est l'espace
-   du haut qui se comprime, le container ne remonte jamais vers le centre. */
+   du haut qui se comprime, le container ne remonte jamais vers le centre.
+   Padding horizontal identique à celui de la navbar (px-[20px] puis
+   min-[840px]:px-[32px] dans Header.tsx) — pas de max-width : contrairement
+   à .section-title-pl (utilisé par Services/About History), le Hero doit
+   suivre la largeur de la navbar, pas se plafonner à 1560px. */
 .hero-container {
-  padding-left: calc(8.8398vw - 49.7238px); /* 120px @1920, 24px @834 */
-  padding-right: calc(8.8398vw - 49.7238px); /* 120px @1920, 24px @834 */
-  padding-bottom: 19.7049vh; /* équivalent du "420px du haut" @1920×1080 */
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 30px;
+}
+@media (min-width: 840px) {
+  .hero-container {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
 }
 
-.hero-title-gap { gap: calc(1.8416vw + 14.6404px); } /* 50px @1920, 30px @834 */
+/* Repris tel quel du Hero (.hero-container) — max-width, centrage et
+   padding-gauche identiques — pour que tous les titres de section (Services,
+   About History...) s'alignent sur le même bord gauche que le titre du Hero
+   ET plafonnent à la même largeur que lui. Le padding-droit et les autres
+   propriétés restent gérés indépendamment par chaque consommateur (cf.
+   ServiceReveal.tsx, ServicesAll.tsx, AboutHistorySticky.tsx). */
+.section-title-pl {
+  max-width: 1560px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: clamp(24px, 1.5152vw + 11.3636px, 35px);
+}
+
+.hero-title-gap { gap: calc(1.5vw + 14.6404px); } /* ~43.44px @1920, ~27.15px @834 — desktop uniquement, cf. media query ci-dessous pour ≤834px */
 .hero-divider-gap { gap: calc(0.7366vw + 5.8484px); } /* 20px @1920, 12px @834 */
-.hero-scroll-gap { gap: 8px; } /* figé — même raison que .label-scroll */
+.hero-scroll-gap { gap: 18px; }
 
 /* Même problème, même remède qu'entre desktop et tablette : formule à 2
    points (834→valeur tablette, 470→valeur mobile) au lieu d'un simple
-   ratio vw, pour rester juste sur toute la plage 470-834px. Le padding
-   horizontal et le padding-bottom ont la même valeur aux 2 bouts (24px et
-   48px) : la droite entre les deux est donc simplement plate, pas de vw
-   du tout — cohérent avec le plancher fixe déjà utilisé sous 470px. */
+   ratio vw, pour rester juste sur toute la plage 470-834px. */
 @media (max-width: 834px) {
   .title-huge { font-size: calc(6.3187vw + 15.3022px); } /* 68px @834, 45px @470 */
   .texte { font-size: calc(0.2747vw + 10.7088px); } /* 13px @834, 12px @470 */
   .hero-title-gap { gap: calc(1.6484vw + 16.2527px); } /* 30px @834, 24px @470 */
   .hero-divider-gap { gap: calc(0.5495vw + 7.4176px); } /* 12px @834, 10px @470 */
   .hero-container {
-    padding-left: 24px; /* identique @834 et @470 — pas de vw nécessaire */
-    padding-right: 24px;
     padding-bottom: 48px; /* identique @834 et @470 */
+  }
+  .section-title-pl {
+    padding-left: 24px; /* identique @834 et @470 — pas de vw nécessaire */
   }
 }
 
@@ -182,8 +199,6 @@
   .hero-title-gap { gap: 24px; }
   .hero-divider-gap { gap: 10px; }
   .hero-container {
-    padding-left: 24px;
-    padding-right: 24px;
     padding-bottom: 48px;
   }
 }
@@ -214,13 +229,19 @@
 }
 
 /* Rôle "About sticky" (test de mise en page "Notre studio") — padding du
-   contenu à l'intérieur du wrapper sticky. */
+   contenu à l'intérieur du wrapper sticky. Padding-gauche géré séparément par
+   .section-title-pl (alignement avec le titre du Hero) — cf. usage dans
+   AboutHistorySticky.tsx. */
 .about-sticky-padding {
-  padding: 120px 60px;
+  padding-top: 120px;
+  padding-right: 60px;
+  padding-bottom: 120px;
 }
 @media (max-width: 834px) {
   .about-sticky-padding {
-    padding: 48px 24px; /* identique @834 et @470 */
+    padding-top: 48px;
+    padding-right: 24px;
+    padding-bottom: 48px; /* identique @834 et @470 */
   }
 }
 

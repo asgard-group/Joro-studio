@@ -105,7 +105,7 @@ export default function ServicesAll() {
           <div className="absolute inset-0 z-0" style={{ backgroundColor: "rgba(35, 6, 6, 0.2)", mixBlendMode: "soft-light" }} />
 
           {/* Contenu DESIGN & BUILD — révélé par le split (z-5) */}
-          <div className="absolute inset-0 z-[5] flex items-center justify-between px-4 sm:px-6 lg:px-[60px]">
+          <div className="absolute inset-0 z-[5] flex items-center justify-between pr-4 sm:pr-6 lg:pr-[32px] section-title-pl">
             <div className="max-w-[480px]">
               <h2 className="text-[26px] md:text-[52px] lg:text-[55px] min-[1200px]:text-[64px] font-semibold uppercase leading-none tracking-tight text-cream mb-[40px] whitespace-nowrap">
                 DESIGN & BUILD

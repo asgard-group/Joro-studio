@@ -10,7 +10,6 @@ import FeaturedWork from "@/components/sections/FeaturedWork";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- gardé pour repasser facilement à l'ancienne version pendant le test
 import AboutHistory from "@/components/sections/AboutHistory";
 import AboutHistorySticky from "@/components/sections/AboutHistorySticky";
-import { workItems } from "@/data/work";
 
 export const metadata: Metadata = buildMetadata({
   title: "JÖRO Studio — Architecture intérieure & espaces hybrides durables",
@@ -20,16 +19,17 @@ export const metadata: Metadata = buildMetadata({
 });
 
 export default function HomePage() {
-  const featuredWork = workItems.filter((w) => w.featured).slice(0, 3);
-
   return (
     <>
       {/* Hero */}
       <Hero
         title={
           <>
-            <span className="block">{homeHeroStrings.title.line1}</span>
-            <span className="block">{homeHeroStrings.title.line2}</span>
+            {/* 2 lignes en dessous de 835px (mobile/tablette) : "Créer" / "les espaces".
+                1 seule ligne ("Créer les espaces") à partir de 835px (desktop). */}
+            <span className="block min-[835px]:inline">{homeHeroStrings.title.line1}</span>
+            <span className="hidden min-[835px]:inline">&nbsp;</span>
+            <span className="block min-[835px]:inline">{homeHeroStrings.title.line2}</span>
             <span className="block font-normal italic">
               {/* 1 seule ligne à partir de 470px (tablette et desktop), 2 lignes en dessous (mobile) */}
               <span className="block min-[470px]:inline">{homeHeroStrings.title.line3a}</span>
@@ -46,8 +46,6 @@ export default function HomePage() {
               {homeHeroStrings.descriptionDesktop.line2}
               <br />
               {homeHeroStrings.descriptionDesktop.line3}
-              <br />
-              {homeHeroStrings.descriptionDesktop.line4}
             </span>
             <span className="hidden min-[470px]:inline min-[835px]:hidden">
               {homeHeroStrings.descriptionTablet.line1}
@@ -65,8 +63,8 @@ export default function HomePage() {
             </span>
           </>
         }
-        image="/images/BG.png"
-        overlay={false}
+        image="/images/2021-07-JeanMarieDufour-Taitbout-Livraison-12-JMD07313.png"
+        overlay
       />
 
       {/* À propos — Notre histoire (avec animation clip-path révélation au scroll) */}
@@ -95,6 +93,7 @@ export default function HomePage() {
             description="Assistance à la maîtrise d'ouvrage : conseil en faisabilité, diagnostic RSE et accompagnement à la certification, nous vous guidons à chaque étape stratégique de votre projet."
             ctaLabel="Être accompagné"
             video="/videos/Composition 1.webm"
+            poster="/images/posters/composition-1-poster.webp"
             flipX
             noParallax
           />
@@ -106,6 +105,7 @@ export default function HomePage() {
             description="Des supports visuels et des espaces de présentation pensés pour valoriser vos actifs immobiliers pour que votre projet trouve son acquéreur avant même d'être livré."
             ctaLabel="Valoriser mon actif"
             video="/videos/vecteezy_elegant-wooden-lamp-casting-warm-light-in-cozy-room_73284090.mp4"
+            poster="/images/posters/wooden-lamp-poster.webp"
             overlayClass="bg-[rgba(96,96,96,0.2)] mix-blend-lighten"
             noParallax
           />
@@ -118,6 +118,7 @@ export default function HomePage() {
             description="Nous vous aidons à définir une stratégie immobilière alignée sur vos ambitions. Une approche conseil qui conjugue vision long terme, culture d'entreprise et exigence de qualité."
             ctaLabel="Affiner ma stratégie"
             video="/videos/vecteezy_4k-animation-angled-view-of-modern-building-with-clear-blue_40552327.webm"
+            poster="/images/posters/modern-building-poster.webp"
             flipX
             wide
             zoomed
@@ -127,9 +128,8 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* FeaturedWork — se superpose aux offres depuis l'arrivée de Conseil Workplace (desktop), colonne unique sur mobile */}
-      <div id="nos-realisations" className="md:-mt-[250vh]">
-        <FeaturedWork items={featuredWork} />
+      <div id="nos-realisations">
+        <FeaturedWork />
       </div>
 
       <div id="temoignages" style={{ marginTop: "-1px" }}>

@@ -13,11 +13,17 @@ interface MenuLink {
 }
 
 const menuLinks: MenuLink[] = [
-  { label: "STUDIO",          href: "/#notre-studio",       image: "/images/2024-01-Retines-Pigalle-_23A2312-web 2.webp" },
-  { label: "OFFRES",          href: "/#nos-offres",         image: "/images/work/3.webp" },
+  { label: "ACCUEIL",         href: "/",                    image: "/images/BG.png" },
+  { label: "NOTRE STUDIO",    href: "/#notre-studio",       image: "/images/2024-01-Retines-Pigalle-_23A2312-web 2.webp" },
+  { label: "NOS OFFRES",      href: "/#nos-offres",         image: "/images/work/3.webp" },
   { label: "RÉALISATIONS",    href: "/#nos-realisations",   image: "/images/work/1.webp" },
-  { label: "TÉMOIGNAGES",     href: "/#temoignages",        image: "/images/work/2.webp" },
   { label: "CONTACT",         href: "/contact",             image: "/images/2024-10-Retines-Asgard-parquet-Pigalle-DSC04495.webp" },
+];
+
+const socialLinks = [
+  { label: "INSTAGRAM", href: "https://www.instagram.com/joro_studio/" },
+  { label: "LINKEDIN", href: "https://www.linkedin.com/company/joro-studio" },
+  { label: "PINTEREST", href: "https://fr.pinterest.com/joro_studio/" },
 ];
 
 interface Props {
@@ -65,28 +71,18 @@ export default function FullscreenMenu({ isOpen, onClose }: Props) {
           d'animation `.joro-contact` (balayage droite → gauche), qui n'a rien à voir
           avec le panneau de contact lui-même, seulement avec son sens d'ouverture. */}
       <div className={`joro-contact${isOpen ? " is-open" : ""}`} role="dialog" aria-modal="true" aria-label="Menu principal">
-        {/* Top bar — survole le panneau gauche et la photo, en overlay */}
+        {/* Top bar — bouton de fermeture uniquement (le sélecteur FR/EN vit dans le
+            panneau de droite, cf. .joro-menu__left, pour rester sur le fond sombre
+            et ne jamais chevaucher la photo à gauche). */}
         <div className="absolute inset-x-0 top-0 z-20 px-[20px] min-[840px]:px-[40px] min-[1200px]:px-[60px]">
-          <div className="flex items-center pt-[40px] pb-[20px]">
+          <div className="flex items-center justify-end pt-[40px] pb-[20px]">
             <button
               type="button"
               onClick={onClose}
               aria-label="Fermer le menu"
-              className="inline-flex items-center gap-[6px] bg-transparent border-0 p-0 cursor-pointer"
+              className="bg-transparent border-0 p-0 cursor-pointer text-[13px] font-semibold uppercase tracking-[0.08em] text-cream transition-opacity hover:opacity-60"
             >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                className="w-[30px] h-[30px] text-cream"
-                style={{ filter: "brightness(0) invert(1) sepia(1) saturate(0) brightness(0.953)" }}
-              >
-                <line x1="2" y1="2" x2="14" y2="14" />
-                <line x1="14" y1="2" x2="2" y2="14" />
-              </svg>
+              Fermer
             </button>
           </div>
         </div>
@@ -124,8 +120,16 @@ export default function FullscreenMenu({ isOpen, onClose }: Props) {
             })}
           </div>
 
-          {/* Droite — nav + social */}
+          {/* Droite — FR/EN + nav + social */}
           <div className="joro-menu__left">
+            {/* pt-0 sous 768px : .joro-menu__left a déjà 32px de padding-top à ce
+                breakpoint (cf. globals.css) — cumulé au pt-[40px] ça décalait FR/EN
+                sous la ligne du bouton Fermer au lieu de s'aligner avec lui. */}
+            <div className="pt-[40px] max-[768px]:pt-0">
+              <ComingSoonLink className="text-[13px] font-semibold uppercase tracking-[0.08em] text-cream">
+                FR&nbsp;/&nbsp;EN
+              </ComingSoonLink>
+            </div>
             <nav aria-label="Menu principal">
               <ul className="joro-menu__nav">
                 {menuLinks.map((link, index) => (
@@ -151,6 +155,22 @@ export default function FullscreenMenu({ isOpen, onClose }: Props) {
                 ))}
               </ul>
             </nav>
+
+            {/* Réseaux sociaux — mêmes liens que le footer */}
+            <ul className="flex flex-col gap-[10px] pb-[40px]">
+              {socialLinks.map((social) => (
+                <li key={social.href}>
+                  <a
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[12px] font-medium uppercase tracking-[0.14em] text-cream/70 transition-colors hover:text-cream"
+                  >
+                    {social.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
 

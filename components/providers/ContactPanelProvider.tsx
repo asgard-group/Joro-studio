@@ -26,7 +26,11 @@ export default function ContactPanelProvider({ children }: { children: React.Rea
 
   return (
     <ContactPanelContext.Provider
-      value={{ isOpen, open: () => setIsOpen(true), close: () => setIsOpen(false) }}
+      value={{
+        isOpen,
+        open: () => setIsOpen(true),
+        close: () => setIsOpen(false),
+      }}
     >
       {children}
     </ContactPanelContext.Provider>

@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { type CSSProperties, type MouseEvent as ReactMouseEvent, useState, useEffect, useRef } from "react";
 import { headerStrings } from "@/lib/strings";
 import FullscreenMenu from "@/components/layout/FullscreenMenu";
-import MiniNavbar from "@/components/layout/MiniNavbar";
+import MiniNavbar, { contactButtonClasses } from "@/components/layout/MiniNavbar";
 import ContactPanel from "@/components/layout/ContactPanel";
 import { useContactPanel } from "@/components/providers/ContactPanelProvider";
 import { useIsDesktop } from "@/hooks/useIsDesktop";
@@ -57,29 +57,10 @@ function NavContent({ dark, onOpenMenu, onOpenContact }: NavContentProps) {
 
   return (
     <div className="px-[20px] min-[840px]:px-[32px]">
-      <div className="grid grid-cols-3 items-center py-[20px]">
-        {/* Left — contact */}
-        <button
-          type="button"
-          onClick={onOpenContact}
-          aria-label={headerStrings.contact}
-          className="justify-self-start w-full inline-flex items-center bg-transparent border-0 p-0 cursor-pointer transition-opacity duration-200 hover:opacity-60"
-        >
-          <span
-            className={`nav-label text-[13px] ${labelClasses(dark)}`}
-            style={LABEL_STYLE}
-          >
-            {headerStrings.contact}
-          </span>
-        </button>
-
-        {/* Center — logo (recadré : masque le sous-titre "amo · architecture ·
+      <div className="flex items-center justify-between py-[20px]">
+        {/* Left — logo (recadré : masque le sous-titre "amo · architecture ·
             travaux" intégré à l'image, en n'affichant que le haut du mot-logo) */}
-        <Link
-          href="/"
-          className="justify-self-center"
-          aria-label={headerStrings.logoAriaLabel}
-        >
+        <Link href="/" aria-label={headerStrings.logoAriaLabel}>
           <style>{`
             @media (max-width: 539px) {
               .logo-mobile-img { width: 125px !important; height: auto !important; }
@@ -92,7 +73,7 @@ function NavContent({ dark, onOpenMenu, onOpenContact }: NavContentProps) {
               top, plutôt que d'afficher l'image entière (1390/330). */}
           <div
             className="logo-mobile-img relative overflow-hidden aspect-[1390/250]"
-            style={{ height: "40.15px" }}
+            style={{ height: "33px" }}
           >
             <Image
               src="/images/logos/joro-studio-amo-architecture-travaux.png"
@@ -106,10 +87,11 @@ function NavContent({ dark, onOpenMenu, onOpenContact }: NavContentProps) {
           </div>
         </Link>
 
-        {/* Right — sections pinnées (liens directs, à la place de l'ancien sélecteur de langue) ;
-            en dessous de 840px, plus assez de place pour les 3 libellés : on retombe sur une icône
-            burger (même dessin que MiniNavbar) qui ouvre le même menu plein écran. */}
-        <div className="justify-self-end w-full flex items-center justify-end">
+        {/* Right — sections pinnées + contact, dans le même groupe (à la place de
+            l'ancien sélecteur de langue) ; en dessous de 840px, plus assez de place
+            pour ces libellés : on retombe sur une icône burger (même dessin que
+            MiniNavbar) qui ouvre le même menu plein écran. */}
+        <div className="flex items-center">
           <div className="hidden min-[840px]:inline-flex items-center gap-3">
             {pinnedSections.map((section, index) => (
               <div key={section.key} className="inline-flex items-center gap-3">
@@ -126,6 +108,15 @@ function NavContent({ dark, onOpenMenu, onOpenContact }: NavContentProps) {
                 </Link>
               </div>
             ))}
+            <button
+              type="button"
+              onClick={onOpenContact}
+              aria-label={headerStrings.contact}
+              className={`ml-3 ${contactButtonClasses}`}
+              style={LABEL_STYLE}
+            >
+              {headerStrings.contact}
+            </button>
           </div>
 
           <button
@@ -207,7 +198,7 @@ export default function Header() {
         <NavContent
           dark={isDark}
           onOpenMenu={() => setMenuOpen(true)}
-          onOpenContact={openContact}
+          onOpenContact={() => openContact()}
         />
       </header>
 
@@ -217,14 +208,15 @@ export default function Header() {
         visible={!isDesktopNav || scrolledPastHeader}
         dark={isDark}
         onOpenMenu={() => setMenuOpen(true)}
-        onOpenContact={openContact}
+        onOpenContact={() => openContact()}
       />
 
       {/* Full-screen split menu */}
       <FullscreenMenu isOpen={menuOpen} onClose={() => setMenuOpen(false)} onHero={onHero} />
 
-      {/* Panneau de contact — même mécanique que le menu, ouverture en miroir (depuis la droite).
-          État partagé via ContactPanelProvider : le lien "Contact" du Footer l'ouvre aussi. */}
+      {/* Panneau de contact — même mécanique que le menu, toujours ouvert depuis la
+          droite (bouton Contact désormais ancré à droite partout : navbar principale,
+          MiniNavbar, Footer, CTA). */}
       <ContactPanel isOpen={contactOpen} onClose={closeContact} />
     </>
   );
