@@ -44,8 +44,6 @@ export default function HomePage() {
               {homeHeroStrings.descriptionDesktop.line1}
               <br />
               {homeHeroStrings.descriptionDesktop.line2}
-              <br />
-              {homeHeroStrings.descriptionDesktop.line3}
             </span>
             <span className="hidden min-[470px]:inline min-[835px]:hidden">
               {homeHeroStrings.descriptionTablet.line1}

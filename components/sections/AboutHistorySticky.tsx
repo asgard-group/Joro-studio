@@ -34,16 +34,6 @@ export default function AboutHistorySticky() {
   });
 
   const barHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
-  // Photo "top-right" (video 1, wideVideoRef) et photo "bottom-left" (video 2,
-  // narrowVideoRef) gardent chacune leur emplacement tout du long : seule leur
-  // TAILLE s'inverse en continu (grande ↔ petite), jamais leur position dans
-  // le duo — cf. capture de référence. La somme des 2 hauteurs (25+17.5vw)
-  // reste constante quel que soit t, donc le bloc entier peut être centré une
-  // fois pour toutes sans recalcul (cf. wrapper plus bas).
-  const topWidth = useTransform(scrollYProgress, [0, 1], ["40vw", "15vw"]);
-  const topHeight = useTransform(scrollYProgress, [0, 1], ["25vw", "17.5vw"]);
-  const bottomWidth = useTransform(scrollYProgress, [0, 1], ["15vw", "40vw"]);
-  const bottomHeight = useTransform(scrollYProgress, [0, 1], ["17.5vw", "25vw"]);
 
   const [activeSlide, setActiveSlide] = useState<0 | 1>(0);
 
@@ -168,104 +158,61 @@ export default function AboutHistorySticky() {
           pour l'effet (cf. explication donnée en conversation). */}
       <div ref={wrapperRef} className="relative h-[300vh]">
         <div className="sticky top-0 h-screen overflow-hidden">
-          {/* Duo de photos — desktop uniquement, calque indépendant de la grille
-              ci-dessous (pas affecté par about-sticky-padding/section-title-pl) :
-              positionné en vw directement par rapport à l'écran, comme demandé
-              (3.5vw du bord droit, bloc centré verticalement). */}
-          <div
-            className="hidden min-[835px]:block absolute top-1/2 -translate-y-1/2"
-            style={{ right: "3.5vw", width: "40vw", height: "42.5vw" }}
-          >
-            {/* Top-droite — video 1 (grande au repos, petite après le seuil) */}
-            <motion.div
-              className="absolute top-0 right-0 overflow-hidden"
-              style={{ width: topWidth, height: topHeight }}
-            >
-              <video
-                ref={wideVideoRef}
-                src="/videos/video 1.mp4"
-                poster={VIDEO_1_POSTER}
-                muted
-                loop
-                playsInline
-                className="absolute inset-0 h-full w-full object-cover"
-              />
-            </motion.div>
-            {/* Bas-gauche — video 2 (petite au repos, grande après le seuil) : le
-                coin bas-gauche de la photo du haut touche le coin haut-droit de
-                celle-ci — top/right recalent directement sur topHeight/topWidth,
-                jamais de valeur séparée à resynchroniser. */}
-            <motion.div
-              className="absolute overflow-hidden"
-              style={{ width: bottomWidth, height: bottomHeight, top: topHeight, right: topWidth }}
-            >
-              <video
-                ref={narrowVideoRef}
-                src="/videos/video 2.mp4"
-                poster={VIDEO_2_POSTER}
-                muted
-                loop
-                playsInline
-                className="absolute inset-0 h-full w-full object-cover"
-              />
-            </motion.div>
-          </div>
-
-          <div className="h-full flex items-center about-sticky-padding section-title-pl">
-          <div className="w-full grid grid-cols-1 min-[835px]:grid-cols-[2px_44.8125fr_55.1875fr] gap-[40px] min-[835px]:gap-0 items-center">
-            {/* Colonne 1 — barre de progression verticale (desktop uniquement) */}
-            <div className="hidden min-[835px]:block relative w-px h-[280px] bg-charcoal/15 self-center">
+          <div className="h-full flex items-center about-sticky-padding">
+          <div className="w-full min-[835px]:h-full grid grid-cols-1 min-[835px]:grid-cols-[2px_minmax(0,1fr)_minmax(0,1fr)] gap-[40px] min-[835px]:gap-0 items-center">
+            {/* Colonne 1 — barre de progression verticale (desktop uniquement) :
+                self-stretch (pas de hauteur fixe) pour prendre exactement la
+                hauteur de la ligne de grille, la même que la colonne vidéo
+                (colonne 3, également self-stretch). */}
+            <div className="hidden min-[835px]:block relative w-px self-stretch bg-charcoal/15">
               <motion.div
                 className="absolute top-0 left-0 w-full bg-charcoal"
                 style={{ height: barHeight }}
               />
             </div>
 
-            {/* Colonne 2 — pill + titre (fixe) + texte (bascule à 50%) */}
-            <div ref={mobileTextRef} className="flex flex-col justify-center min-[835px]:pr-[9.3125vw] min-[835px]:ml-[55px]">
+            {/* Colonne 2 — pill + titre en haut, texte en bas (desktop) : les 2
+                groupes sont écartés au maximum (justify-between sur toute la
+                hauteur de la colonne, = hauteur de la photo), cf. capture de
+                référence. Empilement centré simple en dessous de 835px
+                (justify-center, comme avant). */}
+            <div ref={mobileTextRef} className="flex flex-col justify-center min-[835px]:h-full min-[835px]:justify-between min-[835px]:pr-16 min-[835px]:ml-[50px] min-[835px]:[container-type:inline-size]">
+              <div>
               <Pill className="mb-4 self-start">NOTRE STUDIO</Pill>
-              {/* Taille du titre provisoire (reprise de l'ancienne AboutHistory) —
-                  en attente des valeurs desktop/tablette/mobile.
+              {/* Desktop : taille en container query units (cqw, relatif à la
+                  largeur de la colonne texte ci-dessus, pas au viewport) —
+                  9cqw fait correspondre la largeur du titre (ligne la plus
+                  longue, "Imaginer autrement") à la largeur de la colonne à
+                  n'importe quelle largeur de conteneur, plafonné à 58px
+                  au-delà de ~644px de colonne (soit ~1560px de viewport).
                   Révélation mot par mot (masque + glissement depuis le bas), rejouée
                   à chaque franchissement du seuil des 50% — même déclencheur
                   (activeSlide) que la bascule du paragraphe juste en dessous, donc
                   les 2 animations se déclenchent strictement en même temps. */}
               <h2
-                className="font-semibold tracking-tight uppercase text-charcoal text-[clamp(26px,6.7532vw_+_0.6753px,52px)] min-[835px]:text-[58px] whitespace-nowrap mb-[2.5rem]"
+                className="font-semibold tracking-tight uppercase text-charcoal text-[clamp(26px,6.7532vw_+_0.6753px,52px)] min-[835px]:text-[clamp(24px,9cqw,58px)] whitespace-nowrap mb-[2.5rem]"
                 style={{ lineHeight: "1.05" }}
               >
                 <span className="inline-block overflow-hidden align-bottom">
                   <motion.span
-                    key={`imaginer-${activeSlide}`}
+                    key={`des-${activeSlide}`}
                     className="inline-block whitespace-nowrap"
                     initial={{ y: "100%" }}
                     animate={{ y: "0%" }}
                     transition={{ duration: 0.8, ease: TITLE_EASE, delay: 0 * 0.08 }}
                   >
-                    Imaginer&nbsp;
+                    Des&nbsp;
                   </motion.span>
                 </span>
-                <span className="inline-block overflow-hidden align-bottom">
-                  <motion.span
-                    key={`les-${activeSlide}`}
-                    className="inline-block whitespace-nowrap"
-                    initial={{ y: "100%" }}
-                    animate={{ y: "0%" }}
-                    transition={{ duration: 0.8, ease: TITLE_EASE, delay: 1 * 0.08 }}
-                  >
-                    les
-                  </motion.span>
-                </span>
-                <br />
                 <span className="inline-block overflow-hidden align-bottom">
                   <motion.span
                     key={`espaces-${activeSlide}`}
                     className="inline-block whitespace-nowrap"
                     initial={{ y: "100%" }}
                     animate={{ y: "0%" }}
-                    transition={{ duration: 0.8, ease: TITLE_EASE, delay: 2 * 0.08 }}
+                    transition={{ duration: 0.8, ease: TITLE_EASE, delay: 1 * 0.08 }}
                   >
-                    {" "}espaces&nbsp;
+                    espaces&nbsp;
                   </motion.span>
                 </span>
                 <span className="inline-block overflow-hidden align-bottom">
@@ -274,7 +221,7 @@ export default function AboutHistorySticky() {
                     className="inline-block whitespace-nowrap"
                     initial={{ y: "100%" }}
                     animate={{ y: "0%" }}
-                    transition={{ duration: 0.8, ease: TITLE_EASE, delay: 3 * 0.08 }}
+                    transition={{ duration: 0.8, ease: TITLE_EASE, delay: 2 * 0.08 }}
                   >
                     de&nbsp;
                   </motion.span>
@@ -285,12 +232,36 @@ export default function AboutHistorySticky() {
                     className="inline-block whitespace-nowrap"
                     initial={{ y: "100%" }}
                     animate={{ y: "0%" }}
-                    transition={{ duration: 0.8, ease: TITLE_EASE, delay: 4 * 0.08 }}
+                    transition={{ duration: 0.8, ease: TITLE_EASE, delay: 3 * 0.08 }}
                   >
                     vie
                   </motion.span>
                 </span>
+                <br />
+                <span className="inline-block overflow-hidden align-bottom">
+                  <motion.span
+                    key={`imaginer-${activeSlide}`}
+                    className="inline-block whitespace-nowrap"
+                    initial={{ y: "100%" }}
+                    animate={{ y: "0%" }}
+                    transition={{ duration: 0.8, ease: TITLE_EASE, delay: 4 * 0.08 }}
+                  >
+                    {" "}Imaginer&nbsp;
+                  </motion.span>
+                </span>
+                <span className="inline-block overflow-hidden align-bottom">
+                  <motion.span
+                    key={`autrement-${activeSlide}`}
+                    className="inline-block whitespace-nowrap"
+                    initial={{ y: "100%" }}
+                    animate={{ y: "0%" }}
+                    transition={{ duration: 0.8, ease: TITLE_EASE, delay: 5 * 0.08 }}
+                  >
+                    autrement
+                  </motion.span>
+                </span>
               </h2>
+              </div>
               <div className="relative min-h-[140px] min-[835px]:min-h-[100px]">
                 <motion.p
                   className="texte text-charcoal absolute inset-0"
@@ -317,11 +288,51 @@ export default function AboutHistorySticky() {
               </div>
             </div>
 
-            {/* Colonne 3 — vide : réservée uniquement pour garder les mêmes
-                proportions de grille (et donc la même largeur/hauteur de ligne
-                pour les colonnes 1 et 2) qu'avant. Les photos elles-mêmes vivent
-                maintenant dans le calque indépendant tout en haut du fichier. */}
-            <div className="hidden min-[835px]:block min-[835px]:h-[500px]" aria-hidden="true" />
+            {/* Colonne 3 — vidéos, desktop uniquement : self-stretch (comme la
+                barre en colonne 1) pour prendre exactement la hauteur de la
+                ligne de grille. min-w-0 empêche la colonne de forcer sa
+                largeur minimale de contenu (cf. minmax(0, …) sur les tracks).
+                Crossfade + léger zoom entre les 2 vidéos, même mécanique que
+                le slider mobile plus bas (mêmes états item1Hidden/item2Visible,
+                partagés). */}
+            <div className="hidden min-[835px]:block relative overflow-hidden self-stretch min-w-0">
+              <div
+                className="absolute inset-0 w-full h-full"
+                style={{
+                  opacity: item1Hidden ? 0 : 1,
+                  transform: item1Hidden ? "scale(1.2)" : "scale(1)",
+                  transition: "transform 0.6s 0.15s cubic-bezier(.34,1.56,.64,1), opacity 0.45s ease-in-out",
+                }}
+              >
+                <video
+                  ref={wideVideoRef}
+                  src="/videos/video 1.mp4"
+                  poster={VIDEO_1_POSTER}
+                  muted
+                  loop
+                  playsInline
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+              </div>
+              <div
+                className="absolute inset-0 w-full h-full"
+                style={{
+                  opacity: item2Visible ? 1 : 0,
+                  transform: item2Visible ? "scale(1)" : "scale(1.2)",
+                  transition: "transform 0.6s 0.15s cubic-bezier(.34,1.56,.64,1), opacity 0.45s ease-in-out",
+                }}
+              >
+                <video
+                  ref={narrowVideoRef}
+                  src="/videos/video 2.mp4"
+                  poster={VIDEO_2_POSTER}
+                  muted
+                  loop
+                  playsInline
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+              </div>
+            </div>
 
             {/* Slider mobile — remplace la grille en quinconce ci-dessus sous 835px :
                 2 vidéos superposées en absolute, crossfade + léger zoom (scale 1→1.2)

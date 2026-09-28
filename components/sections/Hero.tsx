@@ -4,7 +4,6 @@ import React, { useRef } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useIsDesktop } from "@/hooks/useIsDesktop";
-import { heroStrings } from "@/lib/strings";
 
 interface HeroProps {
   title: React.ReactNode;
@@ -100,13 +99,6 @@ export default function Hero({
                 </div>
               </div>
             )}
-          </div>
-
-          {/* Divider + "Glisser pour découvrir" — desktop uniquement, en bas du
-              bloc contenu, texte aligné à droite (cf. capture de référence). */}
-          <div className="hidden min-[835px]:flex w-full flex-col items-end hero-scroll-gap">
-            <div className="h-px w-full bg-cream/50" aria-hidden="true" />
-            <span className="label-scroll text-cream/90">{heroStrings.scrollCta}</span>
           </div>
         </div>
       </div>

@@ -43,12 +43,6 @@ export const headerStrings = {
   },
 } as const;
 
-// Section Hero — appel à l'action de scroll en bas de section (générique,
-// réutilisé quelle que soit la page qui monte le composant Hero).
-export const heroStrings = {
-  scrollCta: "Glisser pour découvrir",
-} as const;
-
 // Hero de la page d'accueil — titre et texte descriptif spécifiques à la home.
 export const homeHeroStrings = {
   title: {
@@ -64,8 +58,7 @@ export const homeHeroStrings = {
   // (470-834px) sur 3 lignes, mobile (<470px) version raccourcie sur 3 lignes.
   descriptionDesktop: {
     line1: "Jöro Studio accompagne particuliers et professionnels",
-    line2: "dans la transformation de leurs espaces, alliant",
-    line3: "maîtrise d'ouvrage, architecture et travaux.",
+    line2: "dans la transformation de leurs espaces.",
   },
   descriptionTablet: {
     line1: "Jöro Studio accompagne particuliers et professionnels dans la",
