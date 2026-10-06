@@ -6,8 +6,11 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useIsDesktop } from "@/hooks/useIsDesktop";
 
 interface HeroProps {
+  /** Texte d'accroche (rendu en h1). */
   title: React.ReactNode;
-  description?: React.ReactNode;
+  /** Bouton bas droite (à partir de 840px), ex. "Découvrir" → ancre ctaHref. */
+  ctaLabel?: string;
+  ctaHref?: string;
   image?: string;
   video?: string;
   overlay?: boolean;
@@ -15,7 +18,8 @@ interface HeroProps {
 
 export default function Hero({
   title,
-  description,
+  ctaLabel,
+  ctaHref,
   image,
   video,
   overlay = true,
@@ -33,7 +37,7 @@ export default function Hero({
   const imageY = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]);
 
   return (
-    <section ref={sectionRef} data-navbar-theme="dark" className="relative min-h-[100svh] overflow-hidden">
+    <section ref={sectionRef} data-navbar-theme="dark" className="relative h-[100svh] overflow-hidden">
 
       {/* Background — vidéo ou image, avec parallax via Framer Motion */}
       {(video || image) ? (
@@ -60,14 +64,14 @@ export default function Hero({
               alt=""
               fill
               priority
-              className="object-cover object-right min-[835px]:object-[100%_60%]"
+              className="object-cover object-left min-[835px]:object-[100%_60%]"
               sizes="100vw"
             />
           )}
           {overlay && (
             <div
               className="absolute inset-0"
-              style={{ backgroundColor: "rgba(28, 38, 38, 1)", mixBlendMode: "hard-light", opacity: 0.35 }}
+              style={{ backgroundColor: "#1B2424", mixBlendMode: "hard-light", opacity: 0.35 }}
             />
           )}
         </motion.div>
@@ -75,31 +79,33 @@ export default function Hero({
         <div className="absolute inset-0 bg-cream" />
       )}
 
-      {/* Label + Title — collé en bas à tous les breakpoints (padding-bottom
-          sur .hero-container, jamais padding-top) : si la fenêtre est moins
-          haute, l'espace se comprime en haut, le container ne remonte pas.
-          Tailles/gaps/paddings gérés par le design system fluide (vw) dans
-          globals.css. */}
+      {/* Texte d'accroche (bas gauche) + bouton "Nos projets" (bas droite, ≥840px)
+          — collés en bas à tous les breakpoints (padding-bottom sur
+          .hero-container, jamais padding-top) : si la fenêtre est moins haute,
+          l'espace se comprime en haut, le container ne remonte pas.
+          Tailles/paddings gérés par le design system --u (breakpoints
+          390/834/1280/1920) et .hero-lead dans globals.css. */}
       <div className="absolute inset-0 z-10 flex items-end">
-        <div className="hero-container w-full flex flex-col items-start text-left hero-title-gap">
-          {/* En dessous de 835px : titre + description empilés (colonne), avec le
-              petit trait séparateur devant la description. À partir de 835px
-              (desktop) : titre et description sur une même ligne, calés sur le
-              bas (items-end) et espacés automatiquement (justify-between, pas de
-              gap fixe) — plus de trait séparateur, cf. capture de référence. */}
-          <div className="flex flex-col items-start hero-title-gap w-full min-[835px]:flex-row min-[835px]:items-end min-[835px]:justify-between min-[835px]:gap-x-[40px]">
-            <h1 className="title-huge text-cream" style={{ wordWrap: "break-word" }}>
-              {title}
-            </h1>
-            {description && (
-              <div className="flex items-start hero-divider-gap max-w-[500px]">
-                <span className="mt-[9px] h-px w-[26px] shrink-0 bg-cream/50 min-[835px]:hidden" aria-hidden="true" />
-                <div className="texte text-cream" style={{ wordWrap: "break-word" }}>
-                  {description}
-                </div>
-              </div>
-            )}
-          </div>
+        <div className="hero-container w-full flex items-end justify-between text-left">
+          <h1 className="hero-lead text-cream" style={{ wordWrap: "break-word" }}>
+            {title}
+          </h1>
+          {ctaLabel && (
+            <a href={ctaHref} className="hero-cta hidden min-[840px]:inline-flex items-center text-cream shrink-0">
+              {ctaLabel}
+              {/* Flèche vers le bas (diagonale bas-droite, comme la maquette) */}
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 14 14"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.2"
+                style={{ width: "calc(14 * var(--u))", height: "calc(14 * var(--u))" }}
+              >
+                <path d="M3 3l8 8M11 4v7H4" />
+              </svg>
+            </a>
+          )}
         </div>
       </div>
 

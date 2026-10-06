@@ -2,33 +2,18 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { type CSSProperties } from "react";
 import { headerStrings } from "@/lib/strings";
-
-const LABEL_STYLE: CSSProperties = {
-  lineHeight: "100%",
-  letterSpacing: "0.02em",
-};
 
 // Inverse un SVG foncé (charcoal) en cream — même filtre que Header/FullscreenMenu.
 const ICON_FILTER = "brightness(0) invert(1) sepia(1) saturate(0) brightness(0.953)";
-
-// Bouton Contact — même style que l'ancienne pilule mais sans radius (angles droits).
-// Survol volontairement en valeur littérale et non en `taupe-600` : cette nuance est
-// pensée pour du texte cream (cf. Button.tsx), et donnerait ici un noir sur fond
-// sombre illisible. Ce ton reste une nuance du taupe, lisible avec `text-charcoal`.
-// Exporté : repris tel quel par le bouton Contact de la navbar principale (Header.tsx).
-export const contactButtonClasses =
-  "inline-flex items-center gap-0 bg-taupe px-[16px] py-[10px] text-[13px] font-medium uppercase text-charcoal transition-colors duration-200 hover:bg-[#A7A296]";
 
 interface Props {
   visible: boolean;
   dark: boolean;
   onOpenMenu: () => void;
-  onOpenContact: () => void;
 }
 
-export default function MiniNavbar({ visible, dark, onOpenMenu, onOpenContact }: Props) {
+export default function MiniNavbar({ visible, dark, onOpenMenu }: Props) {
   // Traits du menu : cream sur section sombre, charcoal sur section claire.
   const lineColor = dark ? "#F3F2ED" : "#1C2626";
 
@@ -42,31 +27,34 @@ export default function MiniNavbar({ visible, dark, onOpenMenu, onOpenContact }:
       style={{ pointerEvents: visible ? "auto" : "none" }}
       aria-hidden={!visible}
     >
-      <div className="flex items-center justify-between px-[20px] min-[840px]:px-[32px] py-[16px]">
-        {/* Gauche — monogramme */}
+      {/* Marges — 16/32 latérales (paliers 390/834), 16/24 haute (paliers
+          390-834/1280) : cette navbar peut réapparaître au scroll même en
+          desktop (≥1280px, cf. Header.tsx scrolledPastHeader), elle reprend
+          alors les valeurs du palier 1280/1920 sur tous les axes. */}
+      <div className="flex items-center justify-between px-[calc(16*var(--u))] min-[834px]:px-[calc(32*var(--u))] min-[1280px]:px-[calc(40*var(--u))] py-[calc(16*var(--u))] min-[1280px]:py-[calc(24*var(--u))]">
+        {/* Gauche — monogramme, largeur 44 fixe à tous les paliers (contrairement
+            au logo complet de Header.tsx, ne suit pas la largeur 1280/1920). */}
         <Image
           src="/images/logos/monograme.svg"
           alt={headerStrings.logoAlt}
           width={44}
           height={28}
           priority
-          style={{ filter: dark ? ICON_FILTER : "none" }}
+          style={{ filter: dark ? ICON_FILTER : "none", width: "calc(44 * var(--u))", height: "auto" }}
         />
 
-        {/* Droite — Contact (à la place de l'ancien Menu) + icône menu (2 traits) */}
-        <div className="flex items-center gap-[16px]">
-          <button type="button" onClick={onOpenContact} className={contactButtonClasses} style={LABEL_STYLE}>
-            {headerStrings.contact}
-          </button>
-
+        {/* Droite — icône menu (3 traits) uniquement, plus de lien Contact ici. */}
+        <div className="flex items-center gap-[calc(16*var(--u))]">
           <button
             type="button"
             onClick={onOpenMenu}
             aria-label={headerStrings.menu}
-            className="inline-flex flex-col justify-center gap-[7px] cursor-pointer bg-transparent border-0 p-0"
+            className="inline-flex flex-col justify-center gap-[calc(6*var(--u))] cursor-pointer bg-transparent border-0 p-0"
+            style={{ width: "calc(24 * var(--u))" }}
           >
-            <span className="block h-[1.5px] w-[28px]" style={{ backgroundColor: lineColor }} />
-            <span className="block h-[1.5px] w-[28px]" style={{ backgroundColor: lineColor }} />
+            <span className="block h-[calc(2*var(--u))] w-full" style={{ backgroundColor: lineColor }} />
+            <span className="block h-[calc(2*var(--u))] w-full" style={{ backgroundColor: lineColor }} />
+            <span className="block h-[calc(2*var(--u))] w-full" style={{ backgroundColor: lineColor }} />
           </button>
         </div>
       </div>

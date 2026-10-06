@@ -7,6 +7,17 @@
     --color-cream: #F3F2ED;
     --color-taupe: #BAB6AA;
     --color-charcoal: #1C2626;
+
+    /* Unité de design pour le Hero/Navbar (spec du 2026-09-29) — 1 unité =
+       1px de maquette à partir de 390px ; en dessous, tout (Hero + Navbar)
+       rétrécit proportionnellement à la largeur de l'écran. */
+    --u: 1px;
+  }
+
+  @media (max-width: 389px) {
+    :root {
+      --u: calc(100vw / 390);
+    }
   }
 
   html {
@@ -106,42 +117,101 @@
    Rôles ajoutés au fil des sections traitées (cf. Hero en premier).
    ========================================================================== */
 
-/* Rôle "Hero" — titre H1 unique sur le site (aucune autre section n'a
-   besoin d'un titre aussi grand pour l'instant).
-   Desktop plafonné à la même valeur que l'ancre tablette (68px @834) : plus
-   besoin de formule vw, le titre est simplement figé sur toute la plage
-   ≥834px (cohérent avec .hero-container qui plafonne aussi à 1560px). */
-.title-huge {
-  font-size: 68px;
-  font-weight: 600;
-  line-height: 1;
-  letter-spacing: -0.01em; /* -1% Figma = -0.01em, scale avec la font-size */
-  text-transform: uppercase;
-}
-
-/* Texte d'intro sous un grand titre (line-height 130%, distinct du rôle
-   "texte de section" 14px/175% utilisé ailleurs sur le site). */
-.texte {
-  font-size: calc(0.0921vw + 12.232px); /* 14px @1920, 13px @834 */
+/* Rôle "Hero" — spec du 2026-09-29. Système à paliers fixes (PAS de vw
+   fluide comme le reste du fichier) : 4 breakpoints de référence
+   390/848/1280/1920 (contenu du Hero : le palier "mobile" va de 390 à
+   847px), la valeur du palier inférieur s'applique jusqu'au palier suivant
+   (cf. Hero.tsx pour les breakpoints de layout). Sous 390px, tout rétrécit proportionnellement via la
+   variable --u (cf. :root) : chaque valeur du palier "mobile" s'écrit
+   calc(N * var(--u)) plutôt qu'en px fixe — --u vaut 1px partout ≥390px et
+   calc(100vw/390) en dessous. Au-delà de 1920px : aucun scaling, les
+   valeurs du palier 1920 restent figées (media query min-width:1920px sans
+   borne haute). */
+/* Texte d'accroche du Hero (remplace l'ancien titre) : mêmes tailles que le
+   paragraphe de la section À propos (.studio__text) — fluide, proportionnel à
+   la largeur de l'écran à partir de la maquette du palier : mobile 390px
+   (<834, 18px), tablette 834px (834-1279, 22px), desktop 1920px (≥1280, 37px).
+   Au-delà de 1920px : pas de scaling (37px). Largeur max 733px. */
+.hero-lead {
+  --s: calc(100vw / 390);
+  margin: 0;
+  /* 733px max, mais aussi ~19,3em (mesuré : "…les particuliers" et "et
+     professionnels dans la transformation" font 18,7em, avec "et"/"de" en plus
+     ≥19,86em) → toujours 3 lignes : "…les particuliers / et professionnels
+     dans la transformation / de leurs espaces." à toutes les tailles. */
+  max-width: min(733px, 19.3em);
+  font-size: calc(18 * var(--s));
   font-weight: 500;
-  line-height: 1.3;
+  line-height: 1.15;
+}
+@media (min-width: 834px) {
+  .hero-lead {
+    --s: calc(100vw / 834);
+    font-size: calc(22 * var(--s));
+  }
+}
+@media (min-width: 1280px) {
+  .hero-lead {
+    --s: calc(100vw / 1920);
+    font-size: calc(37 * var(--s));
+  }
+}
+@media (min-width: 1921px) {
+  .hero-lead { --s: 1px; }
 }
 
-/* Container Hero — collé en bas à TOUS les breakpoints (padding-bottom,
-   pas padding-top) : ainsi si la fenêtre est moins haute, c'est l'espace
-   du haut qui se comprime, le container ne remonte jamais vers le centre.
-   Padding horizontal identique à celui de la navbar (px-[20px] puis
-   min-[840px]:px-[32px] dans Header.tsx) — pas de max-width, le Hero suit la
-   largeur de la navbar. */
-.hero-container {
-  padding-left: 20px;
-  padding-right: 20px;
-  padding-bottom: 40px;
+/* Bouton "Nos projets" (bas droite du Hero, à partir de 840px) : texte + flèche,
+   ligne en dessous au survol uniquement. */
+/* (display/align gérés par les classes Tailwind du composant : un `display`
+   ici, non layeré, écraserait le `hidden` sous 840px.) */
+.hero-cta:hover,
+.hero-cta:focus-visible {
+  border-bottom-color: currentColor;
 }
-@media (min-width: 840px) {
+.hero-cta {
+  gap: calc(8 * var(--u));
+  padding-bottom: calc(4 * var(--u));
+  /* Ligne de soulignement : invisible par défaut (transparente, la hauteur est
+     réservée donc rien ne bouge), révélée au survol / focus clavier. */
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s ease;
+  font-size: calc(16 * var(--u));
+  font-weight: 500;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Container Hero — collé en bas à TOUS les breakpoints (padding-bottom, pas
+   padding-top) : ainsi si la fenêtre est moins haute, c'est l'espace du
+   haut qui se comprime, le container ne remonte jamais vers le centre. */
+.hero-container {
+  padding-left: calc(16 * var(--u));
+  padding-right: calc(16 * var(--u));
+  padding-bottom: calc(32 * var(--u));
+}
+@media (min-width: 848px) {
   .hero-container {
-    padding-left: 32px;
-    padding-right: 32px;
+    padding-left: calc(32 * var(--u));
+    padding-right: calc(32 * var(--u));
+    padding-bottom: calc(40 * var(--u));
+  }
+}
+@media (min-width: 1280px) {
+  /* Marges desktop de 40px (4 éléments périphériques sur le même axe : cf. Header.tsx) */
+  .hero-container {
+    padding-left: calc(40 * var(--u));
+    padding-right: calc(40 * var(--u));
+  }
+}
+@media (min-width: 1920px) {
+  /* Au-delà de 1920px, le contenu du Hero (pas la navbar, qui reste pleine
+     largeur) se recentre dans un conteneur plafonné à 1920px — désaligné de
+     la navbar au-delà de cette largeur, volontairement (cf. spec). */
+  .hero-container {
+    max-width: 1920px;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 
@@ -154,32 +224,20 @@
   padding-left: 53px;
 }
 
-.hero-title-gap { gap: calc(1.5vw + 14.6404px); } /* ~43.44px @1920, ~27.15px @834 — desktop uniquement, cf. media query ci-dessous pour ≤834px */
-.hero-divider-gap { gap: calc(0.7366vw + 5.8484px); } /* 20px @1920, 12px @834 */
-
-/* Même problème, même remède qu'entre desktop et tablette : formule à 2
-   points (834→valeur tablette, 470→valeur mobile) au lieu d'un simple
-   ratio vw, pour rester juste sur toute la plage 470-834px. */
-@media (max-width: 834px) {
-  .title-huge { font-size: calc(6.3187vw + 15.3022px); } /* 68px @834, 45px @470 */
-  .texte { font-size: calc(0.2747vw + 10.7088px); } /* 13px @834, 12px @470 */
-  .hero-title-gap { gap: calc(1.6484vw + 16.2527px); } /* 30px @834, 24px @470 */
-  .hero-divider-gap { gap: calc(0.5495vw + 7.4176px); } /* 12px @834, 10px @470 */
-  .hero-container {
-    padding-bottom: 48px; /* identique @834 et @470 */
-  }
+/* Texte d'intro sous un grand titre (line-height 130%, distinct du rôle
+   "texte de section" 14px/175% utilisé ailleurs sur le site). Utilisé par
+   AboutHistorySticky/FeaturedWork — le Hero a sa propre classe .hero-lead
+   ci-dessus. */
+.texte {
+  font-size: calc(0.0921vw + 12.232px); /* 14px @1920, 13px @834 */
+  font-weight: 500;
+  line-height: 1.3;
 }
-
-/* Sous 470px : valeurs figées en px (pas de vw) — on ne veut plus que ça
-   rétrécisse sur les petits téléphones, 470px agit comme un plancher fixe. */
+@media (max-width: 834px) {
+  .texte { font-size: calc(0.2747vw + 10.7088px); } /* 13px @834, 12px @470 */
+}
 @media (max-width: 470px) {
-  .title-huge { font-size: 45px; }
   .texte { font-size: 12px; }
-  .hero-title-gap { gap: 24px; }
-  .hero-divider-gap { gap: 10px; }
-  .hero-container {
-    padding-bottom: 48px;
-  }
 }
 
 /* Rôle "Pill" — eyebrow (NOTRE STUDIO, NOS SERVICES, TÉMOIGNAGES...), partagé
@@ -207,16 +265,203 @@
   .pill-text { font-size: 11px; }
 }
 
-/* Rôle "About sticky" (test de mise en page "Notre studio") — padding du
-   contenu à l'intérieur du wrapper sticky, sur les 4 côtés (ne dépend plus de
-   .section-title-pl, propre à cette section pour pouvoir avoir des valeurs
-   différentes du reste du site). */
-.about-sticky-padding {
-  padding: 80px 24px 80px 53px; /* mobile/tablette (≤834px) */
+/* Rôle "Notre studio" (À propos) — section entièrement fluide, sans animation.
+   Variable propre à la section (--s, n'affecte ni le hero ni la navbar) :
+   1 unité = 1px de maquette, redimensionnée proportionnellement à la largeur
+   de l'écran à partir de la maquette de référence du palier — mobile 390px
+   (<834), tablette 834px (834-1279), desktop 1920px (1280-1920). Au-delà de
+   1920px : pas de scaling (--s: 1px), contenu dans un conteneur max-width
+   1920px centré. Chaque valeur s'écrit calc(N * var(--s)). */
+.studio {
+  --s: calc(100vw / 390);
+  position: relative;
+  overflow: hidden;
+  background-color: #F3F2ED;
+  color: #1C2626;
 }
-@media (min-width: 835px) {
-  .about-sticky-padding {
-    padding: 112px 50px; /* desktop */
+@media (min-width: 834px) {
+  .studio { --s: calc(100vw / 834); }
+}
+@media (min-width: 1280px) {
+  .studio { --s: calc(100vw / 1920); }
+}
+@media (min-width: 1921px) {
+  .studio { --s: 1px; }
+}
+
+.studio__inner {
+  position: relative;
+  max-width: 1920px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: calc(120 * var(--s)) calc(16 * var(--s)) calc(80 * var(--s));
+}
+@media (min-width: 834px) {
+  .studio__inner { padding: calc(140 * var(--s)) calc(32 * var(--s)) calc(80 * var(--s)); }
+}
+@media (min-width: 1280px) {
+  /* min-height : le bas du SVG (32,98 + 1399,3 = 1432,3) doit rentrer dans la section, sinon le
+     overflow:hidden le rogne. */
+  .studio__inner { padding: calc(250 * var(--s)) calc(32 * var(--s)) calc(250 * var(--s)); min-height: calc(1433 * var(--s)); }
+}
+
+/* Cercles décoratifs (svg.svg, viewBox 812×1240) — position/hauteur de
+   maquette par palier, derrière le contenu. */
+.studio__ring {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  max-width: none;
+  /* Le fichier svg.svg a un viewBox étendu de 160 vers le haut (0 -160 812 1400) pour ne
+     plus couper l'arc du haut (tracé à y<0). Hauteur/top ajustés pour que la partie
+     d'origine (812×1240) reste exactement au même endroit : hauteur ×1400/1240,
+     top − 160 × (hauteur d'origine / 1240). */
+  height: calc(558.3 * var(--s));
+  width: auto;
+  left: calc(241.24 * var(--s));
+  top: calc(-114.7 * var(--s));
+}
+@media (min-width: 834px) {
+  .studio__ring {
+    height: calc(1481.3 * var(--s)); /* origine 1312 */
+    left: calc(459.91 * var(--s));
+    top: calc(-566.3 * var(--s)); /* origine -397 */
+  }
+}
+/* Tablette large (840–1279px) : position du SVG propre à cette plage (le palier
+   desktop ≥1280px, juste après, reprend la main). */
+@media (min-width: 840px) {
+  .studio__ring {
+    height: calc(1397.3 * var(--s));
+    left: calc(459.91 * var(--s));
+    top: calc(-486.3 * var(--s));
+  }
+}
+@media (min-width: 1280px) {
+  .studio__ring {
+    height: calc(1579.9 * var(--s)); /* origine 1399.3 */
+    left: calc(992 * var(--s));
+    top: calc(-147.6 * var(--s)); /* origine 32.98 */
+  }
+}
+
+.studio__title,
+.studio__text,
+.studio__image,
+.studio__label {
+  position: relative;
+  z-index: 1;
+}
+
+.studio__title {
+  margin: 0;
+  font-size: calc(46 * var(--s));
+  font-weight: 500;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+@media (min-width: 834px) {
+  .studio__title { font-size: calc(72 * var(--s)); }
+}
+@media (min-width: 1280px) {
+  /* 195px depuis le bord gauche de la section - 32px de marge */
+  .studio__title {
+    font-size: calc(120 * var(--s));
+    line-height: 1.3;
+    margin-left: calc(163 * var(--s));
+  }
+}
+
+/* Paragraphe : 1re ligne en retrait via text-indent (pas d'espaces). */
+.studio__text {
+  margin: calc(22 * var(--s)) 0 0;
+  max-width: calc(346 * var(--s));
+  font-size: calc(17 * var(--s));
+  font-weight: 400;
+  line-height: 1.2;
+  text-indent: calc(100 * var(--s));
+}
+@media (min-width: 834px) {
+  .studio__text {
+    /* décalage gauche 200px depuis le bord - 32px de marge */
+    margin-left: calc(168 * var(--s));
+    max-width: calc(608 * var(--s));
+    font-size: calc(22 * var(--s));
+    text-indent: calc(190 * var(--s));
+  }
+}
+@media (min-width: 1280px) {
+  .studio__text {
+    margin-top: calc(16 * var(--s));
+    /* décalage gauche 500px depuis le bord - 32px de marge */
+    margin-left: calc(468 * var(--s));
+    max-width: calc(1020 * var(--s));
+    font-size: calc(37 * var(--s));
+    text-indent: calc(330 * var(--s));
+  }
+}
+
+/* Image alignée sur le bord gauche du paragraphe. */
+.studio__image {
+  margin-top: calc(50 * var(--s));
+  width: 100%;
+  height: calc(173 * var(--s));
+}
+@media (min-width: 834px) {
+  .studio__image {
+    margin-left: calc(168 * var(--s));
+    width: calc(480 * var(--s));
+    height: calc(238 * var(--s));
+  }
+}
+@media (min-width: 1280px) {
+  .studio__image {
+    margin-top: calc(60 * var(--s));
+    margin-left: calc(468 * var(--s));
+    width: calc(806 * var(--s));
+    height: calc(400 * var(--s));
+  }
+}
+
+/* Label "• À PROPOS" : sous l'image en mobile ; en bas à gauche de la
+   section, aligné sur le bas de l'image, à partir de 834px. Taille minimum
+   11px. */
+.studio__label {
+  display: flex;
+  align-items: center;
+  gap: calc(4 * var(--s));
+  margin: calc(16 * var(--s)) 0 0;
+  font-size: max(11px, calc(11 * var(--s)));
+  font-weight: 500;
+  line-height: 1;
+  text-transform: uppercase;
+}
+.studio__dot {
+  flex-shrink: 0;
+  width: calc(4 * var(--s));
+  height: calc(4 * var(--s));
+  border-radius: 9999px;
+  background-color: #BAB6AA;
+}
+@media (min-width: 834px) {
+  .studio__label {
+    position: absolute;
+    left: calc(32 * var(--s));
+    bottom: calc(80 * var(--s));
+    margin: 0;
+  }
+}
+@media (min-width: 1280px) {
+  .studio__label {
+    /* 250 + 35 : la section grandit de 35 (min-height ci-dessus, pour le SVG), le label
+       garde sa position par rapport au contenu. */
+    bottom: calc(285 * var(--s));
+    gap: calc(8 * var(--s));
+    font-size: max(11px, calc(16 * var(--s)));
+  }
+  .studio__dot {
+    width: calc(6 * var(--s));
+    height: calc(6 * var(--s));
   }
 }
 

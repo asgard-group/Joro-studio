@@ -7,9 +7,7 @@ import CTA from "@/components/sections/CTA";
 import ServicesAll from "@/components/sections/ServicesAll";
 import ServiceReveal from "@/components/sections/ServiceReveal";
 import FeaturedWork from "@/components/sections/FeaturedWork";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- gardé pour repasser facilement à l'ancienne version pendant le test
-import AboutHistory from "@/components/sections/AboutHistory";
-import AboutHistorySticky from "@/components/sections/AboutHistorySticky";
+import AboutStudio from "@/components/sections/AboutStudio";
 
 export const metadata: Metadata = buildMetadata({
   title: "JÖRO Studio — Architecture intérieure & espaces hybrides durables",
@@ -23,55 +21,16 @@ export default function HomePage() {
     <>
       {/* Hero */}
       <Hero
-        title={
-          <>
-            {/* 2 lignes en dessous de 835px (mobile/tablette) : "Créer" / "les espaces".
-                1 seule ligne ("Créer les espaces") à partir de 835px (desktop). */}
-            <span className="block min-[835px]:inline">{homeHeroStrings.title.line1}</span>
-            <span className="hidden min-[835px]:inline">&nbsp;</span>
-            <span className="block min-[835px]:inline">{homeHeroStrings.title.line2}</span>
-            <span className="block font-normal italic">
-              {/* 1 seule ligne à partir de 470px (tablette et desktop), 2 lignes en dessous (mobile) */}
-              <span className="block min-[470px]:inline">{homeHeroStrings.title.line3a}</span>
-              <span className="hidden min-[470px]:inline">&nbsp;</span>
-              <span className="block min-[470px]:inline">{homeHeroStrings.title.line3b}</span>
-            </span>
-          </>
-        }
-        description={
-          <>
-            <span className="hidden min-[835px]:inline">
-              {homeHeroStrings.descriptionDesktop.line1}
-              <br />
-              {homeHeroStrings.descriptionDesktop.line2}
-            </span>
-            <span className="hidden min-[470px]:inline min-[835px]:hidden">
-              {homeHeroStrings.descriptionTablet.line1}
-              <br />
-              {homeHeroStrings.descriptionTablet.line2}
-              <br />
-              {homeHeroStrings.descriptionTablet.line3}
-            </span>
-            <span className="min-[470px]:hidden">
-              {homeHeroStrings.descriptionMobile.line1}
-              <br />
-              {homeHeroStrings.descriptionMobile.line2}
-              <br />
-              {homeHeroStrings.descriptionMobile.line3}
-            </span>
-          </>
-        }
-        image="/images/2021-07-JeanMarieDufour-Taitbout-Livraison-12-JMD07313.png"
-        overlay
+        title={homeHeroStrings.lead}
+        ctaLabel={homeHeroStrings.discover}
+        ctaHref="#nos-realisations"
+        image="/images/870894.png"
+        overlay={false}
       />
 
-      {/* À propos — Notre histoire (avec animation clip-path révélation au scroll) */}
+      {/* À propos — Notre studio (statique, sans animation) */}
       <div id="notre-studio">
-        {/* TEST : nouvelle mise en page "sticky scroll slider" — AboutHistory
-            original conservé en dessous, juste commenté, pour repasser dessus
-            facilement si le test ne convainc pas. */}
-        <AboutHistorySticky />
-        {/* <AboutHistory /> */}
+        <AboutStudio />
       </div>
 
       {/* Services + FeaturedWork — un seul conteneur sticky pour tout l'enchaînement */}
