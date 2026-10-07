@@ -37,8 +37,10 @@ export const headerStrings = {
 
 // Hero de la page d'accueil — texte d'accroche (à la place de l'ancien titre) et bouton.
 export const homeHeroStrings = {
-  lead: "Jöro Studio accompagne les particuliers et professionnels dans la transformation de leurs espaces.",
+  headingLines: ["Concevoir les espaces", "hybrides de demain"],
+  lead: "Jöro Studio accompagne particuliers et professionnels dans la transformation de leurs espaces, alliant assistance à maîtrise d\u2019ouvrage, architecture et conseil pour des lieux plus durables et inspirants.",
   discover: "Nos projets",
+  scroll: "Défiler",
 } as const;
 
 // Section "Notre studio" (À propos, bas du hero) — titre, paragraphe, label.

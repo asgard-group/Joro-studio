@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { headerStrings } from "@/lib/strings";
 import FullscreenMenu from "@/components/layout/FullscreenMenu";
 import MiniNavbar from "@/components/layout/MiniNavbar";
@@ -24,22 +25,22 @@ function NavContent({ dark, onOpenMenu }: NavContentProps) {
   return (
     <div className="px-[calc(40*var(--u))]">
       {/* 3 colonnes : inscription à gauche, logo centré, menu à droite. */}
-      <div className="grid grid-cols-[1fr_auto_1fr] items-start py-[calc(24*var(--u))]">
+      <div className="grid grid-cols-[1fr_auto_1fr] items-start pt-[calc(24*var(--u))] pb-[calc(35*var(--u))]">
         {/* Gauche — inscription (à la place du logo). Les 3 éléments sont alignés sur
             la ligne typographique "JÖRO STUDIO" (mot-logo : lignes 98→227 sur les
-            227 de la boîte, centre à 71,6 % de la hauteur = 27,2px pour 38px), pas
+            227 de la boîte, centre à 71,6 % de la hauteur = 30,1px pour 42px), pas
             sur le centre de la boîte entière, que la virgule/macron au-dessus du O
-            tire vers le haut : marge haute = 27,2 − (hauteur de l'élément / 2). */}
+            tire vers le haut : marge haute = 30,1 − (hauteur de l'élément / 2). */}
         <span
           className="justify-self-start text-[length:calc(11*var(--u))] font-medium leading-none uppercase tracking-[0.08em]"
-          style={{ color: dark ? "#F3F2ED" : "#1C2626", marginTop: "calc(21.7 * var(--u))" }}
+          style={{ color: dark ? "#F3F2ED" : "#1C2626", marginTop: "calc(24.6 * var(--u))" }}
         >
           {headerStrings.tagline}
         </span>
 
         {/* Centre — logo complet (recadré : masque le sous-titre "amo ·
             architecture · travaux" intégré à l'image, en n'affichant que le
-            haut du mot-logo). Hauteur 38 — la largeur suit l'aspect-ratio. */}
+            haut du mot-logo). Hauteur 42 — la largeur suit l'aspect-ratio. */}
         <Link href="/" aria-label={headerStrings.logoAriaLabel} className="justify-self-center">
           {/* Recadrage vertical du logo (fichier 1390×330) : la virgule/accent
               au-dessus du O (y=5-70) et le mot-logo "JOROSTUDIO" (y=98-227)
@@ -50,14 +51,14 @@ function NavContent({ dark, onOpenMenu }: NavContentProps) {
               cadre) : le crop bas à y=227 coupe juste avant le sous-titre. */}
           <div
             className="relative overflow-hidden aspect-[1390/227]"
-            style={{ height: "calc(38 * var(--u))" }}
+            style={{ height: "calc(42 * var(--u))" }}
           >
             <Image
               src="/images/logos/joro-studio-amo-architecture-travaux.png"
               alt={headerStrings.logoAlt}
               fill
               priority
-              sizes="235px"
+              sizes="260px"
               className="object-cover object-top"
               style={{ filter: iconFilter(dark) }}
             />
@@ -65,8 +66,8 @@ function NavContent({ dark, onOpenMenu }: NavContentProps) {
         </Link>
 
         {/* Droite — menu seul (navbar complète, affichée uniquement à partir de
-            1280px, cf. MiniNavbar pour mobile/tablette). */}
-        <div className="justify-self-end inline-flex items-center" style={{ marginTop: "calc(18.2 * var(--u))" }}>
+            835px, cf. MiniNavbar pour mobile/tablette). */}
+        <div className="justify-self-end inline-flex items-center" style={{ marginTop: "calc(21.1 * var(--u))" }}>
           <button
             type="button"
             onClick={onOpenMenu}
@@ -91,10 +92,11 @@ export default function Header() {
   const [onHero, setOnHero] = useState(true);
   const [scrolledPastHeader, setScrolledPastHeader] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
-  // En dessous de 1280px (mobile + tablette, spec du 2026-09-29), la navbar
+  const reducedMotion = useReducedMotion();
+  // En dessous de 835px (mobile + tablette, spec du 2026-09-29), la navbar
   // principale (logo complet + nav + Contact) est masquée : la MiniNavbar en
   // tient lieu en permanence, plutôt que de n'apparaître qu'au scroll.
-  const isDesktopNav = useIsDesktop(1280);
+  const isDesktopNav = useIsDesktop(835);
 
   useEffect(() => {
     let ticking = false;
@@ -144,16 +146,27 @@ export default function Header() {
   return (
     <>
       {/* Navbar principale — ancrée en haut de la section du header, défile normalement avec la page.
-          Masquée en dessous de 1280px : la MiniNavbar en tient lieu (voir ci-dessous). */}
-      <header ref={headerRef} className="hidden min-[1280px]:block absolute inset-x-0 top-0 z-navbar">
+          Masquée en dessous de 835px : la MiniNavbar en tient lieu (voir ci-dessous). */}
+      <header ref={headerRef} className="hidden min-[835px]:block absolute inset-x-0 top-0 z-navbar">
         <NavContent
           dark={isDark}
           onOpenMenu={() => setMenuOpen(true)}
         />
+        {/* Ligne sous la navbar — se trace de gauche à droite à l'arrivée sur la page
+            (animation d'intro) : elle part déjà aux 75 % de sa longueur et termine les 25 %
+            restants ; déjà tracée si l'utilisateur préfère moins d'animations. */}
+        <motion.div
+          aria-hidden="true"
+          className="absolute inset-x-0 bottom-0 h-px origin-left"
+          style={{ backgroundColor: isDark ? "rgba(243, 242, 237, 0.5)" : "rgba(28, 38, 38, 0.4)" }}
+          initial={{ scaleX: reducedMotion ? 1 : 0.75 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 1.4, delay: 0.3, ease: "linear" }}
+        />
       </header>
 
       {/* Navbar compacte — prend le relais une fois la navbar principale sortie de l'écran
-          (desktop) ; permanente en dessous de 1280px, où elle fait office de navbar principale
+          (desktop) ; permanente en dessous de 835px, où elle fait office de navbar principale
           (monogramme + menu seulement, pas de lien Contact ici, cf. MiniNavbar.tsx). */}
       <MiniNavbar
         visible={!isDesktopNav || scrolledPastHeader}

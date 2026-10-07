@@ -1,17 +1,9 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import ComingSoonLink from "@/components/ui/ComingSoonLink";
+import ServiceBottom from "@/components/sections/ServiceBottom";
 import { animate, motion, useMotionValue, useMotionValueEvent, useScroll, useTransform, type MotionValue } from "framer-motion";
-import ServicesMobileCarousel from "@/components/sections/ServicesMobileCarousel";
 import { useIsDesktop } from "@/hooks/useIsDesktop";
-
-const serviceNav = [
-  { label: "DESIGN & BUILD", id: "design-build" },
-  { label: "AMO", id: "amo" },
-  { label: "MARKETING SUITE", id: "marketing-suite" },
-  { label: "CONSEIL & STRATÉGIE", id: "conseil-workplace" },
-];
 
 // false = pas de split screen (l'intro fond directement sur DESIGN & BUILD).
 const SPLIT_ENABLED = true;
@@ -21,8 +13,7 @@ export default function ServicesAll() {
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const { scrollY } = useScroll();
-  // Ce bloc vidéo n'est jamais visible sur mobile (masqué par `hidden md:contents`),
-  // on évite donc de le monter/décoder tant qu'on n'est pas sur desktop.
+  // Taille du rectangle de départ de l'intro (plus petit en mobile).
   const isDesktop = useIsDesktop();
 
   const [ranges, setRanges] = useState({
@@ -62,10 +53,8 @@ export default function ServicesAll() {
   }, []);
 
   useEffect(() => {
-    if (isDesktop && videoRef.current) {
-      videoRef.current.play().catch(() => {});
-    }
-  }, [isDesktop]);
+    videoRef.current?.play().catch(() => {});
+  }, []);
 
   // Rectangle charcoal → plein écran, piloté par le scroll. Le clip-path découpe
   // la couche sombre (fond charcoal + texte cream) : valeurs de départ = taille
@@ -84,9 +73,25 @@ export default function ServicesAll() {
   const [sequenceOn, setSequenceOn] = useState(false);
   const sequenceReady = useRef(false);
   const sequenceBusy = useRef(false);
-  const lockedY = useRef(0);
+  const prevBodyOverflow = useRef<string | null>(null);
   const rangesRef = useRef(ranges);
   rangesRef.current = ranges;
+  // Gel du scroll pendant la séquence : `overflow: hidden` sur le body fige la page
+  // d'un bloc, inertie de la molette/trackpad comprise. (Avant, on ramenait la page à sa
+  // position à chaque événement de scroll : l'inertie continuait en dessous et la page
+  // faisait un bond au déblocage.) Même mécanisme que le menu plein écran (Header.tsx).
+  const lockScroll = () => {
+    if (prevBodyOverflow.current === null) {
+      prevBodyOverflow.current = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+    }
+  };
+  const unlockScroll = () => {
+    if (prevBodyOverflow.current !== null) {
+      document.body.style.overflow = prevBodyOverflow.current;
+      prevBodyOverflow.current = null;
+    }
+  };
   // Hystérésis : déclenche au-dessus de fadeOutStart, ne rejoue à l'envers qu'en
   // dessous de fadeOffAt. Tant que la séquence joue (dans un sens comme dans
   // l'autre), le scroll est ignoré : elle va jusqu'au bout, puis on se recale sur
@@ -97,15 +102,8 @@ export default function ServicesAll() {
     if (y >= r.fadeOutStart) setSequenceOn(true);
     else if (y < r.fadeOffAt) setSequenceOn(false);
   };
-  useMotionValueEvent(scrollY, "change", (y) => {
-    if (!sequenceBusy.current) {
-      syncSequence();
-    } else if (Math.abs(y - lockedY.current) > 1) {
-      // Séquence en cours (aller comme retour) : on ramène la page à sa position de
-      // verrouillage — couvre aussi la barre de défilement, les ancres et l'inertie
-      // que le blocage molette/tactile/clavier ne retient pas.
-      window.scrollTo({ top: lockedY.current, behavior: "instant" });
-    }
+  useMotionValueEvent(scrollY, "change", () => {
+    if (!sequenceBusy.current) syncSequence();
   });
   // Seuils (re)calculés : on se cale sur la position réelle (rechargement ou saut
   // d'ancre plus bas dans la section → état final direct, sans rejouer la séquence).
@@ -139,19 +137,24 @@ export default function ServicesAll() {
       return;
     }
     sequenceBusy.current = true;
-    // Position de verrouillage : celle où l'on se trouve, mais ramenée près du
-    // seuil de déclenchement (au plus 0,3 vh au-delà) pour ne pas figer la page loin.
-    lockedY.current = sequenceOn ? Math.min(y, onAt + vh * 0.3) : Math.max(y, offAt - vh * 0.3);
-    if (Math.abs(y - lockedY.current) > 1) window.scrollTo({ top: lockedY.current, behavior: "instant" });
+    // La page est figée là où elle se trouve (si le scroll a déjà trop dépassé le
+    // seuil, on la ramène au plus à 0,3 vh de celui-ci, avant de la figer).
+    const lockedY = sequenceOn ? Math.min(y, onAt + vh * 0.3) : Math.max(y, offAt - vh * 0.3);
+    if (Math.abs(y - lockedY) > 1) window.scrollTo({ top: lockedY, behavior: "instant" });
+    lockScroll();
     const controls = animate(sequence, target, {
       duration: 0.9,
       ease: [0.76, 0, 0.24, 1],
       onComplete: () => {
         sequenceBusy.current = false;
+        unlockScroll();
         syncSequence();
       },
     });
-    return () => controls.stop();
+    return () => {
+      controls.stop();
+      unlockScroll();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps -- syncSequence lit des refs/valeurs stables
   }, [sequenceOn, sequence, scrollY]);
 
@@ -198,68 +201,40 @@ export default function ServicesAll() {
   const rightX = useTransform(splitProgress, (v) => `${v * 100}%`);
 
   return (
-    // 440vh : après le déclenchement (0,62 vh), la séquence est automatique, donc
-    // moins de scroll à réserver au split ; DESIGN & BUILD garde le même temps affiché.
-    <div ref={containerRef} className="relative" style={{ height: "440vh" }}>
-      <div id="design-build" style={{ position: "absolute", top: "calc(3 * 100vh)" }} />
+    // 380vh : la séquence d'intro se joue toute seule dès 0,62 vh et DESIGN & BUILD est
+    // révélé vers 0,8 vh. Le bloc AMO (page.tsx, -mt-[100vh]) recouvre cette section à
+    // partir de (hauteur − 200vh) de scroll : à 380vh, c'est 1,8 vh, soit ~1 vh de lecture
+    // pour DESIGN & BUILD avant l'arrivée d'AMO. (À 280vh, AMO arrivait dès 0,8 vh et
+    // recouvrait DESIGN & BUILD avant même qu'on puisse le lire.)
+    // Même enchaînement à toutes les tailles d'écran (plus de carrousel en mobile).
+    <div ref={containerRef} className="relative" style={{ height: "380vh" }}>
+      <div id="design-build" style={{ position: "absolute", top: "calc(1 * 100vh)" }} />
       <div
         data-navbar-theme="dark"
         className="sticky top-0 h-screen overflow-hidden bg-charcoal"
         style={{ zIndex: 35 }}
       >
-        {/* Carrousel mobile — révélé par le split, commence par Design & Build */}
-        <ServicesMobileCarousel />
-
-        {/* Vidéo + split Design & Build (desktop) */}
-        <div className="hidden md:contents">
-          {isDesktop && (
-            <video
-              ref={videoRef}
-              className="absolute inset-0 w-full h-full object-cover z-0 scale-x-[-1]"
-              src="/videos/vecteezy_unrecognizable-female-carpenter-or-furniture-designer_71265347.webm"
-              autoPlay
-              muted
-              loop
-              playsInline
-            />
-          )}
+        {/* Vidéo + split Design & Build */}
+        <div className="contents">
+          <video
+            ref={videoRef}
+            className="absolute inset-0 w-full h-full object-cover z-0 scale-x-[-1]"
+            src="/videos/vecteezy_unrecognizable-female-carpenter-or-furniture-designer_71265347.webm"
+            autoPlay
+            muted
+            loop
+            playsInline
+          />
           <div className="absolute inset-0 z-0" style={{ backgroundColor: "rgba(35, 6, 6, 0.2)", mixBlendMode: "soft-light" }} />
 
           {/* Contenu DESIGN & BUILD — révélé par le split (z-5) */}
-          <div className="absolute inset-0 z-[5] flex items-center justify-between pr-4 sm:pr-6 lg:pr-[32px] section-title-pl">
-            <div className="max-w-[480px]">
-              <h2 className="text-[26px] md:text-[52px] lg:text-[55px] min-[1200px]:text-[64px] font-semibold uppercase leading-none tracking-tight text-cream mb-[40px] whitespace-nowrap">
-                DESIGN & BUILD
-              </h2>
-              <p className="max-w-[460px] text-[14px] leading-relaxed text-cream mb-[25px]">
-                Chaque espace est pensé dans ses moindres détails pour conjuguer esthétique et performance durable. Une vision cohérente, du premier trait jusqu'à la remise des clés.
-              </p>
-              <ComingSoonLink className="text-[11px] font-medium uppercase tracking-[0.18em] text-cream border-b border-cream/50 pb-1">
-                Lancer un projet
-              </ComingSoonLink>
-            </div>
-            <div className="hidden min-[940px]:flex flex-col items-end gap-[18px]">
-              {serviceNav.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => {
-                    const el = document.getElementById(item.id);
-                    if (!el) return;
-                    const top = el.getBoundingClientRect().top + window.scrollY;
-                    window.scrollTo({ top, behavior: "smooth" });
-                  }}
-                  className={`flex items-center gap-2 text-[14px] font-medium uppercase tracking-[0.18em] transition-colors hover:text-cream ${
-                    item.id === "design-build" ? "text-cream" : "text-cream/30"
-                  }`}
-                >
-                  {item.id === "design-build" && (
-                    <span className="w-2 h-2 rounded-full bg-taupe shrink-0" />
-                  )}
-                  {item.label}
-                </button>
-              ))}
-            </div>
-          </div>
+          <ServiceBottom
+            activeId="design-build"
+            title="Design & Build"
+            description="Chaque espace est pensé dans ses moindres détails pour conjuguer esthétique et performance durable. Une vision cohérente, du premier trait jusqu'à la remise des clés."
+            ctaLabel="Lancer un projet"
+            zClass="z-[5]"
+          />
         </div>
 
         {/* Panneaux charcoal (toujours opaques) — glissent au split (z-20), sur toutes tailles

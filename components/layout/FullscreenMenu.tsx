@@ -5,6 +5,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState, type MouseEvent as ReactMouseEvent } from "react";
 import ComingSoonLink from "@/components/ui/ComingSoonLink";
+import { useContactPanel } from "@/components/providers/ContactPanelProvider";
 
 interface MenuLink {
   label: string;
@@ -34,6 +35,7 @@ interface Props {
 
 export default function FullscreenMenu({ isOpen, onClose }: Props) {
   const pathname = usePathname();
+  const { open: openContact } = useContactPanel();
   // La dernière image survolée (`current`) se balaie par-dessus, l'avant-dernière (`previous`)
   // reste pleinement ouverte juste derrière → jamais de fond sombre pendant le balayage.
   // Le balayage se rejoue à chaque survol : l'animation CSS redémarre dès qu'une image (re)devient
@@ -139,9 +141,16 @@ export default function FullscreenMenu({ isOpen, onClose }: Props) {
                     onFocus={() => activate(index)}
                   >
                     {link.href === "/contact" ? (
-                      <ComingSoonLink className="joro-menu__nav-link" block>
+                      // Ouvre le panneau de contact PAR-DESSUS le menu, qui reste ouvert en
+                      // dessous (même panneau que le Footer et le CTA, monté par Header.tsx
+                      // après le menu, avec le même z-index : il passe donc au premier plan).
+                      <button
+                        type="button"
+                        onClick={() => openContact()}
+                        className="joro-menu__nav-link bg-transparent border-0 p-0 text-left cursor-pointer"
+                      >
                         {link.label}
-                      </ComingSoonLink>
+                      </button>
                     ) : link.href === "/#nos-realisations" ? (
                       <Link href={link.href} onClick={handleRealisationsClick} className="joro-menu__nav-link">
                         {link.label}

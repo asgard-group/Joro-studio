@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { headerStrings } from "@/lib/strings";
@@ -17,13 +18,27 @@ export default function MiniNavbar({ visible, dark, onOpenMenu }: Props) {
   // Traits du menu : cream sur section sombre, charcoal sur section claire.
   const lineColor = dark ? "#F3F2ED" : "#1C2626";
 
+  // Au chargement/rechargement, Header ne sait pas encore s'il est en mode desktop
+  // (useIsDesktop part à false) : le HTML serveur et le 1er rendu affichent donc la
+  // mini-navbar, qui se rétracte ensuite en glissant. Pour éviter ce flash :
+  //  - tant que la page n'est pas hydratée (`data-ready` absent), le CSS la masque en
+  //    desktop (cf. globals.css) ;
+  //  - la transition est coupée (durée 0) pendant ce 1er cycle, pour que l'état réel
+  //    s'applique sans glissement visible ; elle est activée à la frame suivante.
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setReady(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
+
   return (
     <motion.div
       id="mini-navbar"
+      data-ready={ready ? "" : undefined}
       className="fixed inset-x-0 top-0 z-navbar"
       initial={false}
       animate={{ y: visible ? "0%" : "-100%" }}
-      transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
+      transition={{ duration: ready ? 0.5 : 0, ease: [0.76, 0, 0.24, 1] }}
       style={{ pointerEvents: visible ? "auto" : "none" }}
       aria-hidden={!visible}
     >

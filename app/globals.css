@@ -127,59 +127,92 @@
    calc(100vw/390) en dessous. Au-delà de 1920px : aucun scaling, les
    valeurs du palier 1920 restent figées (media query min-width:1920px sans
    borne haute). */
-/* Texte d'accroche du Hero (remplace l'ancien titre) : mêmes tailles que le
-   paragraphe de la section À propos (.studio__text) — fluide, proportionnel à
-   la largeur de l'écran à partir de la maquette du palier : mobile 390px
-   (<834, 18px), tablette 834px (834-1279, 22px), desktop 1920px (≥1280, 37px).
-   Au-delà de 1920px : pas de scaling (37px). Largeur max 733px. */
-.hero-lead {
-  --s: calc(100vw / 390);
+/* Hero : titre + paragraphe rempli au scroll (cf. Hero.tsx). */
+.hero-heading {
   margin: 0;
-  /* 733px max, mais aussi ~19,3em (mesuré : "…les particuliers" et "et
-     professionnels dans la transformation" font 18,7em, avec "et"/"de" en plus
-     ≥19,86em) → toujours 3 lignes : "…les particuliers / et professionnels
-     dans la transformation / de leurs espaces." à toutes les tailles. */
-  max-width: min(733px, 19.3em);
-  font-size: calc(18 * var(--s));
+  max-width: 14em;
+  font-size: clamp(48px, calc(32px + 6.1vw), 150px);
   font-weight: 500;
-  line-height: 1.15;
+  letter-spacing: -0.055em;
+  line-height: 0.92;
 }
-@media (min-width: 834px) {
-  .hero-lead {
-    --s: calc(100vw / 834);
-    font-size: calc(22 * var(--s));
-  }
+/* Chaque ligne est un masque : son contenu remonte depuis le bas (2e ligne légèrement décalée). */
+.hero-line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.14em;
 }
-@media (min-width: 1280px) {
-  .hero-lead {
-    --s: calc(100vw / 1920);
-    font-size: calc(37 * var(--s));
-  }
+/* Espace réduit sous « Concevoir les espaces » : la marge négative annule la moitié du padding bas de la
+   1re ligne (conservé pour que le jambage du « p » ne soit pas rogné par le masque). */
+.hero-line:first-child {
+  margin-bottom: -0.07em;
 }
-@media (min-width: 1921px) {
-  .hero-lead { --s: 1px; }
+.hero-line + .hero-line {
+  margin-top: calc(10px - 0.08em);
+}
+.hero-line-inner {
+  display: block;
+  transform: translateY(105%);
+  transition: transform 1.1s cubic-bezier(0.77, 0, 0.18, 1);
+}
+.hero-ready .hero-line-inner {
+  transform: none;
+}
+.hero-ready .hero-line:nth-child(2) .hero-line-inner {
+  transition-delay: 0.12s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-line-inner { transform: none; transition: none; }
 }
 
-/* Bouton "Nos projets" (bas droite du Hero, à partir de 840px) : texte + flèche,
-   ligne en dessous au survol uniquement. */
-/* (display/align gérés par les classes Tailwind du composant : un `display`
-   ici, non layeré, écraserait le `hidden` sous 840px.) */
-.hero-cta:hover,
-.hero-cta:focus-visible {
-  border-bottom-color: currentColor;
+/* « Défiler » + souris animée (bas droite de l'écran 1) */
+.hero-scroll-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  transition: opacity 0.6s ease;
 }
-.hero-cta {
-  gap: calc(8 * var(--u));
-  padding-bottom: calc(4 * var(--u));
-  /* Ligne de soulignement : invisible par défaut (transparente, la hauteur est
-     réservée donc rien ne bouge), révélée au survol / focus clavier. */
-  border-bottom: 1px solid transparent;
-  transition: border-color 0.3s ease;
-  font-size: calc(16 * var(--u));
+.hero-mouse {
+  position: relative;
+  width: 20px;
+  height: 30px;
+  border: 2px solid currentColor;
+  border-radius: 999px;
+  overflow: hidden;
+}
+.hero-mouse svg {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 11px;
+  height: 8px;
+  transform: rotate(90deg);
+  animation: hero-arrow-loop 1.6s ease-in-out infinite;
+}
+@keyframes hero-arrow-loop {
+  0% { translate: 0 -160%; }
+  50% { translate: 0 0; }
+  100% { translate: 0 160%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-mouse svg { animation: none; }
+}
+
+/* Paragraphe rempli lettre par lettre (opacité pilotée en JS) */
+.hero-fill {
+  margin: 0;
+  font-size: clamp(20px, 1.9vw, 26px);
   font-weight: 500;
-  line-height: 1;
-  text-transform: uppercase;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+.hero-word {
+  display: inline-block;
   white-space: nowrap;
+}
+.hero-char {
+  opacity: 0.22;
 }
 
 /* Container Hero — collé en bas à TOUS les breakpoints (padding-bottom, pas
@@ -465,6 +498,22 @@
   }
 }
 
+/* Titres des réalisations : même règle de taille que .studio__title (« Nos projets »),
+   avec la même échelle --s que la section À propos / intro des projets. */
+.work-title {
+  --s: calc(100vw / 390);
+  font-size: calc(46 * var(--s));
+}
+@media (min-width: 834px) {
+  .work-title { --s: calc(100vw / 834); font-size: calc(72 * var(--s)); }
+}
+@media (min-width: 1280px) {
+  .work-title { --s: calc(100vw / 1920); font-size: calc(120 * var(--s)); }
+}
+@media (min-width: 1921px) {
+  .work-title { --s: 1px; }
+}
+
 /* Réalisations — carte mobile plein écran */
 .mobile-work-card {
   /* Fallback pour les navigateurs sans support de dvh */
@@ -669,3 +718,18 @@
   transition: opacity 0.6s ease;
 }
 .joro-contact__backdrop.is-visible { opacity: 0.5; }
+
+/* Mini-navbar : masquée en desktop (≥835px) tant que la page n'est pas hydratée —
+   évite qu'elle s'affiche un instant au rechargement (cf. MiniNavbar.tsx). */
+@media (min-width: 835px) {
+  #mini-navbar:not([data-ready]) {
+    transform: translateY(-100%) !important;
+  }
+}
+
+/* Mode de fusion "Plus darker" (Figma) : `plus-darker` n'existe que dans Safari/WebKit ;
+   ailleurs on se rabat sur `multiply` (assombrit de la même façon, en plus doux). */
+.blend-plus-darker { mix-blend-mode: multiply; }
+@supports (mix-blend-mode: plus-darker) {
+  .blend-plus-darker { mix-blend-mode: plus-darker; }
+}
