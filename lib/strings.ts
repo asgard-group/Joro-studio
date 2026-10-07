@@ -15,19 +15,11 @@ export const headerStrings = {
   logoAlt: "JÖRO Studio — Architecture & Travaux",
   logoAriaLabel: "JÖRO Studio — retour à l'accueil",
 
+  // Inscription à gauche de la navbar desktop (≥1280px)
+  tagline: "ARCHITECTURE • AMO • TRAVAUX",
+
   // Bouton menu (droite, à côté du sélecteur de langue)
   menu: "Menu",
-
-  // Bouton contact (gauche)
-  contact: "Contact",
-
-  // Sections pinnées (droite, à la place de l'ancien sélecteur de langue) —
-  // liens directs vers les ancres de la homepage, séparés par un point.
-  pinnedNav: {
-    studio: "Studio",
-    services: "Services",
-    projets: "Projets",
-  },
 
   // Menu plein-écran
   menuOverlay: {
@@ -43,33 +35,20 @@ export const headerStrings = {
   },
 } as const;
 
-// Hero de la page d'accueil — titre et texte descriptif spécifiques à la home.
+// Hero de la page d'accueil — texte d'accroche (à la place de l'ancien titre) et bouton.
 export const homeHeroStrings = {
-  title: {
-    line1: "Créer",
-    line2: "les espaces",
-    // Scindée en 2 parties : sur une seule ligne à partir de 470px ("hybrides
-    // de demain"), sur 2 lignes en dessous ("hybrides" / "de demain").
-    line3a: "hybrides",
-    line3b: "de demain",
-  },
-  // Même texte complet, mais avec des sauts de ligne manuels différents par
-  // breakpoint (maquette Figma) — desktop (≥835px) sur 4 lignes, tablette
-  // (470-834px) sur 3 lignes, mobile (<470px) version raccourcie sur 3 lignes.
-  descriptionDesktop: {
-    line1: "Jöro Studio accompagne particuliers et professionnels",
-    line2: "dans la transformation de leurs espaces.",
-  },
-  descriptionTablet: {
-    line1: "Jöro Studio accompagne particuliers et professionnels dans la",
-    line2: "transformation de leurs espaces, alliant assistance à maîtrise d'ouvrage,",
-    line3: "architecture et conseil pour des lieux plus durables et inspirants.",
-  },
-  descriptionMobile: {
-    line1: "Jöro Studio accompagne particuliers et",
-    line2: "professionnels dans la transformation de",
-    line3: "leurs espaces.",
-  },
+  headingLines: ["Concevoir les espaces", "hybrides de demain"],
+  lead: "Jöro Studio accompagne particuliers et professionnels dans la transformation de leurs espaces, alliant assistance à maîtrise d\u2019ouvrage, architecture et conseil pour des lieux plus durables et inspirants.",
+  discover: "Nos projets",
+  scroll: "Défiler",
+} as const;
+
+// Section "Notre studio" (À propos, bas du hero) — titre, paragraphe, label.
+export const aboutStudioStrings = {
+  title: "Notre studio",
+  text: "Basé à Paris, notre studio réunit architecture, design et maîtrise d\u2019ouvrage. De la conception à la réalisation, nous créons des espaces dans le domaine de l\u2019hôtellerie, bureaux, événementiel et espaces hybrides. Notre ambition : façonner les usages de demain à travers une architecture contemporaine et intemporelle.",
+  imageAlt: "Étagères et objets décoratifs dans un espace réalisé par JÖRO Studio",
+  label: "À propos",
 } as const;
 
 // Section CTA (bas de la home) — 2 blocs : prise de rendez-vous et newsletter.

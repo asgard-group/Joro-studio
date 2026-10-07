@@ -1,18 +1,11 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
-import ComingSoonLink from "@/components/ui/ComingSoonLink";
-import { useIsDesktop } from "@/hooks/useIsDesktop";
+import ServiceBottom from "@/components/sections/ServiceBottom";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, type MotionValue } from "framer-motion";
 
-const serviceNav = [
-  { id: "design-build", label: "DESIGN & BUILD" },
-  { id: "amo", label: "AMO" },
-  { id: "marketing-suite", label: "MARKETING SUITE" },
-  { id: "conseil-workplace", label: "CONSEIL & STRATÉGIE" },
-];
 
 interface Props {
   activeId: string;
@@ -26,29 +19,22 @@ interface Props {
   flipX?: boolean;
   wide?: boolean;
   overlayClass?: string;
-  noParallax?: boolean;
+  /** Second filtre (dégradé, mode de fusion…) posé au-dessus de overlayClass, en style inline. */
+  gradientOverlayStyle?: React.CSSProperties;
+  /** Classes du second filtre (ex. mode de fusion avec repli selon le navigateur). */
+  gradientOverlayClass?: string;
+  /** Décalage vertical du fond (parallaxe), piloté par ServiceStage. */
+  bgY?: MotionValue<string>;
   /** Agrandit le fond (même principe que le scale-110 du Hero) pour un cadrage plus serré */
   zoomed?: boolean;
 }
 
-export default function ServiceReveal({ activeId, title, description, ctaLabel = "Découvrir l'offre", image, video, poster, flipX, wide, overlayClass, noParallax, zoomed }: Props) {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  // Ce composant n'est jamais visible sur mobile (masqué par le parent en `hidden md:block`),
-  // on évite donc de monter/décoder la vidéo tant qu'on n'est pas sur desktop.
-  const isDesktop = useIsDesktop();
+export default function ServiceReveal({ activeId, title, description, ctaLabel = "Découvrir l'offre", image, video, poster, flipX, overlayClass, gradientOverlayStyle, gradientOverlayClass, bgY, zoomed }: Props) {
   // Fondu de la vidéo une fois chargée : le poster reste visible (et net) jusque-là.
   const [videoLoaded, setVideoLoaded] = useState(false);
 
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-
-  const bgY = useTransform(scrollYProgress, [0, 1], noParallax ? ["0%", "0%"] : ["-12%", "12%"]);
-
   return (
     <div
-      ref={sectionRef}
       data-navbar-theme="dark"
       className="relative h-full overflow-hidden"
     >
@@ -59,7 +45,7 @@ export default function ServiceReveal({ activeId, title, description, ctaLabel =
         className="absolute inset-x-0 w-full"
         style={{ y: bgY, top: "-12%", height: "124%", scale: zoomed ? 1.1 : 1 }}
       >
-        {video && isDesktop ? (
+        {video ? (
           <>
             {/* Poster affiché instantanément, puis fondu vers la vidéo une fois chargée */}
             {poster && <Image src={poster} alt="" fill className="object-cover" sizes="100vw" />}
@@ -80,46 +66,10 @@ export default function ServiceReveal({ activeId, title, description, ctaLabel =
         ) : null}
       </motion.div>
       {overlayClass && <div className={`absolute inset-0 ${overlayClass}`} />}
+      {gradientOverlayStyle && <div className={`absolute inset-0 pointer-events-none ${gradientOverlayClass ?? ""}`} style={gradientOverlayStyle} />}
 
       {/* Contenu — affiché d'emblée (pas de fondu à l'entrée dans le viewport) */}
-      <div className="absolute inset-0 z-10 flex items-center justify-between pr-4 sm:pr-6 lg:pr-[32px] section-title-pl">
-        {/* Gauche */}
-        <div className={wide ? "max-w-[880px]" : "max-w-[580px]"}>
-          <h2 className={`text-[26px] md:text-[52px] lg:text-[55px] min-[1200px]:text-[64px] font-semibold uppercase tracking-tight text-cream mb-[40px] ${title.includes('\n') ? 'whitespace-pre-line leading-[1.2]' : 'whitespace-nowrap leading-none'}`}>
-            {title}
-          </h2>
-          <p className="max-w-[460px] text-[14px] leading-relaxed text-cream mb-[25px]">
-            {description}
-          </p>
-          <ComingSoonLink className="text-[11px] font-medium uppercase tracking-[0.18em] text-cream border-b border-cream/50 pb-1">
-            {ctaLabel}
-          </ComingSoonLink>
-        </div>
-
-        {/* Droite — navigation verticale */}
-        <div className="hidden min-[940px]:flex flex-col items-end gap-[18px]">
-          {serviceNav.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => {
-                const el = document.getElementById(item.id);
-                if (!el) return;
-                const top = el.getBoundingClientRect().top + window.scrollY;
-                window.scrollTo({ top, behavior: "smooth" });
-              }}
-              className={`flex items-center gap-2 text-[14px] font-medium uppercase tracking-[0.18em] transition-colors hover:text-cream ${
-                item.id === activeId ? "text-cream" : "text-cream/30"
-              }`}
-            >
-              {item.id === activeId && (
-                <span className="w-2 h-2 rounded-full bg-taupe shrink-0" />
-              )}
-              {item.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
+      <ServiceBottom activeId={activeId} title={title} description={description} ctaLabel={ctaLabel} />
     </div>
   );
 }
