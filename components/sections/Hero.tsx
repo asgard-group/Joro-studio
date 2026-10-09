@@ -26,7 +26,7 @@ interface HeroProps {
 const ARROW = "M11 4 6.9 8H4.5L8 4.8H0V3.2h8L4.5 0h2.4z";
 
 // Texte qui se remplit lettre par lettre : la progression va de 0 (le bloc entre par le bas) à 1
-// (il atteint le milieu de l'écran).
+// (son bas passe au-dessus de 70 % de l'écran).
 function ScrollFill({ text }: { text: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
@@ -42,7 +42,9 @@ function ScrollFill({ text }: { text: string }) {
     const update = () => {
       const vh = window.innerHeight;
       const r = el.getBoundingClientRect();
-      const prog = Math.min(1, Math.max(0, (vh - r.top) / (vh * 0.5 + r.height)));
+      // 0 : le bloc entre par le bas ; 1 : son bas passe au-dessus de 70 % de l'écran (tout est alors lisible,
+      // y compris la dernière phrase).
+      const prog = Math.min(1, Math.max(0, (vh - r.top) / (vh * 0.3 + r.height)));
       const lit = prog * (chars.length + 10);
       chars.forEach((c, i) => {
         c.style.opacity = (0.22 + 0.78 * Math.min(1, Math.max(0, (lit - i) / 10))).toFixed(3);
@@ -61,7 +63,7 @@ function ScrollFill({ text }: { text: string }) {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
-  }, [reduced]);
+  }, [reduced, text]);
 
   return (
     // div (et non p) : la règle globale `p { font-size: 14px !important }` sous 768px.
@@ -88,16 +90,24 @@ export default function Hero({ headingLines, text, ctaLabel, ctaHref, scrollHint
 
   useEffect(() => {
     // Double rAF : laisse le navigateur peindre l'état initial (lignes masquées) avant la transition.
+    let a = 0;
     let b = 0;
-    const a = requestAnimationFrame(() => {
-      b = requestAnimationFrame(() => setReady(true));
-    });
+    const start = () => {
+      a = requestAnimationFrame(() => {
+        b = requestAnimationFrame(() => setReady(true));
+      });
+    };
+    // Loader d'entrée actif : l'intro du hero attend la fin du loader (cf. Loader.tsx).
+    const loaderActive = document.documentElement.classList.contains("loader-active");
+    if (loaderActive) window.addEventListener("loader:done", start, { once: true });
+    else start();
     const onScroll = () => setScrolled(window.scrollY > 20);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
       cancelAnimationFrame(a);
       cancelAnimationFrame(b);
+      window.removeEventListener("loader:done", start);
       window.removeEventListener("scroll", onScroll);
     };
   }, []);
@@ -159,19 +169,18 @@ export default function Hero({ headingLines, text, ctaLabel, ctaHref, scrollHint
           className="pointer-events-none absolute inset-x-0 bottom-0 h-[64%] bg-gradient-to-b from-[rgba(10,14,12,0)] to-[rgba(10,14,12,0.55)]"
         />
         <div className="hero-container relative w-full" style={{ paddingBottom: "12svh" }}>
-          <div className="ml-auto flex w-[min(560px,100%)] flex-col gap-[36px]">
+          <div className="ml-auto flex w-[min(660px,100%)] flex-col gap-[36px]">
             <ScrollFill text={text} />
+            {/* Même UI que le bouton des pages services : texte en capitales + flèche ↘, ligne au survol. */}
             {ctaLabel && (
-              <a href={ctaHref} className="group inline-flex items-center gap-[10px] self-start text-cream">
-                <span className="border-b border-current pb-[3px] text-[16px]">{ctaLabel}</span>
-                <span className="relative block h-[22px] w-[31px] overflow-hidden rounded-full bg-cream text-charcoal" aria-hidden="true">
-                  <svg viewBox="0 0 11 8" className="absolute inset-0 m-auto h-[8px] w-[11px] transition-[translate,scale] duration-[400ms] ease-[cubic-bezier(0.65,0,0.35,1)] group-hover:translate-x-[150%] group-hover:scale-0">
-                    <path fill="currentColor" d={ARROW} />
-                  </svg>
-                  <svg viewBox="0 0 11 8" className="absolute inset-0 m-auto h-[8px] w-[11px] -translate-x-[150%] scale-0 transition-[translate,scale] duration-[400ms] ease-[cubic-bezier(0.65,0,0.35,1)] group-hover:translate-x-0 group-hover:scale-100">
-                    <path fill="currentColor" d={ARROW} />
-                  </svg>
-                </span>
+              <a
+                href={ctaHref}
+                className="flex w-fit items-center gap-[8px] self-start border-b border-transparent pb-[4px] text-[13px] min-[940px]:text-[16px] font-medium uppercase leading-none text-cream transition-colors duration-300 hover:border-cream"
+              >
+                {ctaLabel}
+                <svg aria-hidden="true" width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.2">
+                  <path d="M3 3l8 8M11 4v7H4" />
+                </svg>
               </a>
             )}
           </div>

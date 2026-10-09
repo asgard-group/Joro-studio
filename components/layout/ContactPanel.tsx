@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useContactPanel } from "@/components/providers/ContactPanelProvider";
 import Script from "next/script";
 import { headerStrings } from "@/lib/strings";
 
@@ -18,28 +19,10 @@ interface Props {
 // ancré à droite (navbar principale, MiniNavbar, Footer, CTA), plus besoin de
 // gérer un changement de côté en cours d'ouverture.
 export default function ContactPanel({ isOpen, onClose }: Props) {
+  // Photo déjà affichée par le menu ouvert dessous : seul le bloc sombre s'anime (cf. globals.css).
+  const { keepPhoto } = useContactPanel();
   const formSide = (
     <div className="joro-contact__form-wrap">
-      <button
-        type="button"
-        onClick={onClose}
-        aria-label={strings.closeAriaLabel}
-        className="self-start inline-flex items-center gap-[6px] bg-transparent border-0 p-0 cursor-pointer"
-      >
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          className="w-[30px] h-[30px] text-cream"
-          style={{ filter: "brightness(0) invert(1) sepia(1) saturate(0) brightness(0.953)" }}
-        >
-          <line x1="2" y1="2" x2="14" y2="14" />
-          <line x1="14" y1="2" x2="2" y2="14" />
-        </svg>
-      </button>
 
       {/* Formulaire HubSpot embarqué (portail 145387833) — le script
           cherche ce div par data-form-id au chargement et y injecte
@@ -60,7 +43,7 @@ export default function ContactPanel({ isOpen, onClose }: Props) {
   const photoSide = (
     <div className="joro-contact__photo" aria-hidden="true">
       <Image
-        src="/images/2024-10-Retines-Asgard-parquet-Pigalle-DSC04495.webp"
+        src="/images/contact.png"
         alt=""
         fill
         className="joro-contact__photo-img"
@@ -73,11 +56,26 @@ export default function ContactPanel({ isOpen, onClose }: Props) {
     <>
       <div className={`joro-contact__backdrop${isOpen ? " is-visible" : ""}`} aria-hidden="true" />
       <div
-        className={`joro-contact${isOpen ? " is-open" : ""}`}
+        className={`joro-contact${keepPhoto ? " joro-contact--keep-photo" : ""}${isOpen ? " is-open" : ""}`}
         role="dialog"
         aria-modal="true"
         aria-label={strings.dialogAriaLabel}
       >
+        {/* Bouton de fermeture : même texte, même style et même position (haut droite) que
+            « Fermer » du menu ouvert (cf. FullscreenMenu.tsx). */}
+        <div className="joro-contact__close absolute inset-x-0 top-0 z-20 px-[20px] min-[840px]:px-[40px] min-[1200px]:px-[60px]">
+          <div className="flex items-center justify-end pt-[40px] pb-[20px]">
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label={strings.closeAriaLabel}
+              className="bg-transparent border-0 p-0 cursor-pointer text-[13px] font-semibold uppercase tracking-[0.08em] text-cream transition-opacity hover:opacity-60"
+            >
+              Fermer
+            </button>
+          </div>
+        </div>
+
         <div className="joro-contact__body">
           {photoSide}
           {formSide}

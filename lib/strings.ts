@@ -37,8 +37,9 @@ export const headerStrings = {
 
 // Hero de la page d'accueil — texte d'accroche (à la place de l'ancien titre) et bouton.
 export const homeHeroStrings = {
-  headingLines: ["Concevoir les espaces", "hybrides de demain"],
-  lead: "Jöro Studio accompagne particuliers et professionnels dans la transformation de leurs espaces, alliant assistance à maîtrise d\u2019ouvrage, architecture et conseil pour des lieux plus durables et inspirants.",
+  // Espaces insécables (\u00A0) : si « espaces » / « demain » passe à la ligne, « les » / « de » le suivent.
+  headingLines: ["Concevoir les\u00A0espaces", "hybrides de\u00A0demain"],
+  lead: "Jöro Studio accompagne particuliers et professionnels dans la transformation de leurs espaces, alliant assistance à maîtrise\u00A0d\u2019ouvrage, architecture et conseil pour des lieux plus durables et inspirants. Du premier croquis à la remise des clés.",
   discover: "Nos projets",
   scroll: "Défiler",
 } as const;

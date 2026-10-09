@@ -1,30 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ctaStrings } from "@/lib/strings";
 import { useContactPanel } from "@/components/providers/ContactPanelProvider";
 import { useIsDesktop } from "@/hooks/useIsDesktop";
-
-// Mesure la largeur réellement affichée d'un élément (après retour à la ligne
-// éventuel) et la garde à jour au resize/reflow — utilisé pour faire adapter
-// la largeur du bouton/input à celle du titre au-dessus, plutôt qu'une
-// largeur fixe commune (qui ne suit pas si le titre passe sur 1 ou 2 lignes).
-function useMeasuredWidth<T extends HTMLElement>() {
-  const ref = useRef<T>(null);
-  const [width, setWidth] = useState<number | null>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new ResizeObserver(([entry]) => {
-      setWidth(entry.contentRect.width);
-    });
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-  return [ref, width] as const;
-}
 
 export default function CTA() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -38,9 +19,6 @@ export default function CTA() {
   // Parallax désactivé en mobile (même seuil que le passage de layout md:).
   const y = isDesktop ? rawY : "0%";
 
-  const [appointmentTitleRef, appointmentTitleWidth] = useMeasuredWidth<HTMLParagraphElement>();
-  const [newsletterTitleRef, newsletterTitleWidth] = useMeasuredWidth<HTMLParagraphElement>();
-
   // Aucun endpoint n'est encore branché (même state qu'ailleurs sur le site,
   // cf. ContactPanel.tsx) : on empêche seulement le rechargement de page pour l'instant.
   function handleNewsletterSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -51,7 +29,7 @@ export default function CTA() {
     <section
       ref={sectionRef}
       data-navbar-theme="dark"
-      className="relative overflow-hidden md:min-h-screen md:flex md:items-center md:justify-center"
+      className="relative overflow-hidden bg-[#1C2626] md:min-h-screen md:flex md:items-center md:justify-center"
     >
       {/* Fond — déborde de 130% sur desktop pour que le parallax ne révèle jamais de
           bord vide ; sur mobile, le parallax est désactivé donc ce surdimensionnement
@@ -71,9 +49,8 @@ export default function CTA() {
             ce bloc (pas un 3e élément séparé) : comme le bloc s'étire déjà sur toute la
             hauteur du conteneur, la bordure s'étend naturellement sur toute cette hauteur. */}
         <div className="flex flex-col items-center justify-center px-6 md:flex-1 md:py-[68px] md:border-r" style={{ borderColor: "rgba(186, 182, 170, 0.4)" }}>
-          <div className="w-full max-w-[324px] md:max-w-none flex flex-col items-center gap-[34px]">
+          <div className="w-full max-w-[324px] md:w-fit md:max-w-none flex flex-col items-center gap-[34px]">
             <p
-              ref={appointmentTitleRef}
               className="cta-title whitespace-nowrap text-center text-cream font-normal text-[24px] md:text-[32px] leading-[1.25]"
             >
               {ctaStrings.appointment.titleLine1}
@@ -87,7 +64,6 @@ export default function CTA() {
               style={{
                 backgroundColor: "#EAE7E3",
                 color: "#2C2927",
-                width: isDesktop && appointmentTitleWidth ? appointmentTitleWidth : undefined,
               }}
             >
               {ctaStrings.appointment.button}
@@ -97,9 +73,8 @@ export default function CTA() {
 
         {/* Bloc droit — newsletter */}
         <div className="flex flex-col items-center justify-center px-6 md:flex-1 md:py-[68px]">
-          <div className="w-full max-w-[324px] md:max-w-none flex flex-col items-center gap-[34px]">
+          <div className="w-full max-w-[324px] md:w-fit md:max-w-none flex flex-col items-center gap-[34px]">
             <p
-              ref={newsletterTitleRef}
               className="cta-title whitespace-nowrap text-center text-cream font-normal text-[24px] md:text-[32px] leading-[1.25]"
             >
               {ctaStrings.newsletter.titleLine1}
@@ -109,7 +84,6 @@ export default function CTA() {
             <form
               onSubmit={handleNewsletterSubmit}
               className="w-full flex items-stretch"
-              style={{ width: isDesktop && newsletterTitleWidth ? newsletterTitleWidth : undefined }}
             >
               <input
                 type="email"
