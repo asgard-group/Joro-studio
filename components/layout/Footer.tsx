@@ -4,7 +4,6 @@ import { useState, type MouseEvent as ReactMouseEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useContactPanel } from "@/components/providers/ContactPanelProvider";
 
 // Style commun à tous les libellés du footer (cf. maquette Figma)
 const LABEL = "text-[14px] font-normal uppercase tracking-[1.4px] text-[#FAF6ED]";
@@ -19,11 +18,11 @@ type FooterItem = {
   onClick?: (e: ReactMouseEvent) => void;
 };
 
-const offresLinks: FooterItem[] = [
-  { label: "Design & Build", href: "/#design-build" },
-  { label: "AMO", href: "/#amo" },
-  { label: "Marketing Suite", href: "/#marketing-suite" },
-  { label: "Conseil & Stratégie Immobilière", href: "/#conseil-workplace" },
+// Coordonnées : le téléphone est un placeholder (maquette), l'e-mail est celui de la page
+// « Politique de confidentialité ».
+const contactLinks: FooterItem[] = [
+  { label: "+33 6 00 00 00 00 00", href: "tel:+33600000000" },
+  { label: "contact@joro-studio.fr", href: "mailto:contact@joro-studio.fr", external: true },
 ];
 
 const socialLinks: FooterItem[] = [
@@ -52,6 +51,13 @@ function ItemLabel({ item }: { item: FooterItem }) {
       </button>
     );
   }
+  if (item.href.startsWith("tel:") || item.href.startsWith("mailto:")) {
+    return (
+      <a href={item.href} className={`${LABEL} transition-opacity hover:opacity-60`}>
+        {item.label}
+      </a>
+    );
+  }
   if (item.external) {
     return (
       <a
@@ -73,7 +79,6 @@ function ItemLabel({ item }: { item: FooterItem }) {
 
 export default function Footer() {
   const pathname = usePathname();
-  const { open: openContact } = useContactPanel();
 
   // Scroll direct jusqu'à la 1ère réalisation déjà révélée (au lieu de tomber au début
   // de l'enchaînement sticky des offres, à cause du -mt-[250vh] qui décale l'ancre
@@ -94,24 +99,20 @@ export default function Footer() {
     { label: "Notre studio", href: "/#notre-studio" },
     { label: "Nos réalisations", href: "/#nos-realisations", onClick: handleRealisationsClick },
     { label: "Nos offres", href: "/#nos-offres" },
-    { label: "Contact", onClick: () => openContact() },
   ];
 
   return (
-    <footer className="bg-[#1C2626] text-[#FAF6ED] -mt-px">
+    <footer className="relative bg-[#1C2626] text-[#FAF6ED] -mt-px">
+      {/* Ligne de séparation CTA / footer — même ligne que sous la navbar du hero (crème à 50 %, 1px). */}
+      <div aria-hidden="true" className="absolute inset-x-0 top-0 h-px" style={{ backgroundColor: "rgba(243, 242, 237, 0.5)" }} />
 
       {/* ── Desktop ─────────────────────────────────────────────── */}
-      <div className="hidden flex-col gap-[100px] py-6 px-[32px] md:flex">
-        <div className="flex flex-row items-start justify-between">
-          <FooterColumn title="Nos offres" items={offresLinks} />
+      <div className="hidden flex-col gap-[100px] pb-6 pt-[32px] px-[32px] md:flex">
+        <div className="flex items-start gap-[32px]">
           <FooterColumn title="Liens rapides" items={quickLinks} />
           <FooterColumn title="Suivez-nous" items={socialLinks} />
-          {/* Sélecteur de langue */}
-          <div className="flex shrink-0 items-center gap-1">
-            <span className={`${LABEL} font-bold`}>FR</span>
-            <span className={`${LABEL} font-medium`}>/</span>
-            <span className={`${LABEL} font-medium`}>EN</span>
-          </div>
+          <FooterColumn title="Contactez-nous" items={contactLinks} />
+          <LanguageSwitch />
         </div>
 
         <div className="flex flex-row items-end justify-between">
@@ -124,12 +125,12 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* ── Mobile / tablette (accordéons) ──────────────────────── */}
-      <div className="flex flex-col gap-[128px] p-6 md:hidden">
+      {/* ── Mobile (< 768px) : accordéons, sans sélecteur de langue ─────── */}
+      <div className="flex flex-col gap-[64px] px-6 pb-6 pt-[32px] md:hidden">
         <div className="flex flex-col self-stretch">
-          <FooterAccordion title="Nos offres" items={offresLinks} />
           <FooterAccordion title="Liens rapides" items={quickLinks} />
           <FooterAccordion title="Suivez-nous" items={socialLinks} />
+          <FooterAccordion title="Contactez-nous" items={contactLinks} />
           <FooterAccordion title="Infos légales" items={legalLinks} />
         </div>
         <FooterLogo className="w-full" />
@@ -139,11 +140,22 @@ export default function Footer() {
   );
 }
 
+// ── Sélecteur de langue (FR actif en gras, EN) ───────────────
+function LanguageSwitch({ className = "" }: { className?: string }) {
+  return (
+    <div className={`flex shrink-0 items-center gap-1 ${className}`}>
+      <span className={`${LABEL} font-bold`}>FR</span>
+      <span className={`${LABEL} font-medium`}>/</span>
+      <span className={`${LABEL} font-medium`}>EN</span>
+    </div>
+  );
+}
+
 // ── Colonne desktop ──────────────────────────────────────────
 function FooterColumn({ title, items }: { title: string; items: FooterItem[] }) {
   return (
     <div className="flex flex-1 flex-col items-start gap-[18px]">
-      <h3 className={LABEL}>{title}</h3>
+      <h3 className={`${LABEL} font-medium`}>{title}</h3>
       <div className="flex flex-col items-start gap-2">
         {items.map((item) => (
           <ItemLabel key={item.label} item={item} />
@@ -171,21 +183,11 @@ function FooterAccordion({
         className="flex w-full items-center justify-between py-4"
       >
         <span className={LABEL}>{title}</span>
-        {/* Chevron arrow-drop-down — pivote à l'ouverture */}
-        <Image
-          src="/images/icon/arrow-drop-down-line.svg"
-          alt=""
-          aria-hidden="true"
-          width={16}
-          height={24}
-          className="shrink-0"
-          style={{
-            width: 16,
-            height: 24,
-            transform: open ? "rotate(180deg)" : "none",
-            transition: "transform 200ms ease",
-          }}
-        />
+        {/* « + » (devient « − » à l'ouverture) */}
+        <span className="relative block h-[14px] w-[14px] shrink-0" aria-hidden="true">
+          <span className="absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-current" />
+          <span className={`absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-current transition-transform duration-200 ${open ? "scale-y-0" : ""}`} />
+        </span>
       </button>
       {open && (
         <div className="flex flex-col gap-3 pb-5 pl-[24px]">

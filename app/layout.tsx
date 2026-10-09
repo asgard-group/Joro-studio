@@ -4,6 +4,7 @@ import "./globals.css";
 import { buildMetadata } from "@/lib/metadata";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import Loader from "@/components/layout/Loader";
 import ConsentProvider from "@/components/providers/ConsentProvider";
 import ContactPanelProvider from "@/components/providers/ContactPanelProvider";
 import GoogleAnalytics from "@/components/providers/GoogleAnalytics";
@@ -37,6 +38,7 @@ export default function RootLayout({
           <GoogleAnalytics />
           <ContactPanelProvider>
             <SmoothScroll>
+              <Loader />
               <Header />
               <main className="flex-1">{children}</main>
               <Footer />

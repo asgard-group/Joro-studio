@@ -1,353 +1,174 @@
 "use client";
 
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
-import { animate, motion, useInView } from "framer-motion";
 import { testimonials, type TestimonialCard } from "@/data/testimonials";
 import Pill from "@/components/ui/Pill";
-
-// TODO : texte de témoignage masqué en attendant d'avoir de vrais témoignages
-// (cf. data/testimonials.ts, quotes encore en Lorem ipsum) — seuls le titre
-// (entreprise + adresse) restent affichés pour l'instant.
-const SHOW_QUOTE = false;
+import RevealText from "@/components/ui/RevealText";
 
 const items = testimonials as TestimonialCard[];
-const N = items.length;
-// Liste triplée dans le DOM (technique classique du carrousel à boucle infinie) :
-// tant que l'index logique reste dans le tiers du milieu ([N, 2N[), on peut le
-// décaler de ±N sans qu'aucun changement ne soit visible (même photo N cases plus loin).
-const tripled = [...items, ...items, ...items];
 
-const EASE = [0.16, 1, 0.3, 1] as const;
+// Section « Ils nous ont fait confiance » : titre à gauche, label à droite, puis une rangée
+// horizontale de cartes (photo + ligne de méta + filet). Au survol (ou au toucher sur écran
+// tactile), la photo laisse place à une carte charbon qui dévoile le témoignage.
+export default function Testimonials() {
+  const rowRef = useRef<HTMLDivElement>(null);
+  const [canPrev, setCanPrev] = useState(false);
+  const [canNext, setCanNext] = useState(false);
 
-const HEADING = ["LEUR", "EXPÉRIENCE"];
+  const updateArrows = useCallback(() => {
+    const el = rowRef.current;
+    if (!el) return;
+    setCanPrev(el.scrollLeft > 4);
+    // « Suivant » tant que la dernière carte n'est pas entièrement visible.
+    const cards = el.querySelectorAll("article");
+    const last = cards[cards.length - 1];
+    setCanNext(last ? last.getBoundingClientRect().right > el.getBoundingClientRect().right - 2 : false);
+  }, []);
 
-// Seuils de breakpoint (mêmes que le reste du site : mobile < 470px, tablette 470–834px,
-// desktop ≥ 835px — cf. AboutHistorySticky.tsx / Hero.tsx). Sert au mode d'opacité du
-// coverflow (mobile garde un fondu plus large) — la largeur, elle, est fluide (cf. plus bas).
-type Tier = "mobile" | "tablet" | "desktop";
+  useEffect(() => {
+    const el = rowRef.current;
+    if (!el) return;
+    updateArrows();
+    el.addEventListener("scroll", updateArrows, { passive: true });
+    const ro = new ResizeObserver(updateArrows);
+    ro.observe(el);
+    return () => {
+      el.removeEventListener("scroll", updateArrows);
+      ro.disconnect();
+    };
+  }, [updateArrows]);
 
-function tierOf(width: number): Tier {
-  if (width < 470) return "mobile";
-  if (width < 835) return "tablet";
-  return "desktop";
-}
-
-// Hauteur de carte responsive : fixe en desktop (référence 1920px) et fixe en
-// tablette/mobile (référence ≤ 834px), interpolée fluidement entre les deux dans la zone
-// intermédiaire (pas de palier brutal en rétrécissant l'écran).
-const DESKTOP_REF_VW = 1920;
-const TABLET_REF_VW = 834;
-const DESKTOP_H = 500;
-
-// Ratio des photos de témoignages (toutes au même format, 1054×1320 — cf.
-// public/images/{haiku,coinshare,lemlist}). La largeur de la carte se déduit
-// de ce ratio plutôt que d'être une valeur fluide indépendante : sinon, dès
-// que la boîte n'a pas le même ratio que la photo, `object-cover` doit
-// recadrer (et donc zoomer) pour remplir la largeur ET la hauteur — la photo
-// ne montre alors plus qu'une fine tranche d'elle-même, agrandie. En calant la
-// largeur sur ce ratio, la boîte épouse exactement la photo : elle prend toute
-// la hauteur du conteneur sans recadrage superflu.
-const PHOTO_ASPECT_RATIO = 1054 / 1320;
-
-// FIXED_H choisie pour retrouver une largeur mobile d'environ 260px
-// (MOBILE_TARGET_W ÷ PHOTO_ASPECT_RATIO) une fois ce ratio appliqué — assez
-// étroite pour que les cartes voisines dépassent bien de chaque côté au lieu
-// d'être presque entièrement masquées par la carte active.
-const MOBILE_TARGET_W = 260;
-const FIXED_H = MOBILE_TARGET_W / PHOTO_ASPECT_RATIO;
-
-function fluidValue(viewportWidth: number, desktopValue: number, fixedValue: number) {
-  if (viewportWidth >= DESKTOP_REF_VW) return desktopValue;
-  if (viewportWidth <= TABLET_REF_VW) return fixedValue;
-  const t = (viewportWidth - TABLET_REF_VW) / (DESKTOP_REF_VW - TABLET_REF_VW);
-  return fixedValue + (desktopValue - fixedValue) * t;
-}
-
-function fluidCardHeight(viewportWidth: number) {
-  return fluidValue(viewportWidth, DESKTOP_H, FIXED_H);
-}
-
-// Effet coverflow mobile — scale() par palier (1 / 0.85 / 0.7 / 0.65) selon la distance à
-// la carte active, interpolé en continu entre les paliers pour un rendu fluide au drag.
-function scaleFor(d: number) {
-  const ad = Math.abs(d);
-  if (ad <= 1) return 1 - ad * 0.15;
-  if (ad <= 2) return 0.85 - (ad - 1) * 0.15;
-  if (ad <= 3) return 0.7 - (ad - 2) * 0.05;
-  return 0.65;
-}
-
-function opacityFor(d: number) {
-  const ad = Math.abs(d);
-  if (ad <= 3) return 1;
-  if (ad <= 4) return 1 - (ad - 3);
-  return 0;
-}
-
-// Géométrie d'une carte selon la distance `d` à l'index actif. Une seule taille de boîte
-// pour toutes les cartes à un instant donné (pas de "centrale plus grande") : c'est le même
-// cadre, juste rétréci visuellement via scale() selon le palier de distance. Desktop/tablet
-// n'affichent que 3 cartes (centrale + 1 de chaque côté) ; mobile garde un fondu plus large
-// (jusqu'à ~7 cartes visibles).
-function cardGeometry(tier: Tier, width: number, height: number, d: number) {
-  const scale = scaleFor(d);
-  if (tier === "mobile") {
-    return { width, height, scale, opacity: opacityFor(d) };
+  // Défile d'une carte (largeur + espacement) à la fois.
+  function scrollByCard(dir: 1 | -1) {
+    const el = rowRef.current;
+    const card = el?.querySelector("article");
+    if (!el || !card) return;
+    const gap = parseFloat(getComputedStyle(el).columnGap) || 0;
+    el.scrollBy({ left: dir * (card.getBoundingClientRect().width + gap), behavior: "smooth" });
   }
-  const ad = Math.abs(d);
-  const opacity = ad <= 1 ? 1 : ad <= 1.35 ? 1 - (ad - 1) / 0.35 : 0;
-  return { width, height, scale, opacity };
-}
 
-// Ramène l'index logique dans le tiers du milieu du triple-set ([N, 2N[)
-function wrap(idx: number) {
-  if (idx < N) return idx + N;
-  if (idx >= 2 * N) return idx - N;
-  return idx;
-}
-
-// Chevron du curseur personnalisé (survol gauche/droite du carrousel, indique le sens du drag)
-function CursorArrow({ side }: { side: "left" | "right" }) {
-  const points = side === "left" ? "16,4 6,20 16,36" : "8,4 18,20 8,36";
   return (
-    <svg width="32" height="54" viewBox="0 0 24 40" fill="none">
-      <polyline points={points} stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
+    <section data-navbar-theme="light" className="bg-cream pb-[80px] pt-[100px] min-[1280px]:pb-[120px] min-[1280px]:pt-[160px]">
+      {/* Label sur la même ligne que le titre tant qu'il reste au moins 100px entre eux (gap-x) ; sinon
+          il passe au-dessus (flex-wrap-reverse : la ligne qui déborde se place avant ; en wrap-reverse, items-start aligne en bas). */}
+      <div className="mx-auto flex max-w-[1920px] flex-wrap-reverse items-start justify-between gap-x-[100px] gap-y-[24px] px-[16px] min-[835px]:px-[32px] min-[1280px]:px-[40px]">
+        <RevealText as="h2" className="m-0 max-w-[9em] text-[length:clamp(40px,4.2vw,104px)] font-medium leading-[1.1] text-charcoal">
+          Ils nous ont fait confiance
+        </RevealText>
+        <Pill className="mb-[10px]">
+          TÉMOIGNAGES
+        </Pill>
+      </div>
+
+      {/* Rangée horizontale (--ml : marge de centrage au-delà de 1920px, comme le hero) : défile en natif (trackpad, doigt, Maj + molette), la dernière carte
+          peut dépasser à droite. */}
+      <div
+        ref={rowRef}
+        className="[--ml:max(0px,calc((100vw-1920px)/2))] mt-[48px] flex snap-x snap-mandatory min-[835px]:snap-proximity gap-[16px] overflow-x-auto pl-[calc(var(--ml)+16px)] pr-[16px] pb-[8px] min-[835px]:mt-[72px] min-[835px]:gap-[1.9vw] min-[835px]:pl-[calc(var(--ml)+32px)] min-[835px]:pr-[32px] min-[1280px]:pl-[calc(var(--ml)+40px)] min-[1280px]:pr-[40px] [scroll-padding-left:calc(var(--ml)+16px)] min-[835px]:[scroll-padding-left:calc(var(--ml)+32px)] min-[1280px]:[scroll-padding-left:calc(var(--ml)+40px)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
+        {items.map((item) => (
+          <Card key={item.id} item={item} />
+        ))}
+        {/* Espace de fin : la dernière carte peut se caler à la même marge que la première. */}
+        <div aria-hidden="true" className="w-[1px] shrink-0 min-[835px]:w-[3.5vw]" />
+      </div>
+
+      {/* Flèches précédent / suivant (masquées si toutes les cartes tiennent à l'écran) */}
+      {(canPrev || canNext) && (
+        <div className="mx-auto mt-[40px] flex max-w-[1920px] justify-end gap-[10px] px-[16px] min-[835px]:px-[32px] min-[1280px]:px-[40px]">
+          <ArrowButton dir="prev" disabled={!canPrev} onClick={() => scrollByCard(-1)} />
+          <ArrowButton dir="next" disabled={!canNext} onClick={() => scrollByCard(1)} />
+        </div>
+      )}
+    </section>
   );
 }
 
-export default function Testimonials() {
-  const [active, setActive] = useState(0);
-  const [dragIndex, setDragIndex] = useState(N); // position logique continue dans le triple-set
-  const [isDragging, setIsDragging] = useState(false);
-  const [viewportWidth, setViewportWidth] = useState(DESKTOP_REF_VW);
-  const headingRef = useRef<HTMLHeadingElement>(null);
-  const headingInView = useInView(headingRef, { once: true, amount: 0.3 });
-  const dragStartX = useRef(0);
-  const dragStartIndex = useRef(N);
-  const dragMoved = useRef(false);
-  const settleAnim = useRef<ReturnType<typeof animate> | null>(null);
-  const [cursorInfo, setCursorInfo] = useState<{ x: number; y: number; side: "left" | "right" } | null>(null);
-  const [hasHover, setHasHover] = useState(false);
+// Bouton rond à flèche : actif = contour et flèche pleins, désactivé (début / fin de rangée) = atténué.
+function ArrowButton({ dir, disabled, onClick }: { dir: "prev" | "next"; disabled: boolean; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      aria-label={dir === "prev" ? "Témoignage précédent" : "Témoignage suivant"}
+      className={`flex h-[36px] w-[36px] items-center justify-center rounded-full border border-charcoal text-charcoal transition-opacity duration-300 min-[835px]:h-[42px] min-[835px]:w-[42px] ${
+        disabled ? "cursor-default opacity-35" : "hover:opacity-60"
+      }`}
+    >
+      <svg
+        aria-hidden="true"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        style={{ transform: dir === "prev" ? "rotate(180deg)" : "none" }}
+      >
+        <path d="M4 12h16M13 5l7 7-7 7" />
+      </svg>
+    </button>
+  );
+}
 
-  useEffect(() => {
-    const calc = () => setViewportWidth(window.innerWidth);
-    calc();
-    window.addEventListener("resize", calc);
-    return () => window.removeEventListener("resize", calc);
-  }, []);
+function Card({ item }: { item: TestimonialCard }) {
+  // Écrans sans survol : un toucher bascule l'affichage du témoignage.
+  const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    setHasHover(window.matchMedia("(hover: hover) and (pointer: fine)").matches);
-  }, []);
-
-  const tier = tierOf(viewportWidth);
-  const cardH = fluidCardHeight(viewportWidth);
-  const cardW = cardH * PHOTO_ASPECT_RATIO;
-  const step = cardW;
-  const activeItem = items[active];
-
-  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
-    if (!hasHover) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    setCursorInfo({ x, y, side: x < rect.width / 2 ? "left" : "right" });
-  }
-
-  // Anime dragIndex vers `target`, puis reboucle si besoin et met à jour la légende.
-  // Toute animation de settle en cours est stoppée avant d'en lancer une nouvelle,
-  // pour éviter que son onComplete ne réécrase l'état avec une cible obsolète.
-  function settleTo(target: number) {
-    settleAnim.current?.stop();
-    settleAnim.current = animate(dragIndex, target, {
-      type: "spring",
-      stiffness: 300,
-      damping: 32,
-      onUpdate: (v) => setDragIndex(v),
-      onComplete: () => {
-        const wrapped = wrap(target);
-        if (wrapped !== target) setDragIndex(wrapped);
-        setActive(((Math.round(wrapped) % N) + N) % N);
-      },
-    });
-  }
-
-  function handlePointerDown(e: React.PointerEvent<HTMLDivElement>) {
-    settleAnim.current?.stop();
-    setIsDragging(true);
-    dragMoved.current = false;
-    dragStartX.current = e.clientX;
-    dragStartIndex.current = dragIndex;
-    try {
-      e.currentTarget.setPointerCapture(e.pointerId);
-    } catch {
-      // Ignore — arrive uniquement sur un pointeur déjà relâché, sans impact sur le drag.
-    }
-  }
-
-  function handlePointerMove(e: React.PointerEvent<HTMLDivElement>) {
-    if (!isDragging) return;
-    const deltaPx = e.clientX - dragStartX.current;
-    // Tolérance de 10px avant de considérer que c'est un drag : en dessous, une souris
-    // ou un trackpad bouge de quelques pixels même sur un simple clic, et un seuil trop
-    // bas (3px) bloquait alors le clic-pour-centrer sur les cartes latérales.
-    if (Math.abs(deltaPx) > 10) dragMoved.current = true;
-    let next = dragStartIndex.current - deltaPx / step;
-    if (next < N) {
-      next += N;
-      dragStartIndex.current += N;
-    } else if (next >= 2 * N) {
-      next -= N;
-      dragStartIndex.current -= N;
-    }
-    setDragIndex(next);
-  }
-
-  // Un pointerup sans déplacement est un simple clic : on laisse le onClick de la
-  // carte gérer la sélection plutôt que de re-snapper ici (sinon les deux entrent
-  // en conflit et le clic sur une carte latérale n'a aucun effet visible).
-  function handlePointerUp() {
-    if (!isDragging) return;
-    setIsDragging(false);
-    if (dragMoved.current) settleTo(Math.round(dragIndex));
+  function handleClick() {
+    if (window.matchMedia("(hover: none)").matches) setOpen((o) => !o);
   }
 
   return (
-    <section data-navbar-theme="light" className="bg-cream pt-[100px] lg:pt-[160px] pb-[100px] lg:pb-[160px] min-[470px]:px-[32px]">
-
-      {/* Eyebrow — puce des deux côtés du label */}
-      <div className="flex justify-center mb-4">
-        <Pill dotSide="both">TÉMOIGNAGES</Pill>
-      </div>
-
-      {/* Titre — révélé mot par mot (montée depuis le bas) */}
-      <h2 ref={headingRef} className="text-center mb-[40px] lg:mb-[60px] px-[20px] font-semibold uppercase text-charcoal text-[36px] sm:text-[52px] lg:text-[64px] leading-none tracking-tight">
-        {HEADING.map((word, i) => (
-          <span key={word} className="inline-block overflow-hidden align-bottom">
-            <motion.span
-              className="inline-block whitespace-nowrap"
-              initial={{ y: "100%" }}
-              animate={headingInView ? { y: "0%" } : { y: "100%" }}
-              transition={{ duration: 0.8, ease: EASE, delay: i * 0.08 }}
-            >
-              {word}&nbsp;
-            </motion.span>
-          </span>
-        ))}
-      </h2>
-
-      <div className="relative flex flex-col items-center w-full">
-        {/* Carrousel coverflow draggable — liste triplée pour la boucle infinie */}
+    <article
+      tabIndex={0}
+      onClick={handleClick}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          setOpen((o) => !o);
+        }
+      }}
+      onBlur={() => setOpen(false)}
+      className="group w-[calc(100vw-32px)] shrink-0 snap-start snap-always outline-none min-[835px]:w-[31.5vw]"
+    >
+      <div className="relative aspect-[629/483] w-full overflow-hidden">
+        <Image
+          src={item.photo}
+          alt={`${item.company}, ${item.location}`}
+          fill
+          className="object-cover"
+          sizes="(min-width: 835px) 32vw, 100vw"
+        />
+        {/* Carte charbon avec le témoignage */}
         <div
-          className="relative w-full select-none touch-pan-y overflow-hidden"
-          style={{
-            height: cardH,
-            paddingTop: 16,
-            paddingBottom: 16,
-            cursor: hasHover ? "none" : isDragging ? "grabbing" : "grab",
-          }}
-          onPointerDown={handlePointerDown}
-          onPointerMove={handlePointerMove}
-          onPointerUp={handlePointerUp}
-          onPointerLeave={() => {
-            handlePointerUp();
-            setCursorInfo(null);
-          }}
-          onPointerCancel={handlePointerUp}
-          onMouseMove={handleMouseMove}
-          onClick={(e) => {
-            // Le pointerdown pose setPointerCapture() sur CE conteneur (pour le drag),
-            // ce qui redirige aussi le click résultant vers lui plutôt que vers la carte
-            // visuellement cliquée (comportement documenté de la Pointer Events spec) : un
-            // onClick posé sur chaque carte ne reçoit donc jamais de vrai clic utilisateur.
-            // On retrouve la carte réellement sous le curseur via elementFromPoint, qui fait
-            // un hit-test frais indépendant de cette redirection.
-            if (dragMoved.current) return;
-            const el = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement | null;
-            const cardEl = el?.closest<HTMLElement>("[data-card-index]");
-            if (!cardEl) return;
-            const i = Number(cardEl.dataset.cardIndex);
-            if (Number.isNaN(i)) return;
-            if (Math.round(dragIndex) !== i) settleTo(i);
-          }}
+          className={`absolute inset-0 flex items-start bg-[#1C2626] p-[8%] transition-opacity duration-300 ease-out [@media(hover:hover)]:group-hover:opacity-100 group-focus-visible:opacity-100 ${
+            open ? "opacity-100" : "opacity-0"
+          }`}
         >
-          {tripled.map((t, i) => {
-            const d = i - dragIndex;
-            const geo = cardGeometry(tier, cardW, cardH, d);
-            return (
-              <div
-                key={`${t.id}-${i}`}
-                data-card-index={i}
-                className="absolute left-1/2 top-1/2"
-                style={{
-                  width: geo.width,
-                  height: geo.height,
-                  transform: `translate(-50%, -50%) translateX(${d * step}px) scale(${geo.scale})`,
-                  opacity: geo.opacity,
-                  zIndex: Math.round(100 - Math.abs(d) * 10),
-                }}
-              >
-                <div className="relative w-full h-full overflow-hidden">
-                  <Image
-                    src={t.photo}
-                    alt={t.author}
-                    fill
-                    draggable={false}
-                    className="object-cover pointer-events-none"
-                    sizes="(min-width: 835px) 667px, 260px"
-                  />
-                </div>
-              </div>
-            );
-          })}
-
-          {/* Curseur personnalisé — chevron qui suit la souris, indique le sens du drag */}
-          {hasHover && cursorInfo && (
-            <div
-              className="absolute z-[200] pointer-events-none"
-              style={{ left: cursorInfo.x, top: cursorInfo.y, transform: "translate(-50%, -50%)", mixBlendMode: "difference" }}
-            >
-              <CursorArrow side={cursorInfo.side} />
-            </div>
-          )}
-        </div>
-
-        {/* Légende — titre (et texte, tant que SHOW_QUOTE est actif) révélés en
-            fondu/masque (montée depuis le bas), rejoués à chaque changement de
-            témoignage actif */}
-        <div className="relative mt-[40px] w-full" style={{ minHeight: SHOW_QUOTE ? 149 : undefined }}>
-          <div className="max-w-[464px] flex flex-col gap-y-[16px] px-[20px] mx-auto absolute left-0 right-0 top-0 text-center">
-            <h3 className="overflow-hidden uppercase tracking-wider text-charcoal text-[14px] font-medium">
-              <motion.span
-                key={`title-${active}`}
-                className="block"
-                initial={{ opacity: 0, y: "100%" }}
-                animate={{ opacity: 1, y: "0%" }}
-                transition={{ duration: 0.6, ease: EASE }}
-              >
-                {activeItem.company}
-                {activeItem.location ? ` — ${activeItem.location}` : ""}
-              </motion.span>
-            </h3>
-            {SHOW_QUOTE && (
-              <div className="overflow-hidden">
-                <motion.p
-                  key={`quote-${active}`}
-                  className="text-charcoal/80 text-[14px] leading-[1.4] whitespace-pre-line"
-                  initial={{ opacity: 0, y: "100%" }}
-                  animate={{ opacity: 1, y: "0%" }}
-                  transition={{ duration: 0.6, ease: EASE, delay: 0.08 }}
-                >
-                  {activeItem.quote}
-                </motion.p>
-              </div>
-            )}
-          </div>
+          <div className="text-[length:clamp(13px,0.95vw,18px)] leading-[1.45] text-cream">{item.quote}</div>
         </div>
       </div>
 
-    </section>
+      <div className="mt-[16px] flex items-baseline justify-between gap-[16px] text-[14px] font-medium uppercase leading-none text-charcoal min-[835px]:text-[clamp(13px,0.85vw,16px)]">
+        <span>{item.company}</span>
+        <span className="opacity-65">{item.location}</span>
+      </div>
+      {/* Filet : trait de fond discret + trait plein qui se dessine de gauche à droite au survol, en
+          même temps que le fondu du témoignage (0,5 s, vitesse constante, sans délai), et qui
+          disparaît de gauche à droite en quittant la carte : l'origine de l'échelle passe à droite
+          au repos (le trait se rétracte vers la droite) et à gauche au survol (il part de la gauche). */}
+      <div className="relative mt-[16px] h-px bg-charcoal/25">
+        <div
+          className={`absolute inset-0 bg-charcoal transition-transform duration-300 ease-linear [@media(hover:hover)]:group-hover:origin-left [@media(hover:hover)]:group-hover:scale-x-100 group-focus-visible:origin-left group-focus-visible:scale-x-100 ${
+            open ? "origin-left scale-x-100" : "origin-right scale-x-0"
+          }`}
+        />
+      </div>
+    </article>
   );
 }

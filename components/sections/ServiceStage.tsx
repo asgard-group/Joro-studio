@@ -2,6 +2,7 @@
 
 import { Children, cloneElement, isValidElement, useRef, type ReactElement, type ReactNode } from "react";
 import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
+import { useIsDesktop } from "@/hooks/useIsDesktop";
 
 // Transition entre les services (AMO → Marketing Suite → Conseil) : une seule vue collée en haut
 // (sticky) où chaque service se dévoile par le bas (clip-path) par-dessus le précédent, avec un
@@ -14,7 +15,7 @@ import { motion, useScroll, useTransform, type MotionValue } from "framer-motion
 
 const SCREENS = 4; // écrans de défilement pendant que la vue est collée (500vh − 100vh)
 
-function Panel({ index, progress, children }: { index: number; progress: MotionValue<number>; children: ReactNode }) {
+function Panel({ index, progress, parallax, children }: { index: number; progress: MotionValue<number>; parallax: boolean; children: ReactNode }) {
   // s = nombre d'écrans défilés depuis le début de la scène (0 → SCREENS)
   const clipPath = useTransform(progress, (p) => {
     const reveal = Math.min(1, Math.max(0, p * SCREENS - index));
@@ -23,6 +24,7 @@ function Panel({ index, progress, children }: { index: number; progress: MotionV
   // Parallaxe : l'image entre décalée vers le bas, puis remonte quand le suivant la recouvre.
   // En % de la hauteur du fond (124 % de l'écran, marges de 12 %) : reste dans les marges.
   const bgY = useTransform(progress, (p) => {
+    if (!parallax) return "0%"; // pas de parallaxe en mobile (< 768px)
     const s = p * SCREENS;
     const reveal = Math.min(1, Math.max(0, s - index));
     const cover = Math.min(1, Math.max(0, s - index - 1));
@@ -40,6 +42,7 @@ export default function ServiceStage({ children }: { children: ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
   const items = Children.toArray(children);
+  const parallax = useIsDesktop(768);
 
   return (
     <div ref={ref} className="relative h-[500vh] -mt-[200vh]">
@@ -50,7 +53,7 @@ export default function ServiceStage({ children }: { children: ReactNode }) {
 
       <div className="sticky top-0 h-screen overflow-hidden" style={{ zIndex: 40 }}>
         {items.map((child, i) => (
-          <Panel key={i} index={i} progress={scrollYProgress}>
+          <Panel key={i} index={i} progress={scrollYProgress} parallax={parallax}>
             {child}
           </Panel>
         ))}

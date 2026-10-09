@@ -150,6 +150,20 @@
 .hero-line + .hero-line {
   margin-top: calc(10px - 0.08em);
 }
+/* Quand le titre passe à la ligne (sous ~750px : « Concevoir les espaces » ne tient plus sur une ligne,
+   mesuré en em), chaque « ligne » du titre fait plusieurs lignes : l'écart entre les deux groupes doit
+   être le même que l'interligne, sans l'espace supplémentaire prévu pour deux lignes uniques en
+   desktop (annule le padding bas du masque, aucune marge en plus).
+   « hybrides de demain » (8,05em) tient encore sur une ligne quand « Concevoir les espaces » (9,23em)
+   est déjà coupé : on lui impose une largeur max de 7,9em pour qu'il se coupe en même temps
+   (« hybrides » / « de demain »). */
+@media (max-width: 749px) {
+  /* interligne plus aéré quand le titre se répartit sur 3-4 lignes (0,92 serrait trop) */
+  .hero-heading { line-height: 1.03; }
+  .hero-line:first-child { margin-bottom: -0.14em; }
+  .hero-line + .hero-line { margin-top: 0; }
+  .hero-line:nth-child(2) .hero-line-inner { max-width: 7.9em; }
+}
 .hero-line-inner {
   display: block;
   transform: translateY(105%);
@@ -206,13 +220,42 @@
   font-weight: 500;
   line-height: 1.35;
   letter-spacing: -0.01em;
+  /* Saut (retrait) de la 1re ligne, comme le paragraphe de la section À propos (~16 % de la largeur). */
+  text-indent: 16%;
 }
 .hero-word {
+  /* text-indent est hérité : sans remise à 0, chaque mot (inline-block) se décalerait lui-même. */
+  text-indent: 0;
   display: inline-block;
   white-space: nowrap;
 }
 .hero-char {
   opacity: 0.22;
+}
+
+/* Apparition du texte (cf. components/ui/RevealText.tsx) : même animation que le titre du hero.
+   Chaque mot est un masque ; son contenu remonte quand le bloc entre dans l'écran. */
+.reveal-word {
+  display: inline-block;
+  vertical-align: top;
+  overflow: hidden;
+  /* marge basse négative : le padding (jambages) n'agrandit pas la ligne */
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+  /* text-indent est hérité : sans remise à 0, chaque mot se décalerait lui-même */
+  text-indent: 0;
+  white-space: nowrap;
+}
+.reveal-inner {
+  display: block;
+  transform: translateY(105%);
+  transition: transform 1.1s cubic-bezier(0.77, 0, 0.18, 1);
+}
+.is-revealed .reveal-inner {
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal-inner { transform: none; transition: none; }
 }
 
 /* Container Hero — collé en bas à TOUS les breakpoints (padding-bottom, pas
@@ -223,7 +266,7 @@
   padding-right: calc(16 * var(--u));
   padding-bottom: calc(32 * var(--u));
 }
-@media (min-width: 848px) {
+@media (min-width: 835px) {
   .hero-container {
     padding-left: calc(32 * var(--u));
     padding-right: calc(32 * var(--u));
@@ -699,7 +742,8 @@
   background: #1C2626;
   display: flex;
   flex-direction: column;
-  padding: 24px 32px;
+  /* 80px en haut : laisse la place au bouton « Fermer » (haut droite, comme le menu). */
+  padding: 80px 32px 24px;
   width: 100%;
   height: 100%;
   overflow-y: auto;
@@ -707,6 +751,36 @@
 @media (min-width: 900px) {
   .joro-contact__photo { display: block; }
   .joro-contact__form-wrap { width: 50%; }
+}
+/* Variante « photo conservée » : le menu ouvert affiche déjà la photo de Contact (même moitié
+   gauche, même cadrage). Le panneau n'est plus clippé : seule la moitié droite (formulaire, fond
+   sombre) balaie depuis le bord droit à l'ouverture et à la fermeture ; la photo et le bouton
+   « Fermer » (identique à celui du menu, au même endroit) apparaissent d'un coup à l'ouverture et
+   ne disparaissent qu'une fois le balayage de fermeture terminé. */
+.joro-contact.joro-contact--keep-photo {
+  background: transparent;
+  clip-path: none;
+  transform: none;
+  transition: none;
+}
+.joro-contact--keep-photo .joro-contact__form-wrap {
+  clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%);
+  transform: translateX(5%);
+  transition: clip-path 1s cubic-bezier(.25,.74,.22,.99), transform 1s cubic-bezier(.25,.74,.22,.99);
+}
+.joro-contact--keep-photo.is-open .joro-contact__form-wrap {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  transform: translateX(0);
+}
+.joro-contact--keep-photo .joro-contact__photo,
+.joro-contact--keep-photo .joro-contact__close {
+  visibility: hidden;
+  transition: visibility 0s linear 1s;
+}
+.joro-contact--keep-photo.is-open .joro-contact__photo,
+.joro-contact--keep-photo.is-open .joro-contact__close {
+  visibility: visible;
+  transition-delay: 0s;
 }
 .joro-contact__backdrop {
   position: fixed;
@@ -732,4 +806,23 @@
 .blend-plus-darker { mix-blend-mode: multiply; }
 @supports (mix-blend-mode: plus-darker) {
   .blend-plus-darker { mix-blend-mode: plus-darker; }
+}
+
+
+/* Loader d'entrée (components/layout/Loader.tsx) : pendant son animation, la navbar est masquée et
+   réapparaît en fondu à la fin. Filet de sécurité : si le JS n'a pas retiré le loader au bout de
+   10 s (erreur, script bloqué), il s'efface tout seul pour ne jamais bloquer le site. */
+header,
+#mini-navbar {
+  transition: opacity 0.6s ease;
+}
+html.loader-active header,
+html.loader-active #mini-navbar {
+  opacity: 0;
+}
+.loader-root {
+  animation: loader-failsafe 0.4s ease 10s forwards;
+}
+@keyframes loader-failsafe {
+  to { opacity: 0; visibility: hidden; }
 }

@@ -14,11 +14,11 @@ interface MenuLink {
 }
 
 const menuLinks: MenuLink[] = [
-  { label: "ACCUEIL",         href: "/",                    image: "/images/BG.png" },
-  { label: "NOTRE STUDIO",    href: "/#notre-studio",       image: "/images/2024-01-Retines-Pigalle-_23A2312-web 2.webp" },
-  { label: "NOS OFFRES",      href: "/#nos-offres",         image: "/images/work/3.webp" },
-  { label: "RÉALISATIONS",    href: "/#nos-realisations",   image: "/images/work/1.webp" },
-  { label: "CONTACT",         href: "/contact",             image: "/images/2024-10-Retines-Asgard-parquet-Pigalle-DSC04495.webp" },
+  { label: "ACCUEIL",         href: "/",                    image: "/images/870894.png" },
+  { label: "NOTRE STUDIO",    href: "/#notre-studio",       image: "/images/à propos.png" },
+  { label: "NOS OFFRES",      href: "/#nos-offres",         image: "/images/taitbout.png" },
+  { label: "RÉALISATIONS",    href: "/#nos-realisations",   image: "/images/joro house.png" },
+  { label: "CONTACT",         href: "/contact",             image: "/images/contact.png" },
 ];
 
 const socialLinks = [
@@ -146,7 +146,7 @@ export default function FullscreenMenu({ isOpen, onClose }: Props) {
                       // après le menu, avec le même z-index : il passe donc au premier plan).
                       <button
                         type="button"
-                        onClick={() => openContact()}
+                        onClick={() => openContact({ keepPhoto: menuLinks[current]?.label === "CONTACT" })}
                         className="joro-menu__nav-link bg-transparent border-0 p-0 text-left cursor-pointer"
                       >
                         {link.label}
