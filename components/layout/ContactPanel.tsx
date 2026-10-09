@@ -43,7 +43,7 @@ export default function ContactPanel({ isOpen, onClose }: Props) {
   const photoSide = (
     <div className="joro-contact__photo" aria-hidden="true">
       <Image
-        src="/images/contact.png"
+        src="/images/contact.webp"
         alt=""
         fill
         className="joro-contact__photo-img"

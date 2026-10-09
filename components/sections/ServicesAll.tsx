@@ -52,8 +52,20 @@ export default function ServicesAll() {
     };
   }, []);
 
+  // Vidéo lue seulement quand la section est à l'écran (pas de décodage inutile pendant le reste du scroll).
   useEffect(() => {
-    videoRef.current?.play().catch(() => {});
+    const el = containerRef.current;
+    const video = videoRef.current;
+    if (!el || !video) return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) video.play().catch(() => {});
+        else video.pause();
+      },
+      { rootMargin: "50% 0px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
   }, []);
 
   // Rectangle charcoal → plein écran, piloté par le scroll. Le clip-path découpe
@@ -220,7 +232,6 @@ export default function ServicesAll() {
             ref={videoRef}
             className="absolute inset-0 w-full h-full object-cover z-0 scale-x-[-1]"
             src="/videos/vecteezy_unrecognizable-female-carpenter-or-furniture-designer_71265347.webm"
-            autoPlay
             muted
             loop
             playsInline

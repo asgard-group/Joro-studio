@@ -11,7 +11,7 @@ import FeaturedWork from "@/components/sections/FeaturedWork";
 import AboutStudio from "@/components/sections/AboutStudio";
 
 export const metadata: Metadata = buildMetadata({
-  title: "JÖRO Studio — Architecture intérieure & espaces hybrides durables",
+  title: "JÖRO Studio — Architecture, AMO & Travaux",
   description:
     "JÖRO Studio conçoit et réalise des espaces hybrides haut de gamme : bureaux, hôtellerie, résidentiel. Design contemporain et engagement écologique depuis 2022.",
   alternates: { canonical: "/" },
@@ -27,7 +27,7 @@ export default function HomePage() {
         ctaLabel={homeHeroStrings.discover}
         ctaHref="#nos-realisations"
         scrollHint={homeHeroStrings.scroll}
-        image="/images/870894.png"
+        image="/images/hero.webp"
       />
 
       {/* À propos — Notre studio (statique, sans animation) */}
@@ -48,7 +48,7 @@ export default function HomePage() {
           title="AMO"
           description="Assistance à la maîtrise d'ouvrage : conseil en faisabilité, diagnostic RSE et accompagnement à la certification, nous vous guidons à chaque étape stratégique de votre projet."
           ctaLabel="Être accompagné"
-          video="/videos/amo-web.mp4"
+          video="/videos/amo-web.webm"
           poster="/images/posters/amo-poster.webp"
           // Filtre Figma : aplat rgba(28,38,38,0.2), mode Color dodge
           overlayClass="bg-[rgba(28,38,38,0.2)] mix-blend-color-dodge"
@@ -58,7 +58,7 @@ export default function HomePage() {
           title="Marketing Suite"
           description="Des supports visuels et des espaces de présentation pensés pour valoriser vos actifs immobiliers pour que votre projet trouve son acquéreur avant même d'être livré."
           ctaLabel="Valoriser mon actif"
-          video="/videos/marketing-suite-web.mp4"
+          video="/videos/marketing-suite-web.webm"
           poster="/images/posters/marketing-suite-poster.webp"
           overlayClass="bg-[rgba(96,96,96,0.2)] mix-blend-lighten"
       />
@@ -67,7 +67,7 @@ export default function HomePage() {
           title="Conseil & Stratégie"
           description="Nous vous aidons à définir une stratégie immobilière alignée sur vos ambitions. Une approche conseil qui conjugue vision long terme, culture d'entreprise et exigence de qualité."
           ctaLabel="Affiner ma stratégie"
-          video="/videos/conseil-workplace-web.mp4"
+          video="/videos/conseil-workplace-web.webm"
           poster="/images/posters/conseil-workplace-poster.webp"
           wide
           zoomed

@@ -38,7 +38,7 @@ export default function CTA() {
         className="absolute inset-x-0"
         style={{ top: isDesktop ? "-15%" : "0%", height: isDesktop ? "130%" : "100%", y }}
       >
-        <Image src="/images/CTA.png" alt="" fill className="object-cover" priority />
+        <Image src="/images/cta.webp" alt="" fill className="object-cover" priority />
       </motion.div>
 
       {/* Mobile : hauteur au contenu, blocs empilés avec un gap fixe de 80px.

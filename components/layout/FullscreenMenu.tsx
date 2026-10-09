@@ -14,11 +14,11 @@ interface MenuLink {
 }
 
 const menuLinks: MenuLink[] = [
-  { label: "ACCUEIL",         href: "/",                    image: "/images/accueil.png" },
-  { label: "À PROPOS",         href: "/#notre-studio",       image: "/images/à propos.png" },
-  { label: "NOS SERVICES",   href: "/#nos-offres",         image: "/images/taitbout.png" },
-  { label: "RÉALISATIONS",    href: "/#nos-realisations",   image: "/images/RÉALISATIONS2.png" },
-  { label: "CONTACT",         href: "/contact",             image: "/images/contact.png" },
+  { label: "ACCUEIL",         href: "/",                    image: "/images/accueil.webp" },
+  { label: "À PROPOS",         href: "/#notre-studio",       image: "/images/a-propos.webp" },
+  { label: "NOS SERVICES",   href: "/#nos-offres",         image: "/images/taitbout.webp" },
+  { label: "RÉALISATIONS",    href: "/#nos-realisations",   image: "/images/realisations.webp" },
+  { label: "CONTACT",         href: "/contact",             image: "/images/contact.webp" },
 ];
 
 const socialLinks = [

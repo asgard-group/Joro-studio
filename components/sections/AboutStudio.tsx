@@ -19,7 +19,7 @@ export default function AboutStudio() {
         <RevealText as="div" className="studio__text" delay={0.15} step={0.07}>{aboutStudioStrings.text}</RevealText>
         <div className="studio__image">
           <Image
-            src="/images/à propos.png"
+            src="/images/a-propos.webp"
             alt={aboutStudioStrings.imageAlt}
             fill
             className="object-cover"

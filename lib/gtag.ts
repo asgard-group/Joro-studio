@@ -11,8 +11,3 @@ export function pageview(url: string) {
   if (!GA_ID || typeof window === "undefined") return;
   window.gtag("config", GA_ID, { page_path: url });
 }
-
-export function event(action: string, params?: Record<string, unknown>) {
-  if (typeof window === "undefined" || typeof window.gtag === "undefined") return;
-  window.gtag("event", action, params);
-}
