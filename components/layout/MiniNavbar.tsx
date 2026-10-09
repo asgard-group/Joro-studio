@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { headerStrings } from "@/lib/strings";
 
@@ -15,6 +17,7 @@ interface Props {
 }
 
 export default function MiniNavbar({ visible, dark, onOpenMenu }: Props) {
+  const pathname = usePathname();
   // Traits du menu : cream sur section sombre, charcoal sur section claire.
   const lineColor = dark ? "#F3F2ED" : "#1C2626";
 
@@ -47,16 +50,31 @@ export default function MiniNavbar({ visible, dark, onOpenMenu }: Props) {
           desktop (≥1280px, cf. Header.tsx scrolledPastHeader), elle reprend
           alors les valeurs du palier 1280/1920 sur tous les axes. */}
       <div className="flex items-center justify-between px-[calc(16*var(--u))] min-[834px]:px-[calc(32*var(--u))] min-[1280px]:px-[calc(40*var(--u))] py-[calc(16*var(--u))] min-[1280px]:py-[calc(24*var(--u))]">
-        {/* Gauche — monogramme, largeur 44 fixe à tous les paliers (contrairement
+        {/* Gauche — monogramme cliquable (retour à l'accueil), largeur 44 (50 à partir de 1280px) (contrairement
             au logo complet de Header.tsx, ne suit pas la largeur 1280/1920). */}
-        <Image
-          src="/images/logos/monograme.svg"
-          alt={headerStrings.logoAlt}
-          width={44}
-          height={28}
-          priority
-          style={{ filter: dark ? ICON_FILTER : "none", width: "calc(44 * var(--u))", height: "auto" }}
-        />
+        <Link
+          href="/"
+          aria-label={headerStrings.logoAriaLabel}
+          tabIndex={visible ? 0 : -1}
+          onClick={(e) => {
+            // Déjà sur l'accueil : la navigation ne ferait rien, on remonte en haut de page.
+            if (pathname === "/") {
+              e.preventDefault();
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }
+          }}
+          className="block"
+        >
+          <Image
+            src="/images/logos/monograme.svg"
+            alt={headerStrings.logoAlt}
+            width={44}
+            height={28}
+            priority
+            className="w-[calc(44*var(--u))] min-[1280px]:w-[calc(50*var(--u))]"
+            style={{ filter: dark ? ICON_FILTER : "none", height: "auto" }}
+          />
+        </Link>
 
         {/* Droite — icône menu (3 traits) uniquement, plus de lien Contact ici. */}
         <div className="flex items-center gap-[calc(16*var(--u))]">

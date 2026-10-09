@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useState, type MouseEvent as ReactMouseEvent } from "react";
+import { useRef, useState, type MouseEvent as ReactMouseEvent } from "react";
 import ComingSoonLink from "@/components/ui/ComingSoonLink";
 import { useContactPanel } from "@/components/providers/ContactPanelProvider";
 
@@ -14,10 +14,10 @@ interface MenuLink {
 }
 
 const menuLinks: MenuLink[] = [
-  { label: "ACCUEIL",         href: "/",                    image: "/images/870894.png" },
-  { label: "NOTRE STUDIO",    href: "/#notre-studio",       image: "/images/à propos.png" },
-  { label: "NOS OFFRES",      href: "/#nos-offres",         image: "/images/taitbout.png" },
-  { label: "RÉALISATIONS",    href: "/#nos-realisations",   image: "/images/joro house.png" },
+  { label: "ACCUEIL",         href: "/",                    image: "/images/accueil.png" },
+  { label: "À PROPOS",         href: "/#notre-studio",       image: "/images/à propos.png" },
+  { label: "NOS SERVICES",   href: "/#nos-offres",         image: "/images/taitbout.png" },
+  { label: "RÉALISATIONS",    href: "/#nos-realisations",   image: "/images/RÉALISATIONS2.png" },
   { label: "CONTACT",         href: "/contact",             image: "/images/contact.png" },
 ];
 
@@ -36,17 +36,28 @@ interface Props {
 export default function FullscreenMenu({ isOpen, onClose }: Props) {
   const pathname = usePathname();
   const { open: openContact } = useContactPanel();
-  // La dernière image survolée (`current`) se balaie par-dessus, l'avant-dernière (`previous`)
-  // reste pleinement ouverte juste derrière → jamais de fond sombre pendant le balayage.
-  // Le balayage se rejoue à chaque survol : l'animation CSS redémarre dès qu'une image (re)devient
-  // `current` (nouvel élément qui reçoit data-state="current").
-  const [current, setCurrent] = useState(0);
-  const [previous, setPrevious] = useState(0);
+  // Enchaînement des photos (d'après « menu-split-animation.html ») : chaque survol crée une NOUVELLE
+  // couche qui balaie de bas en haut (rognage 100 % → 0 en 1 s) avec un dézoom 1,1 → 1 (1,1 s). Un
+  // balayage en cours n'est jamais interrompu (pas de saut) ; les couches du dessous ne sont retirées
+  // qu'une fois la nouvelle entièrement dévoilée (onAnimationEnd). La 1re couche apparaît sans balayage.
+  const [layers, setLayers] = useState<{ key: number; index: number; instant: boolean }[]>([
+    { key: 0, index: 0, instant: true },
+  ]);
+  const nextKey = useRef(1);
+  const current = layers[layers.length - 1].index; // photo affichée (la plus récente)
 
   function activate(index: number) {
     if (index === current) return; // déjà au premier plan
-    setPrevious(current);
-    setCurrent(index);
+    const key = nextKey.current++;
+    setLayers((l) => [...l, { key, index, instant: false }]);
+  }
+
+  // Une couche est entièrement dévoilée : on retire toutes celles qu'elle recouvre.
+  function layerRevealed(key: number) {
+    setLayers((l) => {
+      const i = l.findIndex((x) => x.key === key);
+      return i > 0 ? l.slice(i) : l;
+    });
   }
 
   // Scroll direct jusqu'à la 1ère réalisation déjà révélée (au lieu de tomber au début
@@ -72,12 +83,13 @@ export default function FullscreenMenu({ isOpen, onClose }: Props) {
           langue) : le panneau s'ouvre donc depuis la droite — on réutilise la classe
           d'animation `.joro-contact` (balayage droite → gauche), qui n'a rien à voir
           avec le panneau de contact lui-même, seulement avec son sens d'ouverture. */}
-      <div className={`joro-contact${isOpen ? " is-open" : ""}`} role="dialog" aria-modal="true" aria-label="Menu principal">
+      <div className={`joro-contact joro-menu-panel${isOpen ? " is-open" : ""}`} role="dialog" aria-modal="true" aria-label="Menu principal">
         {/* Top bar — bouton de fermeture uniquement (le sélecteur FR/EN vit dans le
             panneau de droite, cf. .joro-menu__left, pour rester sur le fond sombre
             et ne jamais chevaucher la photo à gauche). */}
-        <div className="absolute inset-x-0 top-0 z-20 px-[20px] min-[840px]:px-[40px] min-[1200px]:px-[60px]">
-          <div className="flex items-center justify-end pt-[40px] pb-[20px]">
+        {/* Marges identiques à celles du hero et de la navbar : 16 / 32 / 40 px (seuils 835 / 1280 px), haut 24 px, contenu centré dans 1920 px. */}
+        <div className="absolute inset-x-0 top-0 z-20 mx-auto max-w-[1920px] px-[16px] min-[835px]:px-[32px] min-[1280px]:px-[40px]">
+          <div className="flex items-center justify-end pt-[24px] pb-[20px]">
             <button
               type="button"
               onClick={onClose}
@@ -95,31 +107,29 @@ export default function FullscreenMenu({ isOpen, onClose }: Props) {
         <div className="joro-menu__body">
           {/* Gauche — photo qui change selon le lien survolé à droite, effet de balayage (clip-path) */}
           <div className="joro-menu__preview" aria-hidden="true">
-            {menuLinks.map((link, index) => {
-              const state =
-                index === current && current !== previous
-                  ? "current" // se balaie par-dessus
-                  : index === current || index === previous
-                    ? "prev" // reste ouverte derrière
-                    : "hidden"; // repliée, hors champ
-              const zIndex = state === "current" ? 3 : state === "prev" ? 2 : 1;
-              return (
+            {/* « stack » : glisse de +5 % à 0 à l'ouverture, avec un léger retard (0,2 s). */}
+            <div className="joro-menu__preview-stack">
+              {layers.map((layer) => (
                 <div
-                  key={link.href}
-                  className="joro-menu__preview-item"
-                  data-state={state}
-                  style={{ zIndex }}
+                  key={layer.key}
+                  className={`joro-menu__preview-item${layer.instant ? "" : " is-entering"}`}
+                  style={{ zIndex: layer.key + 1 }}
+                  onAnimationEnd={(e) => {
+                    if (e.target === e.currentTarget) layerRevealed(layer.key);
+                  }}
                 >
-                  <Image
-                    src={link.image}
-                    alt=""
-                    fill
-                    className="joro-menu__preview-img"
-                    sizes="50vw"
-                  />
+                  <div className="joro-menu__preview-zoom">
+                    <Image
+                      src={menuLinks[layer.index].image}
+                      alt=""
+                      fill
+                      className="joro-menu__preview-img"
+                      sizes="50vw"
+                    />
+                  </div>
                 </div>
-              );
-            })}
+              ))}
+            </div>
           </div>
 
           {/* Droite — FR/EN + nav + social */}
@@ -127,7 +137,7 @@ export default function FullscreenMenu({ isOpen, onClose }: Props) {
             {/* pt-0 sous 768px : .joro-menu__left a déjà 32px de padding-top à ce
                 breakpoint (cf. globals.css) — cumulé au pt-[40px] ça décalait FR/EN
                 sous la ligne du bouton Fermer au lieu de s'aligner avec lui. */}
-            <div className="pt-[40px] max-[768px]:pt-0">
+            <div className="pt-[24px]">
               <ComingSoonLink className="text-[13px] font-semibold uppercase tracking-[0.08em] text-cream">
                 FR&nbsp;/&nbsp;EN
               </ComingSoonLink>

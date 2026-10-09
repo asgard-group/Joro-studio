@@ -590,14 +590,23 @@
   background: #1C2626;
   display: flex;
   flex-direction: column;
-  padding: 0 60px;
+  /* Marges latérales du hero / de la navbar : 16 / 32 / 40 px (seuils 835 / 1280 px). */
+  padding: 0 16px;
   width: 100%;
   height: 100%;
+}
+@media (min-width: 835px) {
+  .joro-menu__left { padding: 0 32px; }
+}
+@media (min-width: 1280px) {
+  .joro-menu__left { padding: 0 40px; }
 }
 .joro-menu__left nav {
   flex: 1;
   display: flex;
   align-items: center;
+  /* Remonte les liens : le padding bas décale leur centre de 4vh vers le haut. */
+  padding-bottom: 8vh;
 }
 .joro-menu__nav {
   list-style: none;
@@ -614,28 +623,42 @@
   flex: 0 0 50%;
   overflow: hidden;
 }
+/* Pile de photos : glisse de +5 % à 0 à l'ouverture (retard 0,2 s), comme dans la référence
+   (là-bas -5 %, car le panneau s'ouvre de gauche à droite ; ici de droite à gauche). */
+.joro-menu__preview-stack {
+  position: absolute;
+  inset: 0;
+  transform: translateX(5%);
+  transition: transform 0.8s cubic-bezier(.25,.74,.22,.99) 0.2s;
+}
+.joro-menu-panel.is-open .joro-menu__preview-stack { transform: translateX(0); }
 .joro-menu__preview-item {
   position: absolute;
   inset: 0;
+  overflow: hidden;
+  clip-path: inset(0 0 0 0);
 }
-.joro-menu__preview-img {
-  object-fit: cover;
-  /* Par défaut repliée (hors champ) */
-  clip-path: polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%);
+.joro-menu__preview-zoom {
+  position: absolute;
+  inset: 0;
+  transform: scale(1);
+  will-change: transform;
 }
-/* Image précédente : reste pleinement ouverte derrière (aucun fond exposé pendant le balayage) */
-.joro-menu__preview-item[data-state="prev"] .joro-menu__preview-img {
-  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+.joro-menu__preview-img { object-fit: cover; }
+/* Nouvelle photo : balayage de bas en haut (1 s) + dézoom 1,1 → 1 (1,1 s) */
+.joro-menu__preview-item.is-entering {
+  animation: joroSlideWipe 1s cubic-bezier(.25,.74,.22,.99) both;
 }
-/* Image active : rejoue le balayage à chaque survol (l'animation redémarre quand l'élément
-   (re)devient "current"), puis reste ouverte */
-.joro-menu__preview-item[data-state="current"] .joro-menu__preview-img {
-  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
-  animation: joroMenuWipe 0.9s cubic-bezier(.25,.74,.22,.99);
+.joro-menu__preview-item.is-entering .joro-menu__preview-zoom {
+  animation: joroSlideZoom 1.1s cubic-bezier(.25,.74,.22,.99) both;
 }
-@keyframes joroMenuWipe {
-  from { clip-path: polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%); }
-  to   { clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%); }
+@keyframes joroSlideWipe {
+  from { clip-path: inset(100% 0 0 0); }
+  to   { clip-path: inset(0 0 0 0); }
+}
+@keyframes joroSlideZoom {
+  from { transform: scale(1.1); }
+  to   { transform: scale(1); }
 }
 @media (min-width: 900px) {
   .joro-menu__preview { display: block; }
@@ -653,13 +676,25 @@
   color: #F3F2ED;
   text-decoration: none;
   opacity: 1;
-  transition: color 0.25s ease, opacity 0.25s ease;
+  transition: opacity 0.35s ease;
 }
-.joro-menu__nav a:hover,
-.joro-menu__nav .joro-menu__nav-link:hover { color: #BAB6AA; }
-/* Au survol d'un lien, les autres s'atténuent à 30% ; le survolé reste pleinement opaque */
+/* Apparition en cascade à l'ouverture (référence) : chaque lien monte de 24px en fondu (0,8 s) avec
+   0,07 s de décalage entre deux liens, après 0,35 s. À la fermeture : retour immédiat, sans délai. */
+.joro-menu-panel .joro-menu__nav li {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s cubic-bezier(.25,.74,.22,.99), transform 0.8s cubic-bezier(.25,.74,.22,.99);
+}
+.joro-menu-panel.is-open .joro-menu__nav li { opacity: 1; transform: none; }
+.joro-menu-panel.is-open .joro-menu__nav li:nth-child(1) { transition-delay: 0.35s; }
+.joro-menu-panel.is-open .joro-menu__nav li:nth-child(2) { transition-delay: 0.42s; }
+.joro-menu-panel.is-open .joro-menu__nav li:nth-child(3) { transition-delay: 0.49s; }
+.joro-menu-panel.is-open .joro-menu__nav li:nth-child(4) { transition-delay: 0.56s; }
+.joro-menu-panel.is-open .joro-menu__nav li:nth-child(5) { transition-delay: 0.63s; }
+.joro-menu-panel.is-open .joro-menu__nav li:nth-child(6) { transition-delay: 0.7s; }
+/* Au survol de la liste, les autres liens s'estompent ; le survolé reste pleinement opaque */
 .joro-menu__nav:hover a,
-.joro-menu__nav:hover .joro-menu__nav-link { opacity: 0.3; }
+.joro-menu__nav:hover .joro-menu__nav-link { opacity: 0.28; }
 .joro-menu__nav:hover a:hover,
 .joro-menu__nav:hover .joro-menu__nav-link:hover { opacity: 1; }
 /* Desktop (≥900px) : le panneau gauche ne fait que 50vw et la photo occupe l'autre moitié.
@@ -669,7 +704,7 @@
 @media (min-width: 900px) {
   .joro-menu__nav a,
   .joro-menu__nav .joro-menu__nav-link {
-    font-size: clamp(16px, calc((50vw - 100px) / 7.47), 64px);
+    font-size: clamp(16px, calc((50vw - 100px) / 9.5), 50px);
   }
 }
 .joro-menu__social {
@@ -697,7 +732,7 @@
 }
 .joro-menu__backdrop.is-visible { opacity: 0.5; }
 @media (max-width: 768px) {
-  .joro-menu__left { padding: 32px 24px 40px; }
+  .joro-menu__left { padding: 0 16px 40px; }
 }
 
 /* ContactPanel — même animation que .joro-menu, en miroir horizontal : le
