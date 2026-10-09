@@ -17,7 +17,7 @@ export const realisationsProjects: RealisationProject[] = [
     tagLeft: "Tiers-Lieux",
     tagRight: "Bureaux, Events & Coffee-Shop",
     accentColor: "#96461F",
-    image: "/images/joro house.png",
+    image: "/images/joro-house.webp",
   },
   {
     id: "tournelles",
@@ -27,7 +27,7 @@ export const realisationsProjects: RealisationProject[] = [
     tagLeft: "Lieu Événementiel",
     tagRight: "Espace Modulable",
     accentColor: "#A97F4F",
-    image: "/images/tournelle.png",
+    image: "/images/tournelle.webp",
   },
   {
     id: "taitbout",
@@ -37,7 +37,7 @@ export const realisationsProjects: RealisationProject[] = [
     tagLeft: "Habitat",
     tagRight: "Appartements Meublés",
     accentColor: "#7A7D54",
-    image: "/images/taitbout.png",
+    image: "/images/taitbout.webp",
   },
   {
     id: "rougemont",
@@ -47,7 +47,7 @@ export const realisationsProjects: RealisationProject[] = [
     tagLeft: "Espaces de Travail",
     tagRight: "Bureaux",
     accentColor: "#C1A46F",
-    image: "/images/rougemont.png",
+    image: "/images/rougemont.webp",
   },
   {
     id: "oberkampf-2",
@@ -57,6 +57,6 @@ export const realisationsProjects: RealisationProject[] = [
     tagLeft: "Espaces de Travail",
     tagRight: "Bureaux",
     accentColor: "#954F07",
-    image: "/images/OBERKAMPF.png",
+    image: "/images/oberkampf.webp",
   },
 ];

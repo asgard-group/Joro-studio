@@ -39,12 +39,16 @@ function ScrollFill({ text }: { text: string }) {
       chars.forEach((c) => (c.style.opacity = "1"));
       return;
     }
+    let lastProg = -1;
     const update = () => {
       const vh = window.innerHeight;
       const r = el.getBoundingClientRect();
       // 0 : le bloc entre par le bas ; 1 : son bas passe au-dessus de 70 % de l'écran (tout est alors lisible,
       // y compris la dernière phrase).
       const prog = Math.min(1, Math.max(0, (vh - r.top) / (vh * 0.3 + r.height)));
+      // Hors de la zone d'animation (0 ou 1 inchangé) : aucun style à réécrire.
+      if (prog === lastProg) return;
+      lastProg = prog;
       const lit = prog * (chars.length + 10);
       chars.forEach((c, i) => {
         c.style.opacity = (0.22 + 0.78 * Math.min(1, Math.max(0, (lit - i) / 10))).toFixed(3);
@@ -57,11 +61,15 @@ function ScrollFill({ text }: { text: string }) {
     };
     update();
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+    const onResize = () => {
+      lastProg = -1;
+      onScroll();
+    };
+    window.addEventListener("resize", onResize);
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      window.removeEventListener("resize", onResize);
     };
   }, [reduced, text]);
 

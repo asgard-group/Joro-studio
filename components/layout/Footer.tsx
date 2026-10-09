@@ -210,10 +210,11 @@ function FooterLogo({ className = "" }: { className?: string }) {
       aria-label="JÖRO Studio — retour à l'accueil"
     >
       <Image
-        src="/images/logos/joro-studio-amo-architecture-travaux.png"
+        src="/images/logos/joro-studio-amo-architecture-travaux.webp"
         alt="JÖRO Studio — amo · architecture · travaux"
         width={1390}
         height={330}
+        unoptimized
         className="h-auto w-full"
         style={{ filter: "brightness(0) invert(1) sepia(1) saturate(0) brightness(0.98)" }}
       />

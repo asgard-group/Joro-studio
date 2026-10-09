@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import ServiceBottom from "@/components/sections/ServiceBottom";
 
@@ -16,6 +16,8 @@ interface Props {
   video?: string;
   /** Frame fixe affichée à la place de la vidéo tant qu'elle n'a pas fini de charger. */
   poster?: string;
+  /** Lecture de la vidéo : false = en pause (hors écran). */
+  play?: boolean;
   flipX?: boolean;
   wide?: boolean;
   overlayClass?: string;
@@ -29,7 +31,14 @@ interface Props {
   zoomed?: boolean;
 }
 
-export default function ServiceReveal({ activeId, title, description, ctaLabel = "Découvrir l'offre", image, video, poster, flipX, overlayClass, gradientOverlayStyle, gradientOverlayClass, bgY, zoomed }: Props) {
+export default function ServiceReveal({ activeId, title, description, ctaLabel = "Découvrir l'offre", image, video, poster, flipX, overlayClass, gradientOverlayStyle, gradientOverlayClass, bgY, zoomed, play = true }: Props) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (play) v.play().catch(() => {});
+    else v.pause();
+  }, [play]);
   // Fondu de la vidéo une fois chargée : le poster reste visible (et net) jusque-là.
   const [videoLoaded, setVideoLoaded] = useState(false);
 
@@ -50,11 +59,11 @@ export default function ServiceReveal({ activeId, title, description, ctaLabel =
             {/* Poster affiché instantanément, puis fondu vers la vidéo une fois chargée */}
             {poster && <Image src={poster} alt="" fill className="object-cover" sizes="100vw" />}
             <video
+              ref={videoRef}
               className={`absolute inset-0 w-full h-full object-cover${flipX ? " scale-x-[-1]" : ""}`}
               style={{ opacity: videoLoaded ? 1 : 0, transition: "opacity 0.5s ease" }}
               src={video}
               poster={poster}
-              autoPlay
               muted
               loop
               playsInline

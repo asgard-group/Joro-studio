@@ -12,14 +12,11 @@ export default function NotFound() {
       <h1 className="heading-display mb-6">Page introuvable</h1>
       <p className="mb-10 max-w-md text-charcoal-muted">
         La page que vous cherchez n'existe pas ou a été déplacée. Revenez à
-        l'accueil ou explorez nos réalisations.
+        l'accueil.
       </p>
       <div className="flex flex-wrap gap-4">
         <Link href="/" className="btn-primary">
           Retour à l'accueil
-        </Link>
-        <Link href="/work" className="btn-outline">
-          Nos réalisations
         </Link>
       </div>
     </section>

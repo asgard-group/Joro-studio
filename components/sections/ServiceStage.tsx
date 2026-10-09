@@ -1,7 +1,7 @@
 "use client";
 
-import { Children, cloneElement, isValidElement, useRef, type ReactElement, type ReactNode } from "react";
-import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
+import { Children, cloneElement, isValidElement, useEffect, useRef, useState, type ReactElement, type ReactNode } from "react";
+import { motion, useMotionValueEvent, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { useIsDesktop } from "@/hooks/useIsDesktop";
 
 // Transition entre les services (AMO → Marketing Suite → Conseil) : une seule vue collée en haut
@@ -15,7 +15,24 @@ import { useIsDesktop } from "@/hooks/useIsDesktop";
 
 const SCREENS = 4; // écrans de défilement pendant que la vue est collée (500vh − 100vh)
 
-function Panel({ index, progress, parallax, children }: { index: number; progress: MotionValue<number>; parallax: boolean; children: ReactNode }) {
+// Une vidéo n'est lue que si son panneau est à l'écran : visible (ou sur le point de l'être) et pas encore
+// entièrement recouvert par le suivant. Évite de décoder 3 vidéos 1080p en même temps pendant le scroll.
+function usePanelPlaying(progress: MotionValue<number>, index: number, last: boolean, stageVisible: boolean) {
+  const inRange = (p: number) => {
+    const s = p * SCREENS;
+    return s > index - 0.3 && (last || s < index + 1.05);
+  };
+  const [range, setRange] = useState(false);
+  useEffect(() => setRange(inRange(progress.get())), []); // eslint-disable-line react-hooks/exhaustive-deps
+  useMotionValueEvent(progress, "change", (p) => {
+    const next = inRange(p);
+    setRange((cur) => (cur === next ? cur : next));
+  });
+  return stageVisible && range;
+}
+
+function Panel({ index, last, progress, parallax, stageVisible, children }: { index: number; last: boolean; progress: MotionValue<number>; parallax: boolean; stageVisible: boolean; children: ReactNode }) {
+  const play = usePanelPlaying(progress, index, last, stageVisible);
   // s = nombre d'écrans défilés depuis le début de la scène (0 → SCREENS)
   const clipPath = useTransform(progress, (p) => {
     const reveal = Math.min(1, Math.max(0, p * SCREENS - index));
@@ -30,7 +47,7 @@ function Panel({ index, progress, parallax, children }: { index: number; progres
     const cover = Math.min(1, Math.max(0, s - index - 1));
     return `${(1 - reveal) * 9 - cover * 6}%`;
   });
-  const child = isValidElement(children) ? cloneElement(children as ReactElement<{ bgY?: MotionValue<string> }>, { bgY }) : children;
+  const child = isValidElement(children) ? cloneElement(children as ReactElement<{ bgY?: MotionValue<string>; play?: boolean }>, { bgY, play }) : children;
   return (
     <motion.div className="absolute inset-0 bg-[#111]" style={{ clipPath, zIndex: index + 1 }}>
       {child}
@@ -43,6 +60,14 @@ export default function ServiceStage({ children }: { children: ReactNode }) {
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
   const items = Children.toArray(children);
   const parallax = useIsDesktop(768);
+  const [stageVisible, setStageVisible] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => setStageVisible(e.isIntersecting), { rootMargin: "50% 0px" });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   return (
     <div ref={ref} className="relative h-[500vh] -mt-[200vh]">
@@ -53,7 +78,7 @@ export default function ServiceStage({ children }: { children: ReactNode }) {
 
       <div className="sticky top-0 h-screen overflow-hidden" style={{ zIndex: 40 }}>
         {items.map((child, i) => (
-          <Panel key={i} index={i} progress={scrollYProgress} parallax={parallax}>
+          <Panel key={i} index={i} last={i === items.length - 1} progress={scrollYProgress} parallax={parallax} stageVisible={stageVisible}>
             {child}
           </Panel>
         ))}

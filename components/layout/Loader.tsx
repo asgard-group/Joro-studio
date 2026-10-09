@@ -15,7 +15,7 @@ import { headerStrings } from "@/lib/strings";
 // de mouvement. Prévient Hero / Header via la classe `loader-active` sur <html> et l'événement
 // `loader:done` (leurs animations d'intro attendent la fin du loader).
 
-const LOGO_SRC = "/images/logos/joro-studio-amo-architecture-travaux.png";
+const LOGO_SRC = "/images/logos/joro-studio-amo-architecture-travaux.webp";
 const LOGO_W = 1390;
 // Décalages (en % de la hauteur d'une lettre) volontairement larges : sur mobile, la marge du cadre
 // (--lm) est grande par rapport à la hauteur du logo, et un décalage plus court laisserait dépasser
@@ -87,6 +87,16 @@ function preloadAssets(onProgress: (fraction: number) => void): Promise<void> {
         if (img.complete && img.naturalWidth > 0) return done();
         img.addEventListener("load", done, { once: true });
         img.addEventListener("error", done, { once: true });
+        // Image « lazy » passée en eager que le navigateur n'a jamais démarrée (aucune source choisie) :
+        // on précharge la même source via une image sonde, ce qui réchauffe le cache et libère le loader.
+        setTimeout(() => {
+          if (img.complete || img.currentSrc) return;
+          const probe = new Image();
+          probe.sizes = img.sizes;
+          probe.srcset = img.srcset;
+          probe.onload = probe.onerror = () => done();
+          probe.src = img.src;
+        }, 2500);
       }),
     );
   });
@@ -145,7 +155,18 @@ export default function Loader() {
       return;
     }
 
-    html.classList.add("loader-active");
+    html.classList.add("loader-active", "loader-running");
+    // Fond charbon derrière la page pendant tout le loader : quand le panneau s'efface, la zone pas encore
+    // dévoilée reste charbon (et non beige) jusqu'à l'arrivée de la photo.
+    const prevHtmlBg = html.style.backgroundColor;
+    const prevBodyBg = document.body.style.backgroundColor;
+    html.style.backgroundColor = "#1C2626";
+    document.body.style.backgroundColor = "#1C2626";
+    const restoreBg = () => {
+      html.classList.remove("loader-running");
+      html.style.backgroundColor = prevHtmlBg;
+      document.body.style.backgroundColor = prevBodyBg;
+    };
     const W = window.innerWidth;
     const H = window.innerHeight;
     const isMobile = W < 768;
@@ -183,6 +204,7 @@ export default function Loader() {
       window.removeEventListener("wheel", block);
       window.removeEventListener("touchmove", block);
       html.classList.remove("loader-active");
+      restoreBg();
       setActive(false);
     };
 
@@ -219,39 +241,61 @@ export default function Loader() {
         };
         requestAnimationFrame(tick);
       });
-      const intro = Promise.all([
-        anim(metaRefs.current, { y: ["100%", "0%"] }, { duration: 1, ease: EXPO_OUT, delay: stagger(0.05, { startDelay: 0.25 }) }),
-        anim(lineRefs.current, { y: ["100%", "0%"] }, { duration: 1.2, ease: EXPO_OUT, delay: stagger(0.075, { startDelay: 0.25 }) }),
-        anim(topLetters.current, { y: ["160%", "-160%"] }, { duration: 2, ease: EXPO_OUT, delay: stagger(0.0475, { startDelay: 0.55 }) }),
-        anim(bottomLetters.current, { y: ["280%", "0%"] }, { duration: 2, ease: EXPO_OUT, delay: stagger(0.0475, { startDelay: 0.55 }) }),
-      ]);
-      // Compteur terminé + intro terminée + page chargée (le compteur ne dépasse pas le vrai chargement).
       const loaded =
         document.readyState === "complete"
           ? Promise.resolve()
           : new Promise<void>((r) => window.addEventListener("load", () => r(), { once: true }));
+      let loadingDone = false;
+      void Promise.all([count, loaded, preload]).then(() => {
+        loadingDone = true;
+      });
+      const texts = Promise.all([
+        anim(metaRefs.current, { y: ["100%", "0%"] }, { duration: 1, ease: EXPO_OUT, delay: stagger(0.05, { startDelay: 0.25 }) }),
+        anim(lineRefs.current, { y: ["100%", "0%"] }, { duration: 1.2, ease: EXPO_OUT, delay: stagger(0.075, { startDelay: 0.25 }) }),
+      ]);
+      // Logo en boucle tant que le chargement n'est pas terminé : entrée en cascade → (si ça charge encore)
+      // sortie par le haut → on repart. Le dernier passage s'arrête logo posé, prêt pour la sortie finale.
+      const logoIn = (startDelay: number) =>
+        Promise.all([
+          anim(topLetters.current, { y: ["160%", "-160%"] }, { duration: 2, ease: EXPO_OUT, delay: stagger(0.0475, { startDelay }) }),
+          anim(bottomLetters.current, { y: ["280%", "0%"] }, { duration: 2, ease: EXPO_OUT, delay: stagger(0.0475, { startDelay }) }),
+        ]);
+      const logoLoop = async () => {
+        await logoIn(0.55);
+        while (!loadingDone && !cancelled) {
+          await anim(bottomLetters.current, { y: ["0%", "-160%"] }, { duration: 1.1, ease: FAST_IN_OUT, delay: stagger(0.04) });
+          if (cancelled) return;
+          await Promise.all([
+            anim(topLetters.current, { y: "160%" }, { duration: 0 }),
+            anim(bottomLetters.current, { y: "280%" }, { duration: 0 }),
+          ]);
+          await logoIn(0.1);
+        }
+      };
+      const intro = Promise.all([texts, logoLoop()]);
       await Promise.all([count, intro, loaded, preload]);
-      if (cancelled) return;
-      await new Promise((r) => setTimeout(r, 400));
       if (cancelled) return;
 
       // 2. Sortie : d'abord les textes et les lettres du logo repartent vers le haut en cascade (sur le
       // fond charbon, jusqu'à la dernière lettre : plus aucun logo à l'écran ensuite)…
-      await Promise.all([
+      const exit = Promise.all([
         anim(lineRefs.current, { y: ["0%", "-100%"] }, { duration: 1.2, ease: FAST_IN_OUT, delay: stagger(0.05) }),
         anim(metaRefs.current, { y: ["0%", "-100%"] }, { duration: 1.2, ease: FAST_IN_OUT, delay: stagger(0.05, { startDelay: 0.1 }) }),
         anim(bottomLetters.current, { y: ["0%", "-160%"] }, { duration: 1.3, ease: FAST_IN_OUT, delay: stagger(0.05) }),
       ]);
+      // La page enchaîne sans temps mort : elle démarre dès que les dernières lettres sont presque sorties
+      // (la fin de leur course est hors écran), sans attendre la fin complète de l'animation.
+      await new Promise((r) => setTimeout(r, 1000));
       if (cancelled) return;
 
       // …puis, comme dans la démo, le fond s'efface et la page se déploie depuis le bas (rognage qui
       // s'ouvre + échelle qui revient à 1).
       const t = (d: number) => ({ delay: d });
-      const reveal: Promise<void>[] = [anim(panel, { opacity: [1, 0] }, { duration: 0.35, ease: "easeOut" })];
+      const reveal: Promise<unknown>[] = [exit, anim(panel, { opacity: [1, 0] }, { duration: 0.35, ease: "easeOut" })];
       if (main) {
         reveal.push(
-          anim(main, { clipPath: [insetStart, "inset(0px 0px 0px 0px)"] }, { duration: 1.7, ease: FAST_IN_OUT, ...t(0.1) }),
-          anim(main, { scale: [s0, 1], y: [y0, 0] }, { duration: 1.2, ease: FAST_IN_OUT, ...t(0.6) }),
+          anim(main, { clipPath: [insetStart, "inset(0px 0px 0px 0px)"] }, { duration: 1.7, ease: FAST_IN_OUT, ...t(0) }),
+          anim(main, { scale: [s0, 1], y: [y0, 0] }, { duration: 1.2, ease: FAST_IN_OUT, ...t(0.5) }),
         );
       }
       // Navbar en fondu quand la page est presque en place, puis le contenu du hero s'anime.
@@ -277,6 +321,7 @@ export default function Loader() {
     return () => {
       cancelled = true;
       html.style.overflow = prevOverflow;
+      restoreBg();
       window.removeEventListener("wheel", block);
       window.removeEventListener("touchmove", block);
     };

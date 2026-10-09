@@ -47,10 +47,6 @@
     pointer-events: none;
   }
 
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-
   body {
     @apply bg-cream text-charcoal antialiased text-[14px] md:text-base;
     font-feature-settings: "kern" 1, "liga" 1;
@@ -85,28 +81,12 @@
     @apply font-serif text-4xl font-normal leading-tight tracking-tight lg:text-5xl xl:text-6xl;
   }
 
-  .heading-section {
-    @apply font-serif text-[26px] font-normal leading-snug lg:text-4xl;
-  }
-
   .label-eyebrow {
     @apply text-xs font-semibold uppercase tracking-widest text-taupe;
   }
 
   .btn-primary {
     @apply inline-flex items-center gap-2 bg-taupe px-6 py-3 text-sm font-semibold uppercase tracking-wider text-cream transition-all duration-200 hover:bg-taupe-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-taupe;
-  }
-
-  .btn-outline {
-    @apply inline-flex items-center gap-2 border border-charcoal px-6 py-3 text-sm font-semibold uppercase tracking-wider text-charcoal transition-all duration-200 hover:bg-charcoal hover:text-cream;
-  }
-
-  .btn-ghost {
-    @apply inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold uppercase tracking-wider text-charcoal transition-all duration-200 hover:text-taupe;
-  }
-
-  .link-underline {
-    @apply relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-taupe after:transition-all after:duration-300 hover:after:w-full;
   }
 }
 
@@ -289,15 +269,6 @@
     margin-left: auto;
     margin-right: auto;
   }
-}
-
-/* Padding-gauche partagé par les titres de section (Services, About
-   History...) pour s'aligner sur le même bord gauche que le titre du Hero.
-   Le padding-droit et les autres propriétés restent gérés indépendamment par
-   chaque consommateur (cf. ServiceReveal.tsx, ServicesAll.tsx,
-   AboutHistorySticky.tsx). */
-.section-title-pl {
-  padding-left: 53px;
 }
 
 /* Texte d'intro sous un grand titre (line-height 130%, distinct du rôle
@@ -557,13 +528,6 @@
   .work-title { --s: 1px; }
 }
 
-/* Réalisations — carte mobile plein écran */
-.mobile-work-card {
-  /* Fallback pour les navigateurs sans support de dvh */
-  height: 100vh;
-  height: 100dvh;
-}
-
 /* FullscreenMenu */
 .joro-menu {
   position: fixed;
@@ -707,20 +671,6 @@
     font-size: clamp(16px, calc((50vw - 100px) / 9.5), 50px);
   }
 }
-.joro-menu__social {
-  display: flex;
-  gap: 20px;
-  align-items: center;
-  padding-bottom: 20px;
-}
-.joro-menu__social a {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: rgba(255,255,255,0.7);
-  transition: color 0.2s ease;
-}
-.joro-menu__social a:hover { color: #fff; }
 .joro-menu__backdrop {
   position: fixed;
   inset: 0;
@@ -861,3 +811,7 @@ html.loader-active #mini-navbar {
 @keyframes loader-failsafe {
   to { opacity: 0; visibility: hidden; }
 }
+
+/* Bandeau cookies : masqué pendant le loader, fondu à son arrivée. */
+[role="dialog"][aria-label="Cookies"] { transition: opacity 0.5s ease; }
+html.loader-running [role="dialog"][aria-label="Cookies"] { opacity: 0; pointer-events: none; }

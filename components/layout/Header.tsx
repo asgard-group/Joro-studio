@@ -54,7 +54,7 @@ function NavContent({ dark, onOpenMenu }: NavContentProps) {
             style={{ height: "calc(42 * var(--u))" }}
           >
             <Image
-              src="/images/logos/joro-studio-amo-architecture-travaux.png"
+              src="/images/logos/joro-studio-amo-architecture-travaux.webp"
               alt={headerStrings.logoAlt}
               fill
               priority
