@@ -18,11 +18,10 @@ type FooterItem = {
   onClick?: (e: ReactMouseEvent) => void;
 };
 
-// Coordonnées : le téléphone est un placeholder (maquette), l'e-mail est celui de la page
-// « Politique de confidentialité ».
+// Coordonnées affichées dans la colonne « Contactez-nous ».
 const contactLinks: FooterItem[] = [
-  { label: "+33 6 00 00 00 00 00", href: "tel:+33600000000" },
-  { label: "contact@joro-studio.fr", href: "mailto:contact@joro-studio.fr", external: true },
+  { label: "hello@joro-studio.fr", href: "mailto:hello@joro-studio.fr", external: true },
+  { label: "+33 (0)1 45 00 00 09", href: "tel:+33145000009" },
 ];
 
 const socialLinks: FooterItem[] = [

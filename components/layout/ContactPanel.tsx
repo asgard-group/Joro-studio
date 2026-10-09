@@ -61,10 +61,10 @@ export default function ContactPanel({ isOpen, onClose }: Props) {
         aria-modal="true"
         aria-label={strings.dialogAriaLabel}
       >
-        {/* Bouton de fermeture : même texte, même style et même position (haut droite) que
-            « Fermer » du menu ouvert (cf. FullscreenMenu.tsx). */}
-        <div className="joro-contact__close absolute inset-x-0 top-0 z-20 px-[20px] min-[840px]:px-[40px] min-[1200px]:px-[60px]">
-          <div className="flex items-center justify-end pt-[40px] pb-[20px]">
+        {/* Bouton de fermeture : même texte, même style, mêmes marges et même position (haut droite)
+            que « Fermer » du menu ouvert (cf. FullscreenMenu.tsx) : 16 / 32 / 40 px, haut 24 px. */}
+        <div className="joro-contact__close absolute inset-x-0 top-0 z-20 mx-auto max-w-[1920px] px-[16px] min-[835px]:px-[32px] min-[1280px]:px-[40px]">
+          <div className="flex items-center justify-end pt-[24px] pb-[20px]">
             <button
               type="button"
               onClick={onClose}

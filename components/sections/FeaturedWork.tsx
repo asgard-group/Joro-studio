@@ -83,13 +83,36 @@ export default function FeaturedWork() {
   // Hauteur de l'intro : le morceau de SVG qui dépasse sur la 1re réalisation est une copie
   // « sticky » du même SVG, posée avec le même décalage (haut de la copie = haut de l'intro).
   const introInnerRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const ringRef = useRef<HTMLImageElement>(null);
   const [introH, setIntroH] = useState(0);
+  // Course du sticky retranchée à la fin de la liste (px) : calculée pour que le SVG, une fois libéré,
+  // vienne se poser avec son bas ~20px sous la fin de la section (cf. plus bas).
+  const [ringV, setRingV] = useState(0);
   useEffect(() => {
-    const el = introInnerRef.current;
-    if (!el) return;
-    const ro = new ResizeObserver(() => setIntroH(el.offsetHeight));
-    ro.observe(el);
-    return () => ro.disconnect();
+    const intro = introInnerRef.current;
+    if (!intro) return;
+    const measure = () => {
+      const h = intro.offsetHeight;
+      setIntroH(h);
+      const ring = ringRef.current;
+      const section = sectionRef.current;
+      if (!ring || !section) return;
+      // Bas du SVG dans son cadre (haut du cadre = haut de l'intro) et marge basse de la section.
+      const ringBottom = ring.offsetTop + ring.offsetHeight;
+      const padBottom = parseFloat(getComputedStyle(section).paddingBottom) || 0;
+      // Le SVG libéré se retrouve à (fin de la zone sticky − introH + ringBottom) : on veut
+      // (fin de la dernière réalisation + marge basse + 20px).
+      setRingV(Math.max(0, ringBottom - h - (padBottom + 20)));
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(intro);
+    window.addEventListener("resize", measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measure);
+    };
   }, []);
 
   return (
@@ -115,33 +138,33 @@ export default function FeaturedWork() {
 
       {/* Réalisations : liste verticale, animation au défilement dans ProjectItem. */}
       <section
+        ref={sectionRef}
         data-navbar-theme="light"
-        className="relative z-[1] overflow-clip pb-[20vh] [--pt:150px] min-[835px]:[--pt:220px] min-[1280px]:[--pt:300px]"
+        // clip-path : rogne le haut (le SVG ne doit pas redessiner l'intro) mais laisse déborder le bas
+        // de 600px : les cercles continuent sur le haut de la section suivante.
+        className="relative z-[1] pb-[20vh] [--pt:150px] min-[835px]:[--pt:220px] min-[1280px]:[--pt:300px]"
+        style={{ clipPath: "inset(0 0 -600px 0)" }}
       >
-        {/* Le SVG se fige (sticky) quand le haut de la section atteint -100px, soit quand le titre de
-            la 1re réalisation est à (--pt − 100px) du haut de l'écran. Il se libère symétriquement :
-            quand le titre de la DERNIÈRE réalisation arrive à cette même hauteur. Pour cela, le
-            conteneur du sticky (C) s'arrête avant la dernière réalisation ; la marge négative de la
-            liste raccourcit d'autant sa zone de contenu (course du sticky) et le padding-bas de C la
-            compense : la mise en page ne bouge pas. */}
-        <div className="relative" style={{ paddingBottom: "max(0px, calc(var(--pt) - 18vh))" }}>
+        {/* Le SVG se fige (sticky) quand le haut de la section atteint -100px, descend avec la page
+            pendant tout le défilement, puis se libère tard : il se pose avec son bas ~20px sous la fin
+            de la section, comme sur la maquette. Le conteneur du sticky (C) englobe toute la liste ;
+            la marge négative de la liste (ringV, mesurée) raccourcit sa zone de contenu (course du
+            sticky) et le padding-bas de C la compense : la mise en page ne bouge pas. */}
+        <div className="relative" style={{ paddingBottom: ringV }}>
           {/* Suite des cercles de l'intro : prolonge exactement l'intro au départ (même position) ;
               l'intro, elle, est rognée à sa limite pour que le tracé ne soit pas doublé.
               Hauteur 0 : seul le SVG (positionné vers le haut) dépasse. */}
           <div aria-hidden="true" className="studio pointer-events-none -z-10 h-0" style={{ position: "sticky", top: -100, overflow: "visible", background: "transparent" }}>
             <div className="absolute inset-x-0 bottom-0 mx-auto max-w-[1920px]" style={{ height: introH }}>
               {/* eslint-disable-next-line @next/next/no-img-element -- SVG décoratif positionné en absolu */}
-              <img src="/images/logos/svg.svg" alt="" className="studio__ring" />
+              <img ref={ringRef} src="/images/logos/svg.svg" alt="" className="studio__ring" />
             </div>
           </div>
-          <div className="flex flex-col gap-[18vh] pt-[var(--pt)]" style={{ marginBottom: "calc(-1 * max(0px, calc(var(--pt) - 18vh)))" }}>
-            {realisationsProjects.slice(0, -1).map((project) => (
+          <div className="flex flex-col gap-[18vh] pt-[var(--pt)]" style={{ marginBottom: -ringV }}>
+            {realisationsProjects.map((project) => (
               <ProjectItem key={project.id} project={project} />
             ))}
           </div>
-        </div>
-        <div className="mt-[18vh]">
-          <ProjectItem project={realisationsProjects[realisationsProjects.length - 1]} />
         </div>
       </section>
     </div>

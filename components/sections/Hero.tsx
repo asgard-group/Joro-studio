@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useReducedMotion } from "framer-motion";
 
-// Hero en 2 temps (d'après la maquette « Nouveau projet — Hero ») : la photo reste collée (sticky)
+// Hero en 2 temps (d'après la maquette « Nouveau projet — Hero ») : la photo reste fixe (sans parallaxe)
 // pendant que la section fait 155svh.
 // 1. Écran 1 : le titre, bas gauche, se révèle ligne par ligne (masque qui remonte) ; indication
 //    « Défiler » en bas à droite, qui disparaît dès le scroll.
@@ -117,22 +117,26 @@ export default function Hero({ headingLines, text, ctaLabel, ctaHref, scrollHint
       data-navbar-theme="dark"
       className={`relative h-[155svh] overflow-clip bg-[#111] text-cream${ready ? " hero-ready" : ""}`}
     >
-      {/* Média collé en haut pendant toute la hauteur du hero */}
-      <div className="sticky top-0 h-[100svh] overflow-hidden" aria-hidden="true">
-        {video ? (
-          <video autoPlay muted loop playsInline className="absolute inset-0 h-full w-full object-cover">
-            <source src={video} type={video.endsWith(".webm") ? "video/webm" : "video/mp4"} />
-          </video>
-        ) : image ? (
-          <Image
-            src={image}
-            alt=""
-            fill
-            priority
-            className="object-cover object-left min-[835px]:object-[100%_60%]"
-            sizes="100vw"
-          />
-        ) : null}
+      {/* Média : la photo reste FIXE (aucun mouvement, aucun parallaxe) pendant que le dégradé et le
+          contenu du hero remontent ; les sections suivantes passent par-dessus. Le clip-path découpe la
+          couche fixe aux limites du hero, qui remonte avec la page. */}
+      <div className="absolute inset-0" style={{ clipPath: "inset(0)" }} aria-hidden="true">
+        <div className="fixed inset-x-0 top-0 h-[100svh] w-full">
+          {video ? (
+            <video autoPlay muted loop playsInline className="absolute inset-0 h-full w-full object-cover">
+              <source src={video} type={video.endsWith(".webm") ? "video/webm" : "video/mp4"} />
+            </video>
+          ) : image ? (
+            <Image
+              src={image}
+              alt=""
+              fill
+              priority
+              className="object-cover object-left min-[835px]:object-[100%_60%]"
+              sizes="100vw"
+            />
+          ) : null}
+        </div>
       </div>
 
       {/* Écran 1 : titre (bas gauche) + indication de défilement (bas droite) */}
