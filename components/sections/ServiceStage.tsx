@@ -4,12 +4,12 @@ import { Children, cloneElement, isValidElement, useEffect, useRef, useState, ty
 import { motion, useMotionValueEvent, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { useIsDesktop } from "@/hooks/useIsDesktop";
 
-// Transition entre les services (AMO → Marketing Suite → Conseil) : une seule vue collée en haut
+// Transition entre les services (Travaux → Marketing Suite → Conseil) : une seule vue collée en haut
 // (sticky) où chaque service se dévoile par le bas (clip-path) par-dessus le précédent, avec un
 // léger parallaxe de l'image. Reprise de la maquette « Atelier Vauclair — Projets plein écran ».
 //
-// Géométrie : le conteneur démarre 200vh avant la fin de ServicesAll (là où AMO commençait à
-// entrer) et dure 500vh = 1 écran par dévoilement (AMO, Marketing, Conseil) + 1 écran de pause
+// Géométrie : le conteneur démarre 200vh avant la fin de ServicesAll (là où Travaux commençait à
+// entrer) et dure 500vh = 1 écran par dévoilement (Travaux, Marketing, Conseil) + 1 écran de pause
 // sur le dernier. La vue est collée dès le début du conteneur ; avant son début, tous les
 // panneaux sont entièrement rognés (rien n'est visible).
 
@@ -72,7 +72,7 @@ export default function ServiceStage({ children }: { children: ReactNode }) {
   return (
     <div ref={ref} className="relative h-[500vh] -mt-[200vh]">
       {/* Ancres (les menus des services y font défiler) : au moment où le service est entièrement dévoilé. */}
-      <div id="amo" style={{ position: "absolute", top: "100vh" }} />
+      <div id="travaux" style={{ position: "absolute", top: "100vh" }} />
       <div id="marketing-suite" style={{ position: "absolute", top: "200vh" }} />
       <div id="conseil-workplace" style={{ position: "absolute", top: "300vh" }} />
 

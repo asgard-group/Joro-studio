@@ -15,14 +15,14 @@ import { headerStrings } from "@/lib/strings";
 // de mouvement. Prévient Hero / Header via la classe `loader-active` sur <html> et l'événement
 // `loader:done` (leurs animations d'intro attendent la fin du loader).
 
-const LOGO_SRC = "/images/logos/joro-studio-amo-architecture-travaux.webp";
-const LOGO_W = 1390;
+const LOGO_SRC = "/images/logos/joro-studio-conseil-architecture-travaux.webp";
+const LOGO_W = 1395;
 // Décalages (en % de la hauteur d'une lettre) volontairement larges : sur mobile, la marge du cadre
 // (--lm) est grande par rapport à la hauteur du logo, et un décalage plus court laisserait dépasser
 // le bas des lettres dans cette marge (visible au-dessus / en dessous du logo).
-const LOGO_H = 230; // mot-logo seul (la baseline « amo · architecture · travaux » est rognée)
+const LOGO_H = 230; // mot-logo seul (la baseline « conseil · architecture · travaux » est rognée)
 // Découpe du mot-logo à mi-chemin entre chaque lettre (J O R O S T U D I O), mesurée sur le fichier.
-const CUTS = [0, 114, 280, 412, 588, 733, 880, 1022, 1170, 1235, 1390];
+const CUTS = [0, 115, 283, 414, 590, 735, 882, 1024, 1172, 1237, 1395];
 const SLICES = CUTS.slice(0, -1).map((from, i) => ({ from, width: CUTS[i + 1] - from }));
 // Même filtre que le logo de la navbar : crème sur fond sombre.
 const LOGO_FILTER = "brightness(0) invert(1) sepia(1) saturate(0) brightness(0.953)";

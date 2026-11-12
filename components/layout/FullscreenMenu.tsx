@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useRef, useState, type MouseEvent as ReactMouseEvent } from "react";
 import ComingSoonLink from "@/components/ui/ComingSoonLink";
 import { useContactPanel } from "@/components/providers/ContactPanelProvider";
+import { groupMention } from "@/lib/strings";
 
 interface MenuLink {
   label: string;
@@ -176,7 +177,7 @@ export default function FullscreenMenu({ isOpen, onClose }: Props) {
             </nav>
 
             {/* Réseaux sociaux — mêmes liens que le footer */}
-            <ul className="flex flex-col gap-[10px] pb-[40px]">
+            <ul className="flex flex-col gap-[10px] pb-[16px]">
               {socialLinks.map((social) => (
                 <li key={social.href}>
                   <a
@@ -190,6 +191,8 @@ export default function FullscreenMenu({ isOpen, onClose }: Props) {
                 </li>
               ))}
             </ul>
+            {/* div et non p : la règle globale `p { font-size: 14px !important }` sous 768px. */}
+            <div className="pb-[40px] text-[12px] font-medium uppercase tracking-[0.14em] text-cream/70">{groupMention}</div>
           </div>
         </div>
 

@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, type MouseEvent as ReactMouseEvent } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { groupMention } from "@/lib/strings";
 
 // Style commun à tous les libellés du footer (cf. maquette Figma)
 const LABEL = "text-[14px] font-normal uppercase tracking-[1.4px] text-[#FAF6ED]";
@@ -15,6 +15,8 @@ type FooterItem = {
   label: string;
   href?: string;
   external?: boolean;
+  /** Texte simple (ni lien ni bouton), ex. l'adresse. */
+  text?: boolean;
   onClick?: (e: ReactMouseEvent) => void;
 };
 
@@ -22,6 +24,7 @@ type FooterItem = {
 const contactLinks: FooterItem[] = [
   { label: "hello@joro-studio.fr", href: "mailto:hello@joro-studio.fr", external: true },
   { label: "+33 (0)1 45 00 00 09", href: "tel:+33145000009" },
+  { label: "15 bis rue Jean-Baptiste Pigalle, 75009 Paris", text: true },
 ];
 
 const socialLinks: FooterItem[] = [
@@ -39,6 +42,9 @@ const legalLinks: FooterItem[] = [
 // Rendu d'un libellé — externe = nouvel onglet, interne = Link Next.js,
 // sans href = bouton (action, ex. ouvrir le panneau de contact).
 function ItemLabel({ item }: { item: FooterItem }) {
+  if (item.text) {
+    return <span className={`${LABEL} block`}>{item.label}</span>;
+  }
   if (!item.href) {
     return (
       <button
@@ -115,11 +121,14 @@ export default function Footer() {
         </div>
 
         <div className="flex flex-row items-end justify-between">
-          <FooterLogo className="h-[101px]" />
-          <div className="flex flex-row items-start gap-8">
-            {legalLinks.map((link) => (
-              <ItemLabel key={link.label} item={link} />
-            ))}
+          <FooterLogo className="h-[140px]" />
+          <div className="flex flex-col items-end gap-[18px]">
+            <div className="flex flex-row items-start gap-8">
+              {legalLinks.map((link) => (
+                <ItemLabel key={link.label} item={link} />
+              ))}
+            </div>
+            <span className={LABEL}>{groupMention}</span>
           </div>
         </div>
       </div>
@@ -132,7 +141,10 @@ export default function Footer() {
           <FooterAccordion title="Contactez-nous" items={contactLinks} />
           <FooterAccordion title="Infos légales" items={legalLinks} />
         </div>
-        <FooterLogo className="w-full" />
+        <div className="flex flex-col gap-[24px]">
+          <FooterLogo className="h-[96px]" />
+          <span className={LABEL}>{groupMention}</span>
+        </div>
       </div>
 
     </footer>
@@ -154,7 +166,7 @@ function LanguageSwitch({ className = "" }: { className?: string }) {
 function FooterColumn({ title, items }: { title: string; items: FooterItem[] }) {
   return (
     <div className="flex flex-1 flex-col items-start gap-[18px]">
-      <h3 className={`${LABEL} font-medium`}>{title}</h3>
+      <h3 className={`${LABEL} font-semibold`}>{title}</h3>
       <div className="flex flex-col items-start gap-2">
         {items.map((item) => (
           <ItemLabel key={item.label} item={item} />
@@ -181,7 +193,7 @@ function FooterAccordion({
         aria-expanded={open}
         className="flex w-full items-center justify-between py-4"
       >
-        <span className={LABEL}>{title}</span>
+        <span className={`${LABEL} font-semibold`}>{title}</span>
         {/* « + » (devient « − » à l'ouverture) */}
         <span className="relative block h-[14px] w-[14px] shrink-0" aria-hidden="true">
           <span className="absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-current" />
@@ -199,23 +211,17 @@ function FooterAccordion({
   );
 }
 
-// ── Logo (crème sur fond sombre via filtre d'inversion) ──────
+// ── Monogramme « JS » (crème sur fond sombre via filtre d'inversion) ──
 function FooterLogo({ className = "" }: { className?: string }) {
   return (
-    // Ratio complet (1390 × 330) : la baseline (« amo · architecture · travaux »)
-    // reste visible, aucun rognage.
-    <Link
-      href="/"
-      className={`block overflow-hidden aspect-[1390/330] ${className}`}
-      aria-label="JÖRO Studio — retour à l'accueil"
-    >
-      <Image
-        src="/images/logos/joro-studio-amo-architecture-travaux.webp"
-        alt="JÖRO Studio — amo · architecture · travaux"
-        width={1390}
-        height={330}
-        unoptimized
-        className="h-auto w-full"
+    <Link href="/" className={`block w-fit ${className}`} aria-label="JÖRO Studio — retour à l'accueil">
+      {/* eslint-disable-next-line @next/next/no-img-element -- SVG : next/image n'apporte rien ici */}
+      <img
+        src="/images/logos/monograme.svg"
+        alt="JÖRO Studio"
+        width={177}
+        height={113}
+        className="h-full w-auto"
         style={{ filter: "brightness(0) invert(1) sepia(1) saturate(0) brightness(0.98)" }}
       />
     </Link>

@@ -6,11 +6,11 @@ import { useContactPanel } from "@/components/providers/ContactPanelProvider";
 // - à gauche (centré verticalement en mobile <768px et en desktop ≥940px, en bas en tablette) : label « NOS MISSIONS », grand titre, description, lien d'action ;
 // - à droite : navigation des services (≥940px), son bas aligné sur le bas du paragraphe (marge basse =
 //   espace paragraphe → lien 24px + hauteur du lien 21px = 16px de texte + 4px + 1px de ligne) ; le service actif en cream, les autres atténués.
-// Partagé par ServicesAll (DESIGN & BUILD) et ServiceReveal (AMO, Marketing Suite, Conseil).
+// Partagé par ServicesAll (DESIGN & BUILD) et ServiceReveal (Travaux, Marketing Suite, Conseil).
 
 const serviceNav = [
   { id: "design-build", label: "DESIGN & BUILD" },
-  { id: "amo", label: "AMO" },
+  { id: "travaux", label: "TRAVAUX" },
   { id: "marketing-suite", label: "MARKETING SUITE" },
   { id: "conseil-workplace", label: "CONSEIL & STRATÉGIE" },
 ];

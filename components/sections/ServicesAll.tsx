@@ -214,9 +214,9 @@ export default function ServicesAll() {
 
   return (
     // 380vh : la séquence d'intro se joue toute seule dès 0,62 vh et DESIGN & BUILD est
-    // révélé vers 0,8 vh. Le bloc AMO (page.tsx, -mt-[100vh]) recouvre cette section à
+    // révélé vers 0,8 vh. Le bloc Travaux (page.tsx, -mt-[100vh]) recouvre cette section à
     // partir de (hauteur − 200vh) de scroll : à 380vh, c'est 1,8 vh, soit ~1 vh de lecture
-    // pour DESIGN & BUILD avant l'arrivée d'AMO. (À 280vh, AMO arrivait dès 0,8 vh et
+    // pour DESIGN & BUILD avant l'arrivée de Travaux. (À 280vh, Travaux arrivait dès 0,8 vh et
     // recouvrait DESIGN & BUILD avant même qu'on puisse le lire.)
     // Même enchaînement à toutes les tailles d'écran (plus de carrousel en mobile).
     <div ref={containerRef} className="relative" style={{ height: "380vh" }}>
