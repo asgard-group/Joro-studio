@@ -60,8 +60,8 @@ export const ctaStrings = {
     button: "Prendre rendez-vous",
   },
   newsletter: {
-    titleLine1: "Tenez vous aux courants",
-    titleLine2: "des derniers projets",
+    titleLine1: "Tenez-vous au courant",
+    titleLine2: "de nos derniers projets",
     emailLabel: "E-mail",
     emailPlaceholder: "E-mail",
     button: "Rejoindre",
