@@ -292,14 +292,17 @@ export default function ServicesAll() {
 // dessous ; charcoal + texte cream au-dessus, découpée par le clip-path (le
 // rectangle qui grandit). Là où le rectangle recouvre le texte, celui-ci est donc
 // cream ; une fois le rectangle plein écran, tout est charcoal / cream.
-function IntroTitle({ className, scale }: { className: string; scale: MotionValue<number> }) {
+// `duplicate` : copie purement visuelle (titre crème, visible dans le rectangle qui grandit) : ni titre
+// ni texte pour les lecteurs d'écran / le référencement, la copie charbon fait foi.
+function IntroTitle({ className, scale, duplicate = false }: { className: string; scale: MotionValue<number>; duplicate?: boolean }) {
+  const Heading = duplicate ? "div" : "h2";
   return (
     <motion.div style={{ scale }} className="absolute inset-0 flex items-center justify-center text-center px-6">
-      <h2 className={`font-medium tracking-[-0.02em] leading-[1.15] text-[8.2vw] min-[768px]:text-[6vw] ${className}`}>
+      <Heading aria-hidden={duplicate ? true : undefined} className={`font-medium tracking-[-0.02em] leading-[1.15] text-[8.2vw] min-[768px]:text-[6vw] ${className}`}>
         Quatre expertises,
         <br />
         un seul interlocuteur
-      </h2>
+      </Heading>
     </motion.div>
   );
 }
@@ -309,7 +312,7 @@ function IntroSlide({ clipPath, titleScale }: { clipPath: MotionValue<string>; t
     <div className="absolute inset-0 bg-cream">
       <IntroTitle className="text-charcoal" scale={titleScale} />
       <motion.div className="absolute inset-0 bg-charcoal" style={{ clipPath }}>
-        <IntroTitle className="text-cream" scale={titleScale} />
+        <IntroTitle className="text-cream" scale={titleScale} duplicate />
       </motion.div>
     </div>
   );

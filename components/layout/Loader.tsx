@@ -66,12 +66,12 @@ function LogoLayer({ className = "", style, refs, initialY }: { className?: stri
 
 // Précharge tout ce que la page contient : images (y compris celles à chargement différé, forcées en
 // « eager »), vidéos (jusqu'à pouvoir être lues sans coupure) et polices. `onProgress` reçoit la
-// fraction chargée (0 → 1). Chaque ressource est plafonnée à 15 s : une ressource lente ou en erreur
+// fraction chargée (0 → 1). Chaque ressource est plafonnée à 4 s : une ressource lente ou en erreur
 // ne bloque jamais le site.
 function preloadAssets(onProgress: (fraction: number) => void): Promise<void> {
   const wait = (setup: (done: () => void) => void) =>
     new Promise<void>((resolve) => {
-      const timer = setTimeout(resolve, 15000);
+      const timer = setTimeout(resolve, 4000);
       setup(() => {
         clearTimeout(timer);
         resolve();
@@ -219,7 +219,7 @@ export default function Loader() {
     async function run() {
       // 1. Entrée : textes qui montent, puis lettres en cascade ; le compteur monte en parallèle.
       // Compteur = progression RÉELLE du chargement (images, vidéos, polices), jamais plus rapide qu'un
-      // minimum de 2,2 s : il lit la fraction préchargée avec un léger lissage.
+      // minimum de 1 s : il lit la fraction préchargée avec un léger lissage.
       let fraction = 0;
       const preload = preloadAssets((f) => (fraction = f));
       const count = new Promise<void>((resolve) => {
@@ -228,12 +228,12 @@ export default function Loader() {
         const tick = () => {
           if (cancelled) return resolve();
           const elapsed = Math.max(0, (performance.now() - start) / 1000);
-          const timeCap = Math.min(1, elapsed / 2.2);
+          const timeCap = Math.min(1, elapsed / 1);
           const eased = timeCap < 0.5 ? 2 * timeCap * timeCap : 1 - Math.pow(-2 * timeCap + 2, 2) / 2;
           const target = Math.min(fraction, eased);
           shown += (target - shown) * 0.12;
           if (counterRef.current) counterRef.current.textContent = `${Math.min(100, Math.round(shown * 100))}%`;
-          if (fraction >= 1 && elapsed >= 2.2 && shown >= 0.995) {
+          if (fraction >= 1 && elapsed >= 1 && shown >= 0.995) {
             if (counterRef.current) counterRef.current.textContent = "100%";
             return resolve();
           }
@@ -257,11 +257,11 @@ export default function Loader() {
       // sortie par le haut → on repart. Le dernier passage s'arrête logo posé, prêt pour la sortie finale.
       const logoIn = (startDelay: number) =>
         Promise.all([
-          anim(topLetters.current, { y: ["160%", "-160%"] }, { duration: 2, ease: EXPO_OUT, delay: stagger(0.0475, { startDelay }) }),
-          anim(bottomLetters.current, { y: ["280%", "0%"] }, { duration: 2, ease: EXPO_OUT, delay: stagger(0.0475, { startDelay }) }),
+          anim(topLetters.current, { y: ["160%", "-160%"] }, { duration: 1.3, ease: EXPO_OUT, delay: stagger(0.035, { startDelay }) }),
+          anim(bottomLetters.current, { y: ["280%", "0%"] }, { duration: 1.3, ease: EXPO_OUT, delay: stagger(0.035, { startDelay }) }),
         ]);
       const logoLoop = async () => {
-        await logoIn(0.55);
+        await logoIn(0.3);
         while (!loadingDone && !cancelled) {
           await anim(bottomLetters.current, { y: ["0%", "-160%"] }, { duration: 1.1, ease: FAST_IN_OUT, delay: stagger(0.04) });
           if (cancelled) return;
@@ -269,7 +269,7 @@ export default function Loader() {
             anim(topLetters.current, { y: "160%" }, { duration: 0 }),
             anim(bottomLetters.current, { y: "280%" }, { duration: 0 }),
           ]);
-          await logoIn(0.1);
+          await logoIn(0.05);
         }
       };
       const intro = Promise.all([texts, logoLoop()]);
