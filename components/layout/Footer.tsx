@@ -31,7 +31,7 @@ const socialLinks: FooterItem[] = [
 ];
 
 const legalLinks: FooterItem[] = [
-  { label: "Mentions légales", href: "/privacy" },
+  { label: "Mentions légales", href: "/mentions-legales" },
   { label: "Cookies", href: "/privacy#cookies" },
   { label: "Politique de confidentialité", href: "/privacy" },
 ];
@@ -97,7 +97,7 @@ export default function Footer() {
   const quickLinks: FooterItem[] = [
     { label: "Notre studio", href: "/#notre-studio" },
     { label: "Nos réalisations", href: "/#nos-realisations", onClick: handleRealisationsClick },
-    { label: "Nos offres", href: "/#nos-offres" },
+    { label: "Nos missions", href: "/#nos-offres" },
   ];
 
   return (

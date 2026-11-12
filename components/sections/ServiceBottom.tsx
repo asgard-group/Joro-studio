@@ -1,9 +1,9 @@
 "use client";
 
-import ComingSoonLink from "@/components/ui/ComingSoonLink";
+import { useContactPanel } from "@/components/providers/ContactPanelProvider";
 
 // Mise en page « bas de page » des sections Services (test, d'après la maquette) :
-// - à gauche (centré verticalement en mobile <768px et en desktop ≥940px, en bas en tablette) : label « NOS SERVICES », grand titre, description, lien d'action ;
+// - à gauche (centré verticalement en mobile <768px et en desktop ≥940px, en bas en tablette) : label « NOS MISSIONS », grand titre, description, lien d'action ;
 // - à droite : navigation des services (≥940px), son bas aligné sur le bas du paragraphe (marge basse =
 //   espace paragraphe → lien 24px + hauteur du lien 21px = 16px de texte + 4px + 1px de ligne) ; le service actif en cream, les autres atténués.
 // Partagé par ServicesAll (DESIGN & BUILD) et ServiceReveal (AMO, Marketing Suite, Conseil).
@@ -32,6 +32,8 @@ const leadingBearingEm: Record<string, number> = { D: 0.078, M: 0.078, A: 0.02, 
 const gutterX = "px-[16px] min-[835px]:px-[32px] min-[1280px]:px-[40px]";
 
 export default function ServiceBottom({ activeId, title, description, ctaLabel, zClass = "z-10" }: Props) {
+  // Les boutons d'action ouvrent le formulaire de prise de contact / rendez-vous (HubSpot, panneau de contact).
+  const { open: openContact } = useContactPanel();
   // Les 4 panneaux superposés répètent le même bandeau : seul celui de Design & Build est exposé aux
   // lecteurs d'écran / au clavier, les 3 autres sont purement visuels (aucun changement à l'écran).
   const primaryNav = activeId === "design-build";
@@ -56,7 +58,7 @@ export default function ServiceBottom({ activeId, title, description, ctaLabel, 
             description, lien) reste seul à déterminer le centrage vertical. */}
         <div className="absolute bottom-full left-0 mb-[calc(var(--t)*0.47+10px)] min-[940px]:mb-[clamp(14px,calc(3.5vw-10px),57px)] flex items-center gap-[8px] text-[11px] min-[940px]:text-[13px] font-medium uppercase leading-none text-cream">
           <span className="block w-[6px] h-[6px] rounded-full bg-cream/50 shrink-0" aria-hidden="true" />
-          Nos services
+          Nos missions
         </div>
         {/* Contenu remonté de 10px (sans bouger le label, ancré au bloc non décalé). */}
         <div className="-translate-y-[10px]">
@@ -70,12 +72,16 @@ export default function ServiceBottom({ activeId, title, description, ctaLabel, 
           <div className="mt-[calc(var(--t)*0.4)] min-[940px]:mt-[40px] max-w-[529px] text-[14px] min-[940px]:text-[16px] leading-[1.65] text-cream">
             {description}
           </div>
-          <ComingSoonLink className="mt-[calc(var(--t)*0.24)] min-[940px]:mt-[24px] flex w-fit items-center gap-[8px] border-b border-transparent pb-[4px] text-[13px] min-[940px]:text-[16px] font-medium uppercase leading-none text-cream transition-colors duration-300 hover:border-cream">
+          <button
+            type="button"
+            onClick={() => openContact()}
+            className="mt-[calc(var(--t)*0.24)] min-[940px]:mt-[24px] flex w-fit cursor-pointer items-center gap-[8px] border-0 border-b border-transparent bg-transparent p-0 pb-[4px] text-left text-[13px] min-[940px]:text-[16px] font-medium uppercase leading-none text-cream transition-colors duration-300 hover:border-cream"
+          >
             {ctaLabel}
             <svg aria-hidden="true" width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.2" className="-scale-y-100">
               <path d="M3 3l8 8M11 4v7H4" />
             </svg>
-          </ComingSoonLink>
+          </button>
         </div>
       </div>
 
