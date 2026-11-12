@@ -11,7 +11,7 @@ import FeaturedWork from "@/components/sections/FeaturedWork";
 import AboutStudio from "@/components/sections/AboutStudio";
 
 export const metadata: Metadata = buildMetadata({
-  title: "JÖRO Studio — Architecture, AMO & Travaux",
+  title: "JÖRO Studio — Conseil, Architecture & Travaux",
   description:
     "JÖRO Studio conçoit et réalise des espaces hybrides haut de gamme : bureaux, hôtellerie, résidentiel. Design contemporain et engagement écologique depuis 2022.",
   alternates: { canonical: "/" },
@@ -39,17 +39,17 @@ export default function HomePage() {
       <div id="nos-offres">
         <ServicesAll />
       </div>
-      {/* Transition AMO → Marketing Suite → Conseil : chaque service se dévoile par le bas
+      {/* Transition Travaux → Marketing Suite → Conseil : chaque service se dévoile par le bas
           (clip-path) par-dessus le précédent, pendant que l'image fait un léger parallaxe
-          (cf. ServiceStage). Démarre 200vh avant la fin de ServicesAll, comme l'entrée d'AMO. */}
+          (cf. ServiceStage). Démarre 200vh avant la fin de ServicesAll, comme l'entrée de Travaux. */}
       <ServiceStage>
       <ServiceReveal
-          activeId="amo"
-          title="AMO"
-          description="Assistance à la maîtrise d'ouvrage : conseil en faisabilité, diagnostic RSE et accompagnement à la certification, nous vous guidons à chaque étape stratégique de votre projet."
+          activeId="travaux"
+          title="Travaux"
+          description="Du chantier à la livraison : nous pilotons vos travaux, coordonnons les intervenants et veillons au respect des budgets, des délais et de la qualité, pour une réalisation fidèle au projet."
           ctaLabel="Être accompagné"
-          video="/videos/amo-web.webm"
-          poster="/images/posters/amo-poster.webp"
+          video="/videos/travaux-web.webm"
+          poster="/images/posters/travaux-poster.webp"
           // Filtre Figma : aplat rgba(28,38,38,0.2), mode Color dodge
           overlayClass="bg-[rgba(28,38,38,0.2)] mix-blend-color-dodge"
       />

@@ -214,9 +214,9 @@ export default function ServicesAll() {
 
   return (
     // 380vh : la séquence d'intro se joue toute seule dès 0,62 vh et DESIGN & BUILD est
-    // révélé vers 0,8 vh. Le bloc AMO (page.tsx, -mt-[100vh]) recouvre cette section à
+    // révélé vers 0,8 vh. Le bloc Travaux (page.tsx, -mt-[100vh]) recouvre cette section à
     // partir de (hauteur − 200vh) de scroll : à 380vh, c'est 1,8 vh, soit ~1 vh de lecture
-    // pour DESIGN & BUILD avant l'arrivée d'AMO. (À 280vh, AMO arrivait dès 0,8 vh et
+    // pour DESIGN & BUILD avant l'arrivée de Travaux. (À 280vh, Travaux arrivait dès 0,8 vh et
     // recouvrait DESIGN & BUILD avant même qu'on puisse le lire.)
     // Même enchaînement à toutes les tailles d'écran (plus de carrousel en mobile).
     <div ref={containerRef} className="relative" style={{ height: "380vh" }}>
@@ -292,14 +292,17 @@ export default function ServicesAll() {
 // dessous ; charcoal + texte cream au-dessus, découpée par le clip-path (le
 // rectangle qui grandit). Là où le rectangle recouvre le texte, celui-ci est donc
 // cream ; une fois le rectangle plein écran, tout est charcoal / cream.
-function IntroTitle({ className, scale }: { className: string; scale: MotionValue<number> }) {
+// `duplicate` : copie purement visuelle (titre crème, visible dans le rectangle qui grandit) : ni titre
+// ni texte pour les lecteurs d'écran / le référencement, la copie charbon fait foi.
+function IntroTitle({ className, scale, duplicate = false }: { className: string; scale: MotionValue<number>; duplicate?: boolean }) {
+  const Heading = duplicate ? "div" : "h2";
   return (
     <motion.div style={{ scale }} className="absolute inset-0 flex items-center justify-center text-center px-6">
-      <h2 className={`font-medium tracking-[-0.02em] leading-[1.15] text-[8.2vw] min-[768px]:text-[6vw] ${className}`}>
+      <Heading aria-hidden={duplicate ? true : undefined} className={`font-medium tracking-[-0.02em] leading-[1.15] text-[8.2vw] min-[768px]:text-[6vw] ${className}`}>
         Quatre expertises,
         <br />
         un seul interlocuteur
-      </h2>
+      </Heading>
     </motion.div>
   );
 }
@@ -309,7 +312,7 @@ function IntroSlide({ clipPath, titleScale }: { clipPath: MotionValue<string>; t
     <div className="absolute inset-0 bg-cream">
       <IntroTitle className="text-charcoal" scale={titleScale} />
       <motion.div className="absolute inset-0 bg-charcoal" style={{ clipPath }}>
-        <IntroTitle className="text-cream" scale={titleScale} />
+        <IntroTitle className="text-cream" scale={titleScale} duplicate />
       </motion.div>
     </div>
   );

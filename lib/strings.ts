@@ -10,13 +10,16 @@
  * - Aucune chaîne hardcodée ne doit subsister dans les composants.
  */
 
+// Mention de rattachement (pied de page et menu ouvert).
+export const groupMention = "Une société d'Asgard Group";
+
 export const headerStrings = {
   // Logo (centre du header)
-  logoAlt: "JÖRO Studio — Architecture & Travaux",
+  logoAlt: "JÖRO Studio — Conseil, Architecture & Travaux",
   logoAriaLabel: "JÖRO Studio — retour à l'accueil",
 
   // Inscription à gauche de la navbar desktop (≥1280px)
-  tagline: "ARCHITECTURE • AMO • TRAVAUX",
+  tagline: "CONSEIL • ARCHITECTURE • TRAVAUX",
 
   // Bouton menu (droite, à côté du sélecteur de langue)
   menu: "Menu",
@@ -39,7 +42,7 @@ export const headerStrings = {
 export const homeHeroStrings = {
   // Espaces insécables (\u00A0) : si « espaces » / « demain » passe à la ligne, « les » / « de » le suivent.
   headingLines: ["Concevoir les\u00A0espaces", "hybrides de\u00A0demain"],
-  lead: "Jöro Studio accompagne particuliers et professionnels dans la transformation de leurs espaces, alliant assistance à maîtrise\u00A0d\u2019ouvrage, architecture et conseil pour des lieux plus durables et inspirants. Du premier croquis à la remise des clés.",
+  lead: "Jöro Studio accompagne particuliers et professionnels dans la transformation de leurs espaces, alliant conseil, architecture et travaux pour des lieux plus durables et inspirants. Du premier croquis à la remise des clés.",
   discover: "Nos projets",
   scroll: "Défiler",
 } as const;
@@ -47,7 +50,7 @@ export const homeHeroStrings = {
 // Section "Notre studio" (À propos, bas du hero) — titre, paragraphe, label.
 export const aboutStudioStrings = {
   title: "Notre studio",
-  text: "Basé à Paris, notre studio réunit architecture, design et maîtrise d\u2019ouvrage. De la conception à la réalisation, nous créons des espaces dans le domaine de l\u2019hôtellerie, bureaux, événementiel et espaces hybrides. Notre ambition : façonner les usages de demain à travers une architecture contemporaine et intemporelle.",
+  text: "Basé à Paris, notre studio réunit architecture, design et travaux. De la conception à la réalisation, nous créons des espaces dans le domaine de l\u2019hôtellerie, bureaux, événementiel et espaces hybrides. Notre ambition : façonner les usages de demain à travers une architecture contemporaine et intemporelle.",
   imageAlt: "Étagères et objets décoratifs dans un espace réalisé par JÖRO Studio",
   label: "À propos",
 } as const;
@@ -60,8 +63,8 @@ export const ctaStrings = {
     button: "Prendre rendez-vous",
   },
   newsletter: {
-    titleLine1: "Tenez vous aux courants",
-    titleLine2: "des derniers projets",
+    titleLine1: "Tenez-vous au courant",
+    titleLine2: "de nos derniers projets",
     emailLabel: "E-mail",
     emailPlaceholder: "E-mail",
     button: "Rejoindre",

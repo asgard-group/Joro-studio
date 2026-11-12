@@ -3,7 +3,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
-import { motion, useReducedMotion } from "framer-motion";
 import { headerStrings } from "@/lib/strings";
 import FullscreenMenu from "@/components/layout/FullscreenMenu";
 import MiniNavbar from "@/components/layout/MiniNavbar";
@@ -38,23 +37,23 @@ function NavContent({ dark, onOpenMenu }: NavContentProps) {
           {headerStrings.tagline}
         </span>
 
-        {/* Centre — logo complet (recadré : masque le sous-titre "amo ·
+        {/* Centre — logo complet (recadré : masque le sous-titre "conseil ·
             architecture · travaux" intégré à l'image, en n'affichant que le
             haut du mot-logo). Hauteur 42 — la largeur suit l'aspect-ratio. */}
         <Link href="/" aria-label={headerStrings.logoAriaLabel} className="justify-self-center">
-          {/* Recadrage vertical du logo (fichier 1390×330) : la virgule/accent
+          {/* Recadrage vertical du logo (fichier 1395×330) : la virgule/accent
               au-dessus du O (y=5-70) et le mot-logo "JOROSTUDIO" (y=98-227)
               doivent rester visibles (mesuré sur le fichier source), seul le
-              sous-titre "amo · architecture · travaux" en dessous (y=280-325)
+              sous-titre "conseil · architecture · travaux" en dessous (y=280-325)
               est exclu. Ratio 1390/227 + object-top (crop à partir de y=0,
               donc aucun rognage en haut — la virgule est entièrement dans le
               cadre) : le crop bas à y=227 coupe juste avant le sous-titre. */}
           <div
-            className="relative overflow-hidden aspect-[1390/227]"
+            className="relative overflow-hidden aspect-[1395/227]"
             style={{ height: "calc(42 * var(--u))" }}
           >
             <Image
-              src="/images/logos/joro-studio-amo-architecture-travaux.webp"
+              src="/images/logos/joro-studio-conseil-architecture-travaux.webp"
               alt={headerStrings.logoAlt}
               fill
               priority
@@ -92,22 +91,6 @@ export default function Header() {
   const [onHero, setOnHero] = useState(true);
   const [scrolledPastHeader, setScrolledPastHeader] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
-  const reducedMotion = useReducedMotion();
-  // La ligne sous la navbar part de 0 et se trace quand la page est visible à ~40 % pendant le loader d'entrée (ou tout de suite s'il n'y en a pas).
-  const [lineGo, setLineGo] = useState(false);
-  // Après le loader, la navbar apparaît en fondu (0,6 s) : la ligne attend qu'elle soit visible à ~40 % (0,12 s).
-  const [lineDelay, setLineDelay] = useState(0);
-  useEffect(() => {
-    if (document.documentElement.classList.contains("loader-active")) {
-      const go = () => {
-        setLineDelay(0.12);
-        setLineGo(true);
-      };
-      window.addEventListener("loader:navbar", go, { once: true });
-      return () => window.removeEventListener("loader:navbar", go);
-    }
-    setLineGo(true);
-  }, []);
   // En dessous de 835px (mobile + tablette, spec du 2026-09-29), la navbar
   // principale (logo complet + nav + Contact) est masquée : la MiniNavbar en
   // tient lieu en permanence, plutôt que de n'apparaître qu'au scroll.
@@ -170,17 +153,6 @@ export default function Header() {
         <NavContent
           dark={isDark}
           onOpenMenu={() => setMenuOpen(true)}
-        />
-        {/* Ligne sous la navbar — part de 0 et se trace de gauche à droite (0,9 s, vitesse constante) quand
-            la page est visible à ~40 % pendant le loader d'entrée (cf. Loader.tsx) ; déjà tracée si
-            l'utilisateur préfère moins d'animations. */}
-        <motion.div
-          aria-hidden="true"
-          className="absolute inset-x-0 bottom-0 h-px origin-left"
-          style={{ backgroundColor: isDark ? "rgba(243, 242, 237, 0.5)" : "rgba(28, 38, 38, 0.4)" }}
-          initial={{ scaleX: reducedMotion ? 1 : 0 }}
-          animate={{ scaleX: lineGo || reducedMotion ? 1 : 0 }}
-          transition={{ duration: 0.9, delay: lineDelay, ease: "linear" }}
         />
       </header>
 

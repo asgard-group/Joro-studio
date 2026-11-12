@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 
 const siteConfig = {
   name: "JÖRO Studio",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://joro-studio.fr",
+  // URL de production fixe (canonical, og:url, og:image, sitemap) : ne dépend plus d'une variable d'environnement,
+  // pour qu'un déploiement de test (*.netlify.app) ne se retrouve pas dans le référencement.
+  url: "https://joro-studio.fr",
   description:
     "JÖRO Studio conçoit et réalise des espaces hybrides haut de gamme — bureaux, hôtellerie, résidentiel — avec un engagement fort pour le design contemporain et la responsabilité écologique.",
-  twitter: "@jorostudio",
 };
 
 export function buildMetadata(overrides?: Partial<Metadata>): Metadata {
@@ -21,11 +22,10 @@ export function buildMetadata(overrides?: Partial<Metadata>): Metadata {
       locale: "fr_FR",
       url: siteConfig.url,
       siteName: siteConfig.name,
-      images: [{ url: "/images/og-default.jpg", width: 1200, height: 630 }],
+      images: [{ url: `${siteConfig.url}/images/og-default.jpg`, width: 1200, height: 630 }],
     },
     twitter: {
       card: "summary_large_image",
-      site: siteConfig.twitter,
     },
     robots: {
       index: true,
