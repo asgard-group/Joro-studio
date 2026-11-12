@@ -32,6 +32,10 @@ const leadingBearingEm: Record<string, number> = { D: 0.078, M: 0.078, A: 0.02, 
 const gutterX = "px-[16px] min-[835px]:px-[32px] min-[1280px]:px-[40px]";
 
 export default function ServiceBottom({ activeId, title, description, ctaLabel, zClass = "z-10" }: Props) {
+  // Les 4 panneaux superposés répètent le même bandeau : seul celui de Design & Build est exposé aux
+  // lecteurs d'écran / au clavier, les 3 autres sont purement visuels (aucun changement à l'écran).
+  const primaryNav = activeId === "design-build";
+  const NavTag = primaryNav ? "nav" : "div";
   return (
     <div className={`absolute inset-0 ${zClass}`}>
       {/* Contraste derrière le texte de gauche : très léger dégradé sombre depuis le bord gauche,
@@ -76,13 +80,15 @@ export default function ServiceBottom({ activeId, title, description, ctaLabel, 
       </div>
 
       {/* Droite — navigation des services */}
-      <nav
-        aria-label="Services"
+      <NavTag
+        aria-label={primaryNav ? "Services" : undefined}
+        aria-hidden={primaryNav ? undefined : true}
         className="hidden min-[940px]:flex shrink-0 flex-col items-end gap-[clamp(10px,1.2vw,23px)] mb-[45px] -translate-y-[10px]"
       >
         {serviceNav.map((item) => (
           <button
             key={item.id}
+            tabIndex={primaryNav ? undefined : -1}
             onClick={() => {
               const el = document.getElementById(item.id);
               if (!el) return;
@@ -96,7 +102,7 @@ export default function ServiceBottom({ activeId, title, description, ctaLabel, 
             {item.label}
           </button>
         ))}
-      </nav>
+      </NavTag>
       </div>
     </div>
   );
